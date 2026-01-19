@@ -1,0 +1,70 @@
+# English Translations
+
+# Navigation
+nav:
+  home: "Home"
+  projects: "Projects"
+  resume: "Resume"
+  contact: "Contact"
+
+# Page Titles
+pages:
+  home: "Home"
+  projects: "Projects"
+  resume: "Resume"
+  contact: "Contact"
+
+# Section Headings
+sections:
+  about_me: "About me"
+  skills: "Skills"
+  projects: "Projects"
+  contents: "Contents"
+
+# Resume Sections
+resume:
+  summary: "Summary"
+  experience: "Experience"
+  education: "Education"
+  skills: "Skills"
+  certifications: "Certifications & Courses"
+  academic_formation: "Academic Formation"
+
+# Resume Labels
+resume_labels:
+  languages: "Languages"
+  frameworks: "Frameworks"
+  libraries: "Libraries"
+  tools: "Tools"
+  other: "Other"
+
+# Contact Page
+contact:
+  get_in_touch: "Get In Touch"
+  connect_with_me: "Connect With Me"
+  send_email: "Send me an email"
+
+# Projects
+projects:
+  last_updated: "Last Updated"
+  languages: "Languages"
+  show_readme: "Show README"
+  hide_readme: "Hide README"
+  no_readme: "No README available"
+  unable_to_load: "Unable to load README. Please try again later."
+  no_projects: "No projects configured. Add repositories to the <code>repositories:</code> list in <code>_config.yml</code>."
+  error_loading: "Error loading projects. Please check the console for details."
+  no_repos: "No repositories found. Please check your repository names in <code>_config.yml</code>."
+
+# Skills Categories
+skills:
+  languages: "Languages"
+  frameworks: "Frameworks"
+  libraries: "Libraries"
+  tools: "Tools"
+  other: "Other"
+
+# Experience/Education Labels
+meta:
+  location: "Location"
+  date_range: "Date Range"

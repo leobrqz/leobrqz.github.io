@@ -1,0 +1,41 @@
+# Site Settings
+title: "Portfolio"
+description: "Portfolio website"
+author: "Leonardo Briquezi"
+github_username: "leobrqz"
+
+# Language Settings
+default_lang: en
+languages:
+  - en
+  - pt
+
+# GitHub Pages Settings
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
+# Build Settings
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Repository list for projects (manually specified)
+repositories:
+  - AutoPot-DR
+  - AutoPot-LE
+  - SmokeShopERP-DataAnalytics
+  - MiniSchool
+  - Cheatsheet-LabAI
+  - myContracts-SpeedrunEthereum
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .gitignore
+  - README.md
+  - DevelopmentPlan

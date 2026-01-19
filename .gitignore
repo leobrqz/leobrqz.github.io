@@ -1,0 +1,20 @@
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Bundler
+.bundle/
+vendor/
+
+# Development files
+DevelopmentPlan
+
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log

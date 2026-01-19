@@ -1,0 +1,70 @@
+# Portuguese Translations
+
+# Navigation
+nav:
+  home: "Início"
+  projects: "Projetos"
+  resume: "Currículo"
+  contact: "Contato"
+
+# Page Titles
+pages:
+  home: "Início"
+  projects: "Projetos"
+  resume: "Currículo"
+  contact: "Contato"
+
+# Section Headings
+sections:
+  about_me: "Sobre mim"
+  skills: "Habilidades"
+  projects: "Projetos"
+  contents: "Conteúdo"
+
+# Resume Sections
+resume:
+  summary: "Resumo"
+  experience: "Experiência"
+  education: "Formação Acadêmica"
+  skills: "Habilidades"
+  certifications: "Certificados e Cursos"
+  academic_formation: "Formação Acadêmica"
+
+# Resume Labels
+resume_labels:
+  languages: "Linguagens"
+  frameworks: "Frameworks"
+  libraries: "Bibliotecas"
+  tools: "Ferramentas"
+  other: "Outros"
+
+# Contact Page
+contact:
+  get_in_touch: "Entre em Contato"
+  connect_with_me: "Conecte-se Comigo"
+  send_email: "Envie-me um email"
+
+# Projects
+projects:
+  last_updated: "Última Atualização"
+  languages: "Linguagens"
+  show_readme: "Mostrar README"
+  hide_readme: "Ocultar README"
+  no_readme: "Nenhum README disponível"
+  unable_to_load: "Não foi possível carregar o README. Tente novamente mais tarde."
+  no_projects: "Nenhum projeto configurado. Adicione repositórios à lista <code>repositories:</code> em <code>_config.yml</code>."
+  error_loading: "Erro ao carregar projetos. Verifique o console para detalhes."
+  no_repos: "Nenhum repositório encontrado. Verifique os nomes dos repositórios em <code>_config.yml</code>."
+
+# Skills Categories
+skills:
+  languages: "Linguagens"
+  frameworks: "Frameworks"
+  libraries: "Bibliotecas"
+  tools: "Ferramentas"
+  other: "Outros"
+
+# Experience/Education Labels
+meta:
+  location: "Localização"
+  date_range: "Período"

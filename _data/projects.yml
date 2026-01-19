@@ -1,0 +1,69 @@
+# Repository libraries and tools mapping
+# Format: repository name as key, with libraries and tools arrays
+# Languages are automatically fetched from GitHub API
+# Libraries and tools can be manually added here
+
+# Example structure:
+# repo-name:
+#   libraries:
+#     - Library 1
+#     - Library 2
+#   tools:
+#     - Tool 1
+#     - Tool 2
+
+# Add your repositories here
+AutoPot-DR:
+  libraries:
+    - PyQt5
+    - Pymem
+    - Ctypes
+    - Threading
+
+  tools:
+    - Cheat Engine
+
+
+AutoPot-LE:
+  libraries:
+    - PyQt5
+    - Pymem
+    - Threading
+  tools:
+    - Cheat Engine
+
+
+SmokeShopERP-DataAnalytics:
+  libraries:
+    - PyQt6
+    - Pymem
+    - Matplotlib
+    - Numpy
+    - Psycopg2
+  tools:
+    - PostgreSQL
+
+MiniSchool:
+  libraries:
+    - Tkinter
+    - Psycopg2
+  tools:
+    - PostgreSQL
+
+Cheatsheet-LabAI:
+  libraries:
+    - PyQt5
+    - LangChain
+    - Gradio
+    - Chromadb
+    - Threading
+  tools:
+    - Docker
+    - Chroma Database
+
+myContracts-SpeedrunEthereum:
+  libraries:
+    - Hardhat
+    - Next.js
+  tools:
+    - Sepolia Testnet

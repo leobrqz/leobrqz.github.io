@@ -1,0 +1,82 @@
+{% assign lang = "en" %}
+{% if page.url contains "/pt/" %}
+  {% assign lang = "pt" %}
+{% endif %}
+
+<div class="skills-section">
+    <div class="skills-grid">
+        {% if site.data.skills.languages %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.languages" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.languages %}
+                <li class="skill-item">
+                    <i class="fab fa-{{ skill.icon }}"></i>
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if site.data.skills.frameworks %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.frameworks" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.frameworks %}
+                <li class="skill-item">
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if site.data.skills.libraries %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.libraries" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.libraries %}
+                <li class="skill-item {% if skill.name contains ',' %}skill-item-full{% endif %}">
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if site.data.skills.tools %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.tools" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.tools %}
+                <li class="skill-item">
+                    {% if skill.icon == 'database' %}
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    {% else %}
+                    <i class="fab fa-{{ skill.icon }}"></i>
+                    {% endif %}
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if site.data.skills.other %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.other" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.other %}
+                <li class="skill-item">
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>

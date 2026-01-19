@@ -1,0 +1,28 @@
+# Certifications and Courses
+- name:
+    en: "Python Programming"
+    pt: "Programação em Python"
+  issuer: "DataCamp"
+  date: "2025"
+  url: ""
+
+- name:
+    en: "Python Programming Fundamentals"
+    pt: "Fundamentos de Programação em Python"
+  issuer: "DataCamp"
+  date: "2025"
+  url: ""
+
+- name:
+    en: "AI Fundamentals"
+    pt: "Fundamentos de IA"
+  issuer: "DataCamp"
+  date: "2025"
+  url: ""
+
+- name:
+    en: "AWS Cloud Computing"
+    pt: "Computação em Nuvem AWS"
+  issuer: "Ka Solution"
+  date: "2025"
+  url: ""

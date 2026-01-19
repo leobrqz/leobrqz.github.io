@@ -1,0 +1,29 @@
+{% assign lang = "en" %}
+{% if page.url contains "/pt/" %}
+  {% assign lang = "pt" %}
+{% endif %}
+
+{% if site.data.experience %}
+<div class="experience-section">
+    {% for job in site.data.experience %}
+    <div class="experience-item">
+        <h3>{% if job.title[lang] %}{{ job.title[lang] }}{% else %}{{ job.title }}{% endif %}</h3>
+        <div class="meta">
+            <strong>{{ job.company }}</strong>{% if job.location %} | {{ job.location }}{% endif %}
+            <br>
+            {{ job.start_date }} - {{ job.end_date }}
+        </div>
+        {% if job.description %}
+        <div class="description">
+            {% assign desc = job.description[lang] | default: job.description %}
+            {% if desc contains '•' or desc contains '-' %}
+                {{ desc | markdownify }}
+            {% else %}
+                <p>{{ desc }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

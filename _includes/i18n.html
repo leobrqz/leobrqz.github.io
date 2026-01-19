@@ -1,0 +1,32 @@
+{% comment %}
+  i18n helper include
+  Usage: {% include i18n.html key="nav.home" %}
+  
+  Detects current language from page URL:
+  - If URL starts with /pt/, use Portuguese
+  - Otherwise, use English (default)
+{% endcomment %}
+
+{% assign lang = "en" %}
+{% if page.url contains "/pt/" %}
+  {% assign lang = "pt" %}
+{% endif %}
+
+{% assign translation_key = include.key | split: "." %}
+{% assign translation_data = site.data.i18n[lang] %}
+{% assign result = include.key %}
+
+{% if translation_data %}
+  {% for key in translation_key %}
+    {% if translation_data[key] %}
+      {% assign translation_data = translation_data[key] %}
+      {% if forloop.last %}
+        {% assign result = translation_data %}
+      {% endif %}
+    {% else %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{{ result }}

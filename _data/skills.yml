@@ -1,0 +1,36 @@
+# Skills data structure
+# Categories: Languages, Frameworks, Libraries, Tools, Other
+
+languages:
+  - name: Python
+    icon: python
+  - name: JavaScript
+    icon: js
+  - name: CSS/HTML
+    icon: html5
+  - name: Solidity
+    icon: ethereum
+  - name: Java
+    icon: java
+
+frameworks:
+  - name: FastAPI
+    icon: bolt
+  - name: LangChain
+    icon: link
+
+libraries:
+  - name: NumPy, Pandas, Matplotlib
+    icon: chart-line
+  - name: OpenAI
+    icon: brain
+  - name: HuggingFace
+    icon: brain
+
+tools:
+  - name: Git
+    icon: git
+  - name: Docker
+    icon: docker
+  - name: PostgreSQL
+    icon: database

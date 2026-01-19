@@ -1,0 +1,32 @@
+# Work Experience
+- title:
+    en: "Speedrun Ethereum"
+    pt: "Speedrun Ethereum"
+  company: "BuidlGuidl"
+  location: ""
+  start_date: "2024"
+  end_date: "2024"
+  description:
+    en: |
+      - Development of smart contracts in Solidity on Ethereum with practical challenges. Implementation of ERC20, ERC721/ERC1155 (NFTs) patterns, staking, on-chain governance, decentralized marketplaces and DEX.
+      - Technologies: Solidity, Scaffold-ETH with HardHat.
+    pt: |
+      - Desenvolvimento de contratos inteligentes em Solidity na Ethereum com desafios práticos. Implementação de padrões ERC20, ERC721/ERC1155 (NFTs), staking, governança on-chain, marketplaces descentralizados e DEX.
+      - Tecnologias: Solidity, Scaffold-ETH com HardHat.
+
+- title:
+    en: "Optimism Hackathon"
+    pt: "Hackathon Optimism"
+  company: "NearX"
+  location: ""
+  start_date: "2024"
+  end_date: "2024"
+  description:
+    en: |
+      - Hackathon and Bootcamp focused on development on the Optimism blockchain, covering blockchain fundamentals, security and development with Solidity for Smart Contracts on EVM.
+      - Development of DeFi platform for issuance and management of a stablecoin pegged to the Real on the Optimism blockchain.
+      - Technologies: Solidity, HardHat and FrontEnd with Scaffold-ETH2.
+    pt: |
+      - Hackathon e Bootcamp focados em desenvolvimento na blockchain Optimism, abordando fundamentos de blockchain, segurança e desenvolvimento com Solidity para Smart Contracts na EVM.
+      - Desenvolvimento de plataforma DeFi para emissão e gestão de uma stablecoin ancorada ao Real na blockchain Optimism.
+      - Tecnologias: Solidity, HardHat e FrontEnd com Scaffold-ETH2.

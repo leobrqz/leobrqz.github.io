@@ -1,0 +1,24 @@
+{% assign lang = "en" %}
+{% if page.url contains "/pt/" %}
+  {% assign lang = "pt" %}
+{% endif %}
+
+{% if site.data.education %}
+<div class="education-section">
+    {% for edu in site.data.education %}
+    <div class="education-item">
+        <h3>{% if edu.degree[lang] %}{{ edu.degree[lang] }}{% else %}{{ edu.degree }}{% endif %}</h3>
+        <div class="meta">
+            <strong>{{ edu.institution }}</strong>{% if edu.location %} | {{ edu.location }}{% endif %}
+            <br>
+            {{ edu.start_date }} - {{ edu.end_date }}
+        </div>
+        {% if edu.description %}
+        <div class="description">
+            <p>{% if edu.description[lang] %}{{ edu.description[lang] }}{% else %}{{ edu.description }}{% endif %}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

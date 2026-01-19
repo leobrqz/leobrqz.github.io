@@ -1,0 +1,100 @@
+---
+layout: resume
+title: Resume
+---
+
+{% assign lang = "en" %}
+{% if page.url contains "/pt/" %}
+  {% assign lang = "pt" %}
+{% endif %}
+
+<div class="resume-content">
+    <div class="resume-header">
+        <h1>{{ site.data.contact.name | default: site.author }}</h1>
+        <div class="contact-info">
+            {% if site.data.contact.email %}
+            <span><i class="fas fa-envelope"></i> <a href="mailto:{{ site.data.contact.email }}">{{ site.data.contact.email }}</a></span>
+            {% endif %}
+            {% if site.data.contact.phone %}
+            <span><i class="fas fa-phone"></i> {{ site.data.contact.phone }}</span>
+            {% endif %}
+            {% if site.data.contact.location %}
+            <span><i class="fas fa-map-marker-alt"></i> {{ site.data.contact.location }}</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if site.data.about.content %}
+    <div class="resume-section">
+        <h2>{% include i18n.html key="resume.summary" %}</h2>
+        <div class="professional-summary">
+            {{ site.data.about.content[lang] | markdownify }}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if site.data.experience %}
+    <div class="resume-section">
+        <h2>{% include i18n.html key="resume.experience" %}</h2>
+        {% include experience.html %}
+    </div>
+    {% endif %}
+    
+    {% if site.data.skills %}
+    <div class="resume-section">
+        <h2>{% include i18n.html key="resume.skills" %}</h2>
+        <div class="resume-skills">
+            {% if site.data.skills.languages %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.languages" %}:</strong>
+                <span>{{ site.data.skills.languages | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
+            {% if site.data.skills.frameworks %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.frameworks" %}:</strong>
+                <span>{{ site.data.skills.frameworks | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
+            {% if site.data.skills.libraries %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.libraries" %}:</strong>
+                <span>{{ site.data.skills.libraries | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
+            {% if site.data.skills.tools %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.tools" %}:</strong>
+                <span>{{ site.data.skills.tools | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
+            {% if site.data.skills.other %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.other" %}:</strong>
+                <span>{{ site.data.skills.other | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if site.data.certifications %}
+    <div class="resume-section">
+        <h2>{% include i18n.html key="resume.certifications" %}</h2>
+        <ul class="certifications-list">
+            {% for cert in site.data.certifications %}
+            <li>
+                {% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}{% if cert.issuer %} | {{ cert.issuer }}{% endif %}{% if cert.date %} | {{ cert.date }}{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if site.data.education %}
+    <div class="resume-section">
+        <h2>{% include i18n.html key="resume.education" %}</h2>
+        {% include education.html %}
+    </div>
+    {% endif %}
+</div>

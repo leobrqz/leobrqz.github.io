@@ -1,0 +1,54 @@
+<aside class="sidebar">
+    <div class="sidebar-content">
+        <div class="sidebar-header">
+            <div class="avatar">
+                <img src="https://github.com/{{ site.github_username }}.png" alt="{{ site.author }}" class="avatar-img">
+            </div>
+            <h1 class="sidebar-name">{{ site.author }}</h1>
+        </div>
+        
+        <div class="sidebar-social">
+            <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer" class="social-link">
+                <i class="fab fa-github"></i>
+            </a>
+            {% if site.data.contact.linkedin %}
+            <a href="https://linkedin.com/in/{{ site.data.contact.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-link">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            {% endif %}
+        </div>
+        
+{% assign lang = "en" %}
+{% if page.url contains "/pt/" %}
+  {% assign lang = "pt" %}
+{% endif %}
+
+        <nav class="sidebar-nav">
+            {% if lang == "pt" %}
+                <a href="{{ '/pt/' | relative_url }}" class="nav-link {% if page.url == '/pt/' or page.url == '/pt/index.html' %}active{% endif %}">{% include i18n.html key="nav.home" %}</a>
+                <a href="{{ '/pt/projects' | relative_url }}" class="nav-link {% if page.url == '/pt/projects.html' %}active{% endif %}">{% include i18n.html key="nav.projects" %}</a>
+                <a href="{{ '/pt/resume' | relative_url }}" class="nav-link {% if page.url == '/pt/resume.html' %}active{% endif %}">{% include i18n.html key="nav.resume" %}</a>
+                <a href="{{ '/pt/contact' | relative_url }}" class="nav-link {% if page.url == '/pt/contact.html' %}active{% endif %}">{% include i18n.html key="nav.contact" %}</a>
+            {% else %}
+                <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">{% include i18n.html key="nav.home" %}</a>
+                <a href="{{ '/projects' | relative_url }}" class="nav-link {% if page.url == '/projects.html' %}active{% endif %}">{% include i18n.html key="nav.projects" %}</a>
+                <a href="{{ '/resume' | relative_url }}" class="nav-link {% if page.url == '/resume.html' %}active{% endif %}">{% include i18n.html key="nav.resume" %}</a>
+                <a href="{{ '/contact' | relative_url }}" class="nav-link {% if page.url == '/contact.html' %}active{% endif %}">{% include i18n.html key="nav.contact" %}</a>
+            {% endif %}
+        </nav>
+        
+        <div class="language-switcher">
+            <a href="#" class="lang-option {% unless page.url contains '/pt/' %}active{% endunless %}" data-lang="en">
+                <span class="flag">🇺🇸</span> English
+            </a>
+            <span class="lang-separator">|</span>
+            <a href="#" class="lang-option {% if page.url contains '/pt/' %}active{% endif %}" data-lang="pt">
+                <span class="flag">🇧🇷</span> Português
+            </a>
+        </div>
+        
+        <div class="sidebar-footer">
+            <p class="copyright">© 2026 {{ site.data.contact.name | default: site.author }}.<br>All rights reserved.</p>
+        </div>
+    </div>
+</aside>
