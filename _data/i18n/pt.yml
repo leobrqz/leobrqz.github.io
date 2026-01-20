@@ -36,6 +36,7 @@ resume_labels:
   frameworks: "Frameworks"
   libraries: "Bibliotecas"
   tools: "Ferramentas"
+  others: "Outros"
   other: "Outros"
 
 # Contact Page
@@ -62,6 +63,7 @@ skills:
   frameworks: "Frameworks"
   libraries: "Bibliotecas"
   tools: "Ferramentas"
+  others: "Outros"
   other: "Outros"
 
 # Experience/Education Labels

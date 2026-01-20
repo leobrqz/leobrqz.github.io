@@ -59,10 +59,10 @@ title: Currículo
                 <span>{{ site.data.skills.libraries | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
-            {% if site.data.skills.tools %}
+            {% if site.data.skills.others %}
             <div class="skill-group">
-                <strong>{% include i18n.html key="resume_labels.tools" %}:</strong>
-                <span>{{ site.data.skills.tools | map: 'name' | join: ', ' }}</span>
+                <strong>{% include i18n.html key="resume_labels.others" %}:</strong>
+                <span>{{ site.data.skills.others | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
             {% if site.data.skills.other %}
