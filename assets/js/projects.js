@@ -202,7 +202,8 @@ async function enrichProjectsData(repos) {
             ...repo,
             languages: languages,
             libraries: projectData?.libraries || [],
-            tools: projectData?.tools || []
+            tools: projectData?.tools || [],
+            default_branch: repo.default_branch || 'main' // Store default branch for image URL fixing
         };
     }));
     
@@ -247,7 +248,85 @@ async function fetchRepositoryLanguages(repoName) {
     }
 }
 
-async function fetchReadmeHTML(repoName) {
+// Fix relative image URLs in README HTML to use GitHub raw content
+function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
+    if (!html || typeof html !== 'string') {
+        return html;
+    }
+    
+    // Create a temporary DOM element to parse and fix the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Find all img tags
+    const images = tempDiv.querySelectorAll('img');
+    
+    images.forEach(img => {
+        let src = img.getAttribute('src');
+        if (!src) return;
+        
+        // Skip data URIs
+        if (src.startsWith('data:')) {
+            return;
+        }
+        
+        // Handle absolute URLs
+        if (src.startsWith('http://') || src.startsWith('https://')) {
+            // Convert GitHub blob URLs to raw URLs
+            if (src.includes('github.com') && src.includes('/blob/')) {
+                img.src = src.replace('/blob/', '/raw/');
+            }
+            return;
+        }
+        
+        // Handle relative paths and GitHub-relative URLs
+        let imagePath = '';
+        let branch = defaultBranch; // Use provided branch or default to 'main'
+        
+        // Remove query strings and fragments
+        src = src.split('?')[0].split('#')[0];
+        
+        // Handle GitHub-relative URLs like /username/repo/blob/branch/path
+        if (src.startsWith('/')) {
+            const pathParts = src.split('/').filter(p => p);
+            
+            // Check if it's a full GitHub path: /username/repo/blob/branch/path
+            if (pathParts.length >= 5 && 
+                pathParts[0] === GITHUB_USERNAME && 
+                pathParts[1] === repoName && 
+                pathParts[2] === 'blob') {
+                branch = pathParts[3];
+                imagePath = pathParts.slice(4).join('/');
+            } 
+            // Check if it's just /username/repo/path (without blob)
+            else if (pathParts.length >= 3 && 
+                     pathParts[0] === GITHUB_USERNAME && 
+                     pathParts[1] === repoName) {
+                imagePath = pathParts.slice(2).join('/');
+            }
+            // Simple relative path starting with /
+            else {
+                imagePath = pathParts.join('/');
+            }
+        } 
+        // Handle relative paths like ./images/logo.png or images/logo.png
+        else {
+            // Remove leading ./ if present
+            imagePath = src.replace(/^\.\//, '');
+        }
+        
+        // Construct GitHub raw content URL
+        if (imagePath) {
+            // Ensure no double slashes
+            imagePath = imagePath.replace(/^\/+/, '').replace(/\/+/g, '/');
+            img.src = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${repoName}/${branch}/${imagePath}`;
+        }
+    });
+    
+    return tempDiv.innerHTML;
+}
+
+async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
     const cacheKey = `github_readme_${repoName}`;
     const cached = getCachedData(cacheKey);
     
@@ -318,6 +397,9 @@ async function fetchReadmeHTML(repoName) {
             const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
             html = `<p>${noReadmeText}.</p>`;
         }
+        
+        // Fix image URLs to use GitHub raw content
+        html = fixReadmeImageUrls(html, repoName, defaultBranch);
         
         setCachedData(cacheKey, html);
         return html;
@@ -523,6 +605,9 @@ function createProjectBox(project) {
     const box = document.createElement('div');
     box.className = 'project-box';
     box.setAttribute('data-repo', project.name);
+    // Store default branch for image URL fixing
+    const defaultBranch = project.default_branch || 'main';
+    box.setAttribute('data-branch', defaultBranch);
     // Add unique ID for TOC anchor
     const projectId = `project-${project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     box.id = projectId;
@@ -686,7 +771,9 @@ function attachExpandHandlers() {
                     readmeContent.appendChild(loadingMsg);
                     
                     try {
-                        const html = await fetchReadmeHTML(repoName);
+                        // Get default branch from data attribute if available
+                        const defaultBranch = box.getAttribute('data-branch') || 'main';
+                        const html = await fetchReadmeHTML(repoName, defaultBranch);
                         // Remove loading message
                         if (loadingMsg.parentNode) {
                             loadingMsg.parentNode.removeChild(loadingMsg);

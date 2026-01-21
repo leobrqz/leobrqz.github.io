@@ -70,3 +70,8 @@ skills:
 meta:
   location: "Location"
   date_range: "Date Range"
+
+# Sidebar
+sidebar:
+  role: "Developer"
+  education: "Computer Science Student"

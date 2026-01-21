@@ -5,6 +5,10 @@
                 <img src="https://github.com/{{ site.github_username }}.png" alt="{{ site.author }}" class="avatar-img">
             </div>
             <h1 class="sidebar-name">{{ site.author }}</h1>
+            <div class="sidebar-subtitle">
+                <p class="sidebar-role">{% include i18n.html key="sidebar.role" %}</p>
+                <p class="sidebar-education">{% include i18n.html key="sidebar.education" %}</p>
+            </div>
         </div>
         
         <div class="sidebar-social">
@@ -39,11 +43,11 @@
         
         <div class="language-switcher">
             <a href="#" class="lang-option {% unless page.url contains '/pt/' %}active{% endunless %}" data-lang="en">
-                <span class="flag">🇺🇸</span> English
+                <img src="https://hatscripts.github.io/circle-flags/flags/us.svg" alt="US" class="flag-icon" width="20" height="20"> English
             </a>
             <span class="lang-separator">|</span>
             <a href="#" class="lang-option {% if page.url contains '/pt/' %}active{% endif %}" data-lang="pt">
-                <span class="flag">🇧🇷</span> Português
+                <img src="https://hatscripts.github.io/circle-flags/flags/br.svg" alt="BR" class="flag-icon" width="20" height="20"> Português
             </a>
         </div>
         

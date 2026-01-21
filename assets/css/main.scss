@@ -64,6 +64,27 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
     color: $text-primary;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-subtitle {
+    margin-top: 0.5rem;
+    
+    p {
+        margin: 0.25rem 0;
+        font-size: 0.9rem;
+        color: $text-secondary;
+        line-height: 1.4;
+    }
+    
+    .sidebar-role {
+        font-weight: 500;
+    }
+    
+    .sidebar-education {
+        font-size: 0.85rem;
+        opacity: 0.9;
+    }
 }
 
 .sidebar-social {
@@ -126,13 +147,19 @@ body {
         text-decoration: none;
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.5rem;
         padding: 0.5rem 0.75rem;
         border-radius: 4px;
         transition: all 0.3s;
         
-        .flag {
-            font-size: 1rem;
+        .flag-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
         }
         
         &:hover {
