@@ -1,6 +1,6 @@
 # leobrqz.github.io
 
-My personal portfolio. Features dynamic GitHub project integration, and support for English and Portuguese languages.
+My personal portfolio. Features dynamic GitHub project integration and support for English or Portuguese.
 
 ## 🛠️ Tech Stack
 
