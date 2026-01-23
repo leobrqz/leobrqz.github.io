@@ -1,12 +1,16 @@
 # About Section Content
 home_content:
   en: |
-    I'm a technology enthusiast and Computer Science student, with experience in Python and Solidity. I have skills in Java and Databases like PostgreSQL, as well as knowledge in Docker and Git. I dive deep into Artificial Intelligence as a hobby and seek opportunities to develop new skills and competencies.
+    I'm a Computer Science student with experience in Python, JavaScript and Solidity. I have practical knowledge in database systems like PostgreSQL, containerization with Docker and version control with Git. My work spans desktop application development, web development, data analytics and AI integration, using frameworks such as FastAPI for backend services and LangChain for AI applications.
+    
+    I've developed projects including AutoPot-DR, a game automation tool built with PyQt5 and Pymem that provides automated gameplay features through memory manipulation, and SmokeShopERP-DataAnalytics, an ERP system with data analytics capabilities using NumPy and Matplotlib. I have knowledge and practical experience in artificial intelligence, using it for automation tasks and integrating with APIs such as OpenAI.
   pt: |
-    Sou um entusiasta da tecnologia e estudante de Ciência da Computação, com experiência em Python e Solidity. Tenho habilidades em Java e Bancos de Dados como PostgreSQL, além de conhecimento em Docker e Git. Me aprofundo em Inteligência Artificial como hobby e busco oportunidades de desenvolver novas habilidades e competências.
+    Sou estudante de Ciência da Computação com experiência em Python, JavaScript e Solidity. Tenho conhecimento prático em sistemas de banco de dados como PostgreSQL, containerização com Docker e controle de versão com Git. Tenho experiência em desenvolvimento de aplicações desktop, desenvolvimento web, análise de dados e integração com IA, utilizando frameworks como FastAPI para serviços backend e LangChain para aplicações de IA.
+    
+    Desenvolvi projetos incluindo AutoPot-DR, uma ferramenta para um jogo desenvolvida com PyQt5 e Pymem que fornece recursos de gameplay automatizados através da leitura de memória, e SmokeShopERP-DataAnalytics, um sistema ERP com capacidades de análise de dados usando NumPy e Matplotlib. Tenho conhecimento e experiência prática em inteligência artificial, utilizando-a para tarefas automatizadas e integração com APIs como OpenAI.
 
 content:
   en: |
-    I'm a technology enthusiast and Computer Science student, with experience in Python, JavaScript, and Solidity. I have skills in Java and Databases like PostgreSQL, as well as knowledge in Docker and Git. I dive deep into Artificial Intelligence as a hobby and seek opportunities to develop new skills and competencies.
+    Computer Science student with hands-on experience in Python, JavaScript and Solidity. Proficient in PostgreSQL, Docker and Git. Experienced in building desktop applications with PyQt5 and Tkinter, web solutions and data analytics systems using NumPy, Pandas and Matplotlib. Experienced in AI integration through frameworks like LangChain and FastAPI, with practical application in automation projects and API development.
   pt: |
-    Sou um entusiasta da tecnologia e estudante de Ciência da Computação, com experiência em Python, JavaScript e Solidity. Tenho habilidades em Java e Bancos de Dados como PostgreSQL, além de conhecimento em Docker e Git. Me aprofundo em Inteligência Artificial como hobby e busco oportunidades de desenvolver novas habilidades e competências.
+    Estudante de Ciência da Computação com experiência prática em Python, JavaScript e Solidity. Proficiente em PostgreSQL, Docker e Git. Experiência em desenvolvimento de aplicações desktop com PyQt5 e Tkinter, soluções web e sistemas de análise de dados usando NumPy, Pandas e Matplotlib. Experiência em integração com IA através de frameworks como LangChain e FastAPI, com aplicação prática em projetos de automação e desenvolvimento de APIs.

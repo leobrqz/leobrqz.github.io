@@ -40,6 +40,27 @@ title: Resume
     </div>
     {% endif %}
     
+    {% if site.data.resume_projects %}
+    <div class="resume-section">
+        <h2>{% include i18n.html key="resume.projects" %}</h2>
+        <div class="resume-projects">
+            {% for project in site.data.resume_projects %}
+            <div class="project-item">
+                <h3>{% if project.name[lang] %}{{ project.name[lang] }}{% else %}{{ project.name }}{% endif %}</h3>
+                <div class="project-description">
+                    {% if project.description[lang] %}{{ project.description[lang] | markdownify }}{% else %}{{ project.description | markdownify }}{% endif %}
+                </div>
+                {% if project.technologies %}
+                <div class="project-technologies">
+                    <strong>{% include i18n.html key="resume_labels.technologies" %}:</strong> {{ project.technologies | join: ', ' }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
     {% if site.data.skills %}
     <div class="resume-section">
         <h2>{% include i18n.html key="resume.skills" %}</h2>

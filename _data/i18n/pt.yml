@@ -27,6 +27,7 @@ resume:
   experience: "Experiência"
   education: "Formação Acadêmica"
   skills: "Habilidades"
+  projects: "Projetos"
   certifications: "Certificados e Cursos"
   academic_formation: "Formação Acadêmica"
 
@@ -38,6 +39,7 @@ resume_labels:
   tools: "Ferramentas"
   others: "Outros"
   other: "Outros"
+  technologies: "Tecnologias"
 
 # Contact Page
 contact:

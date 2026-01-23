@@ -10,8 +10,6 @@
         <h3>{% if job.title[lang] %}{{ job.title[lang] }}{% else %}{{ job.title }}{% endif %}</h3>
         <div class="meta">
             <strong>{{ job.company }}</strong>{% if job.location %} | {{ job.location }}{% endif %}
-            <br>
-            {{ job.start_date }} - {{ job.end_date }}
         </div>
         {% if job.description %}
         <div class="description">

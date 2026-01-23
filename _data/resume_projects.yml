@@ -1,0 +1,31 @@
+# Resume Projects
+- name:
+    en: "AutoPot-DR"
+    pt: "AutoPot-DR"
+  description:
+    en: |
+      Desktop application for game automation that monitors player health by reading game process memory. Implemented with PyQt5 for the overlay interface, Pymem for memory access using pointer chain resolution, and multi-threading for background memory reading operations. The tool attaches to the game process, reads health values through iterative pointer dereferencing, and automatically triggers potion usage when HP drops below a configurable threshold.
+    pt: |
+      Aplicação desktop para automação de jogos que monitora a saúde do jogador através da leitura da memória do processo do jogo. Implementada com PyQt5 para a interface overlay, Pymem para acesso à memória usando resolução de cadeia de ponteiros, e multi-threading para operações de leitura de memória em segundo plano. A ferramenta anexa ao processo do jogo, lê valores de saúde através de desreferenciamento iterativo de ponteiros e aciona automaticamente o uso de poções quando a HP cai abaixo de um limite configurável.
+  technologies:
+    - PyQt5
+    - Pymem
+    - Ctypes
+    - Threading
+    - Python
+
+- name:
+    en: "SmokeShopERP-DataAnalytics"
+    pt: "SmokeShopERP-DataAnalytics"
+  description:
+    en: |
+      Desktop management system with integrated data analytics dashboard. Built with PyQt6 for the interface, PostgreSQL for data persistence, and NumPy/Matplotlib for statistical analysis and visualization. Implements CRUD operations for inventory, sales and customer management, along with analytical features including sales trends, profit margin analysis, inventory turnover metrics, and customer behavior insights through interactive charts and graphs.
+    pt: |
+      Sistema desktop de gestão com dashboard integrado de análise de dados. Construído com PyQt6 para interface, PostgreSQL para persistência de dados e NumPy/Matplotlib para análise estatística e visualização. Implementa operações CRUD para gestão de inventário, vendas e clientes, além de funcionalidades analíticas incluindo tendências de vendas, análise de margem de lucro, métricas de giro de estoque e insights de comportamento do cliente através de gráficos interativos.
+  technologies:
+    - PyQt6
+    - NumPy
+    - Matplotlib
+    - PostgreSQL
+    - Psycopg2
+    - Python

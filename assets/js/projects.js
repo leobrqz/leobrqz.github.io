@@ -164,24 +164,21 @@ async function fetchRepositories(repoList) {
     }
     
     try {
-        const allRepos = await fetch(`${API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=100`)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            });
+        const { value } = await fetchWithConditionalCache(
+            `${API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=100`,
+            cacheKey,
+            {},
+            async (response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const allRepos = await response.json();
+                const filteredRepos = allRepos.filter(repo => repoList.includes(repo.name));
+                return repoList
+                    .map(repoName => filteredRepos.find(repo => repo.name === repoName))
+                    .filter(repo => repo !== undefined);
+            }
+        );
         
-        // Filter to only specified repositories
-        const filteredRepos = allRepos.filter(repo => repoList.includes(repo.name));
-        
-        // Sort according to the order in repoList
-        const sortedRepos = repoList
-            .map(repoName => filteredRepos.find(repo => repo.name === repoName))
-            .filter(repo => repo !== undefined); // Remove any not found
-        
-        // Cache the results
-        setCachedData(cacheKey, sortedRepos);
-        
-        return sortedRepos;
+        return value;
     } catch (error) {
         console.error('Error fetching repositories:', error);
         // Return cached data if available, even if expired
@@ -219,25 +216,28 @@ async function fetchRepositoryLanguages(repoName) {
     }
     
     try {
-        const languages = await fetch(`${API_BASE}/repos/${GITHUB_USERNAME}/${repoName}/languages`)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            });
+        const { value } = await fetchWithConditionalCache(
+            `${API_BASE}/repos/${GITHUB_USERNAME}/${repoName}/languages`,
+            cacheKey,
+            {},
+            async (response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const languages = await response.json();
+                const total = Object.values(languages).reduce((sum, val) => sum + val, 0);
+                const languagesWithPercentages = {};
+                
+                for (const [lang, bytes] of Object.entries(languages)) {
+                    languagesWithPercentages[lang] = {
+                        bytes: bytes,
+                        percentage: Math.round((bytes / total) * 100)
+                    };
+                }
+                
+                return languagesWithPercentages;
+            }
+        );
         
-        // Calculate percentages
-        const total = Object.values(languages).reduce((sum, val) => sum + val, 0);
-        const languagesWithPercentages = {};
-        
-        for (const [lang, bytes] of Object.entries(languages)) {
-            languagesWithPercentages[lang] = {
-                bytes: bytes,
-                percentage: Math.round((bytes / total) * 100)
-            };
-        }
-        
-        setCachedData(cacheKey, languagesWithPercentages);
-        return languagesWithPercentages;
+        return value;
     } catch (error) {
         console.error(`Error fetching languages for ${repoName}:`, error);
         const expiredCache = getCachedData(cacheKey, true);
@@ -337,72 +337,67 @@ async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
     
     try {
         console.log(`Fetching README for ${repoName}...`);
-        const response = await fetch(`${API_BASE}/repos/${GITHUB_USERNAME}/${repoName}/readme`, {
-            headers: {
-                'Accept': 'application/vnd.github.html+json'
+        const { value } = await fetchWithConditionalCache(
+            `${API_BASE}/repos/${GITHUB_USERNAME}/${repoName}/readme`,
+            cacheKey,
+            {
+                headers: {
+                    'Accept': 'application/vnd.github.html+json'
+                }
+            },
+            async (response) => {
+                console.log(`README response status for ${repoName}:`, response.status);
+                console.log(`README response content-type:`, response.headers.get('content-type'));
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log(`No README found for ${repoName}`);
+                        const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
+                        return `<p>${noReadmeText} for this repository.</p>`;
+                    }
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const responseText = await response.text();
+                console.log(`README response text length for ${repoName}:`, responseText.length);
+                
+                const contentType = response.headers.get('content-type') || '';
+                let html;
+                
+                if (contentType.includes('application/json')) {
+                    try {
+                        const readme = JSON.parse(responseText);
+                        console.log(`README JSON parsed for ${repoName}:`, readme);
+                        const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
+                        html = readme.html || readme.content || `<p>${noReadmeText}.</p>`;
+                    } catch (parseError) {
+                        console.warn(`Failed to parse JSON for ${repoName}, using as HTML:`, parseError);
+                        html = responseText;
+                    }
+                } else if (contentType.includes('text/html')) {
+                    html = responseText;
+                    console.log(`README HTML fetched directly for ${repoName}`);
+                } else {
+                    try {
+                        const readme = JSON.parse(responseText);
+                        html = readme.html || readme.content || responseText;
+                        console.log(`README parsed as JSON for ${repoName}`);
+                    } catch (parseError) {
+                        html = responseText;
+                        console.log(`README used as HTML for ${repoName} (JSON parse failed)`);
+                    }
+                }
+                
+                if (!html || html.trim() === '') {
+                    const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
+                    html = `<p>${noReadmeText}.</p>`;
+                }
+                
+                return fixReadmeImageUrls(html, repoName, defaultBranch);
             }
-        });
+        );
         
-        console.log(`README response status for ${repoName}:`, response.status);
-        console.log(`README response content-type:`, response.headers.get('content-type'));
-        
-        if (!response.ok) {
-            if (response.status === 404) {
-                console.log(`No README found for ${repoName}`);
-                const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
-                const html = `<p>${noReadmeText} for this repository.</p>`;
-                setCachedData(cacheKey, html);
-                return html;
-            }
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        // Get the response text first (we can only read the body once)
-        const responseText = await response.text();
-        console.log(`README response text length for ${repoName}:`, responseText.length);
-        
-        // Check content type to determine how to parse
-        const contentType = response.headers.get('content-type') || '';
-        let html;
-        
-        if (contentType.includes('application/json')) {
-            // Try to parse as JSON
-            try {
-                const readme = JSON.parse(responseText);
-                console.log(`README JSON parsed for ${repoName}:`, readme);
-                const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
-                html = readme.html || readme.content || `<p>${noReadmeText}.</p>`;
-            } catch (parseError) {
-                console.warn(`Failed to parse JSON for ${repoName}, using as HTML:`, parseError);
-                html = responseText;
-            }
-        } else if (contentType.includes('text/html')) {
-            // HTML response directly
-            html = responseText;
-            console.log(`README HTML fetched directly for ${repoName}`);
-        } else {
-            // Try to parse as JSON first, fallback to HTML
-            try {
-                const readme = JSON.parse(responseText);
-                html = readme.html || readme.content || responseText;
-                console.log(`README parsed as JSON for ${repoName}`);
-            } catch (parseError) {
-                // If JSON parsing fails, use as HTML
-                html = responseText;
-                console.log(`README used as HTML for ${repoName} (JSON parse failed)`);
-            }
-        }
-        
-        if (!html || html.trim() === '') {
-            const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
-            html = `<p>${noReadmeText}.</p>`;
-        }
-        
-        // Fix image URLs to use GitHub raw content
-        html = fixReadmeImageUrls(html, repoName, defaultBranch);
-        
-        setCachedData(cacheKey, html);
-        return html;
+        return value;
     } catch (error) {
         console.error(`Error fetching README for ${repoName}:`, error);
         console.error('Error details:', {
@@ -812,7 +807,7 @@ function attachExpandHandlers() {
 }
 
 // Cache management functions
-function getCachedData(key, allowExpired = false) {
+function getCachedEntry(key, allowExpired = false) {
     try {
         const item = localStorage.getItem(key);
         if (!item) return null;
@@ -824,22 +819,73 @@ function getCachedData(key, allowExpired = false) {
             return null; // Cache expired
         }
         
-        return data.value;
+        if (!data || typeof data !== 'object' || typeof data.value === 'undefined') {
+            return null;
+        }
+        
+        return data;
     } catch (e) {
         return null;
     }
 }
 
-function setCachedData(key, value) {
+function getCachedData(key, allowExpired = false) {
+    const entry = getCachedEntry(key, allowExpired);
+    return entry ? entry.value : null;
+}
+
+function setCachedData(key, value, metadata = {}) {
     try {
         const data = {
             value: value,
-            expiry: Date.now() + (60 * 60 * 1000) // 1 hour
+            expiry: Date.now() + CACHE_EXPIRY
         };
+        
+        if (metadata.etag) {
+            data.etag = metadata.etag;
+        }
+        if (metadata.lastModified) {
+            data.lastModified = metadata.lastModified;
+        }
         localStorage.setItem(key, JSON.stringify(data));
     } catch (e) {
         // Ignore storage errors (e.g., quota exceeded)
     }
+}
+
+async function fetchWithConditionalCache(url, cacheKey, fetchOptions, parseResponse) {
+    const cachedEntry = getCachedEntry(cacheKey, true);
+    const headers = new Headers((fetchOptions && fetchOptions.headers) ? fetchOptions.headers : {});
+    const hasCachedValue = cachedEntry && typeof cachedEntry.value !== 'undefined';
+    
+    if (hasCachedValue) {
+        if (cachedEntry.etag) {
+            headers.set('If-None-Match', cachedEntry.etag);
+        }
+        if (cachedEntry.lastModified) {
+            headers.set('If-Modified-Since', cachedEntry.lastModified);
+        }
+    }
+    
+    const response = await fetch(url, {
+        ...fetchOptions,
+        headers: headers
+    });
+    
+    if (response.status === 304 && hasCachedValue) {
+        setCachedData(cacheKey, cachedEntry.value, {
+            etag: cachedEntry.etag,
+            lastModified: cachedEntry.lastModified
+        });
+        return { value: cachedEntry.value, response: response };
+    }
+    
+    const value = await parseResponse(response);
+    setCachedData(cacheKey, value, {
+        etag: response.headers.get('etag'),
+        lastModified: response.headers.get('last-modified')
+    });
+    return { value: value, response: response };
 }
 
 function buildProjectsTOC() {
