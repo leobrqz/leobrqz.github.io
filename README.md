@@ -16,7 +16,7 @@ My personal portfolio. Features dynamic GitHub project integration and support f
 - **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
 - **Sidebar Navigation**: Always-visible sidebar with navigation and language switcher
 - **Table of Contents**: Dynamic TOC sidebar for easy navigation on home and projects pages
-- **Resume Page**: Professional CV format with print-friendly styling
+- **Resume Page**: Professional CV format
 
 
 
@@ -45,14 +45,12 @@ The site uses the GitHub API to:
 
 ### Caching
 
-API responses are cached in localStorage for 1 hour to:
-- Reduce API calls
-- Handle rate limiting gracefully
-- Improve page load performance
+GitHub API responses are cached in localStorage. **ETag** and **Last-Modified** are used for conditional revalidation:
 
-### Rate Limiting
+- Sends stored ETag/Last-Modified on subsequent requests; 304 → reuse cache, 200 → store new response and metadata
+- 1-hour expiry
+- Reduces API calls and mitigates rate limiting
 
-GitHub API has a rate limit of 60 requests/hour for unauthenticated requests. The caching system helps manage this, and the site will gracefully fall back to cached data if the limit is reached.
 
 ## Author
 
