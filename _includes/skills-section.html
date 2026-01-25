@@ -68,19 +68,5 @@
             </ul>
         </div>
         {% endif %}
-        
-        {% if site.data.skills.other %}
-        <div class="skill-category">
-            <h3>{% include i18n.html key="skills.other" %}</h3>
-            <ul class="skill-list">
-                {% for skill in site.data.skills.other %}
-                <li class="skill-item">
-                    <i class="fas fa-{{ skill.icon }}"></i>
-                    <span>{{ skill.name }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
     </div>
 </div>

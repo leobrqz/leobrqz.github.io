@@ -38,7 +38,6 @@ resume_labels:
   libraries: "Libraries"
   tools: "Tools"
   others: "Others"
-  other: "Other"
   technologies: "Technologies"
 
 # Contact Page
@@ -51,6 +50,8 @@ contact:
 projects:
   last_updated: "Last Updated"
   languages: "Languages"
+  libraries: "Libraries"
+  tools: "Tools"
   show_readme: "Show README"
   hide_readme: "Hide README"
   no_readme: "No README available"
@@ -66,7 +67,6 @@ skills:
   libraries: "Libraries"
   tools: "Tools"
   others: "Others"
-  other: "Other"
 
 # Experience/Education Labels
 meta:

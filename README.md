@@ -5,16 +5,15 @@ My personal portfolio. Features dynamic GitHub project integration and support f
 ## 🛠️ Tech Stack
 
 - **Jekyll**: Static site generator
+- **JavaScript**: Dynamic content loading and language switching
 - **GitHub API**: Client-side integration for fetching repository data and READMEs
-- **SCSS**: Styling with variables and modular structure
-- **JavaScript (ES6+)**: Dynamic content loading and language switching
 
 ## Features
 
 - **Multilanguage Support**: Full English/Portuguese translation with URL-based routing (`/` for English, `/pt/` for Portuguese)
 - **Dynamic Project Display**: Automatically fetches and displays GitHub repositories via GitHub API
 - **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
-- **Sidebar Navigation**: Always-visible sidebar with navigation and language switcher
+- **Sidebar Navigation**: Toggleable sidebar with navigation and language selector
 - **Table of Contents**: Dynamic TOC sidebar for easy navigation on home and projects pages
 - **Resume Page**: Professional CV format
 

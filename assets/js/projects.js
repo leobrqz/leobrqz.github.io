@@ -1,19 +1,9 @@
-// Projects JavaScript - GitHub API integration
 
-// Configuration - defined at top level for global access
 const GITHUB_USERNAME = 'leobrqz';
 const API_BASE = 'https://api.github.com';
 const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds
 
-// Safe translation helper - always returns default if i18n not available
-function safeTranslate(key, defaultValue) {
-    // Always return default value - translations are optional
-    // This ensures projects display even if i18n.js fails to load
-    return defaultValue;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Get repository list from config
     const repoList = getRepoList();
     
     console.log('Repository list:', repoList);
@@ -74,7 +64,7 @@ async function loadProjectsGrid(repoList) {
         console.log('Fetched repositories:', repos);
         
         if (!repos || repos.length === 0) {
-            const msg = safeTranslate('projects.no_repos', 'No repositories found. Please check your repository names in <code>_config.yml</code>.');
+            const msg = t('projects.no_repos');
             gridContainer.innerHTML = `<p style="color: var(--text-secondary, #b0b0b0); text-align: center; padding: 2rem;">${msg}</p>`;
             return;
         }
@@ -98,7 +88,7 @@ async function loadProjectsGrid(repoList) {
         console.log('Projects grid loaded successfully');
     } catch (error) {
         console.error('Error loading projects grid:', error);
-        const msg = safeTranslate('projects.error_loading', 'Error loading projects. Please check the console for details.');
+        const msg = t('projects.error_loading');
         gridContainer.innerHTML = `<p style="color: #ff6b6b; text-align: center; padding: 2rem;">${msg}</p>`;
     }
 }
@@ -116,7 +106,7 @@ async function loadProjectsPage(repoList) {
         console.log('Fetched repositories:', repos);
         
         if (!repos || repos.length === 0) {
-            const msg = safeTranslate('projects.no_repos', 'No repositories found. Please check your repository names in <code>_config.yml</code>.');
+            const msg = t('projects.no_repos');
             container.innerHTML = `<p style="color: var(--text-secondary, #b0b0b0); text-align: center; padding: 2rem;">${msg}</p>`;
             return;
         }
@@ -146,7 +136,7 @@ async function loadProjectsPage(repoList) {
         console.log('Projects page loaded successfully');
     } catch (error) {
         console.error('Error loading projects page:', error);
-        const msg = safeTranslate('projects.error_loading', 'Error loading projects. Please check the console for details.');
+        const msg = t('projects.error_loading');
         container.innerHTML = `<p style="color: #ff6b6b; text-align: center; padding: 2rem;">${msg}</p>`;
     }
 }
@@ -272,7 +262,6 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
         
         // Handle absolute URLs
         if (src.startsWith('http://') || src.startsWith('https://')) {
-            // Convert GitHub blob URLs to raw URLs
             if (src.includes('github.com') && src.includes('/blob/')) {
                 img.src = src.replace('/blob/', '/raw/');
             }
@@ -281,7 +270,7 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
         
         // Handle relative paths and GitHub-relative URLs
         let imagePath = '';
-        let branch = defaultBranch; // Use provided branch or default to 'main'
+        let branch = defaultBranch;
         
         // Remove query strings and fragments
         src = src.split('?')[0].split('#')[0];
@@ -298,7 +287,7 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
                 branch = pathParts[3];
                 imagePath = pathParts.slice(4).join('/');
             } 
-            // Check if it's just /username/repo/path (without blob)
+            // Check if it's just /username/repo/path 
             else if (pathParts.length >= 3 && 
                      pathParts[0] === GITHUB_USERNAME && 
                      pathParts[1] === repoName) {
@@ -309,7 +298,7 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
                 imagePath = pathParts.join('/');
             }
         } 
-        // Handle relative paths like ./images/logo.png or images/logo.png
+
         else {
             // Remove leading ./ if present
             imagePath = src.replace(/^\.\//, '');
@@ -317,7 +306,7 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
         
         // Construct GitHub raw content URL
         if (imagePath) {
-            // Ensure no double slashes
+ 
             imagePath = imagePath.replace(/^\/+/, '').replace(/\/+/g, '/');
             img.src = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${repoName}/${branch}/${imagePath}`;
         }
@@ -352,7 +341,7 @@ async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
                 if (!response.ok) {
                     if (response.status === 404) {
                         console.log(`No README found for ${repoName}`);
-                        const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
+                        const noReadmeText = t('projects.no_readme');
                         return `<p>${noReadmeText} for this repository.</p>`;
                     }
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -368,7 +357,7 @@ async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
                     try {
                         const readme = JSON.parse(responseText);
                         console.log(`README JSON parsed for ${repoName}:`, readme);
-                        const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
+                        const noReadmeText = t('projects.no_readme');
                         html = readme.html || readme.content || `<p>${noReadmeText}.</p>`;
                     } catch (parseError) {
                         console.warn(`Failed to parse JSON for ${repoName}, using as HTML:`, parseError);
@@ -389,7 +378,7 @@ async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
                 }
                 
                 if (!html || html.trim() === '') {
-                    const noReadmeText = safeTranslate('projects.no_readme', 'No README available');
+                    const noReadmeText = t('projects.no_readme');
                     html = `<p>${noReadmeText}.</p>`;
                 }
                 
@@ -410,15 +399,15 @@ async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
             return expiredCache;
         }
         // Show error only if no cache exists
-        const unableToLoadText = safeTranslate('projects.unable_to_load', 'Unable to load README. Please try again later.');
+        const unableToLoadText = t('projects.unable_to_load');
         return `<p>${unableToLoadText}</p>`;
     }
 }
 
 function getProjectData(repoName) {
     // This would come from _data/projects.yml, but since it's static,
-    // we'll need to pass it via a data attribute or inline script
-    // For now, return empty object
+    // need to pass it via a data attribute or inline script
+    // returns empty object
     try {
         const scriptTag = document.getElementById('projects-data');
         if (scriptTag && scriptTag.textContent) {
@@ -480,7 +469,7 @@ function createProjectCard(project) {
     const container = document.createElement('div');
     container.className = 'project-card-container';
     
-    // Left box: GitHub data (same styling as project-card)
+    // Left box: GitHub data 
     const leftBox = document.createElement('div');
     leftBox.className = 'project-card project-info-box';
     
@@ -499,14 +488,14 @@ function createProjectCard(project) {
     const updated = document.createElement('p');
     updated.className = 'project-updated';
     const updatedDate = new Date(project.updated_at);
-    const lastUpdatedText = safeTranslate('projects.last_updated', 'Last Updated');
+    const lastUpdatedText = t('projects.last_updated');
     updated.textContent = `${lastUpdatedText}: ${updatedDate.toLocaleDateString()}`;
     
     leftBox.appendChild(name);
     leftBox.appendChild(description);
     leftBox.appendChild(updated);
     
-    // Right box: Languages, Libraries, Tools (same styling as project-card)
+    // Right box: Languages, Libraries, Tools
     const rightBox = document.createElement('div');
     rightBox.className = 'project-card project-tech-box';
     
@@ -517,7 +506,7 @@ function createProjectCard(project) {
         const languagesSection = document.createElement('div');
         languagesSection.className = 'tech-section languages-section';
         const langTitle = document.createElement('h4');
-        langTitle.textContent = safeTranslate('projects.languages', 'Languages');
+        langTitle.textContent = t('projects.languages');
         languagesSection.appendChild(langTitle);
         
         const languagesList = document.createElement('div');
@@ -554,7 +543,7 @@ function createProjectCard(project) {
         const librariesSection = document.createElement('div');
         librariesSection.className = 'tech-section libraries-section';
         const libTitle = document.createElement('h4');
-        libTitle.textContent = 'Libraries';
+        libTitle.textContent = t('projects.libraries');
         librariesSection.appendChild(libTitle);
         const libList = document.createElement('div');
         libList.className = 'libs-list';
@@ -573,7 +562,7 @@ function createProjectCard(project) {
         const toolsSection = document.createElement('div');
         toolsSection.className = 'tech-section tools-section';
         const toolsTitle = document.createElement('h4');
-        toolsTitle.textContent = 'Tools';
+        toolsTitle.textContent = t('projects.tools');
         toolsSection.appendChild(toolsTitle);
         const toolsList = document.createElement('div');
         toolsList.className = 'tools-list';
@@ -620,7 +609,7 @@ function createProjectBox(project) {
     
     header.appendChild(title);
     
-    // Create content wrapper with horizontal layout (like home page)
+    // Create content wrapper with horizontal layout
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'project-content-wrapper';
     
@@ -640,7 +629,7 @@ function createProjectBox(project) {
     updatedSpan.textContent = updatedDate.toLocaleDateString();
     
     const updatedP = document.createElement('p');
-    const lastUpdatedText = safeTranslate('projects.last_updated', 'Last Updated');
+    const lastUpdatedText = t('projects.last_updated');
     updatedP.textContent = `${lastUpdatedText}: `;
     updatedP.appendChild(updatedSpan);
     
@@ -648,12 +637,12 @@ function createProjectBox(project) {
     meta.appendChild(updatedP);
     leftSection.appendChild(meta);
     
-    // Right section: languages (with separator)
+    // Right section: languages
     const languagesSection = document.createElement('div');
     languagesSection.className = 'project-languages-section';
     
     const langTitle = document.createElement('h4');
-    langTitle.textContent = safeTranslate('projects.languages', 'Languages');
+    langTitle.textContent = t('projects.languages');
     languagesSection.appendChild(langTitle);
     
     const languagesList = document.createElement('div');
@@ -695,17 +684,17 @@ function createProjectBox(project) {
     contentWrapper.appendChild(leftSection);
     contentWrapper.appendChild(languagesSection);
     
-    // Readme content with toggle button below divider
+    // Readme content with toggle button
     const readmeContent = document.createElement('div');
     readmeContent.className = 'readme-content';
     
     const toggle = document.createElement('button');
     toggle.className = 'expand-toggle';
-    const showReadmeText = safeTranslate('projects.show_readme', 'Show README');
+    const showReadmeText = t('projects.show_readme');
     toggle.setAttribute('aria-label', showReadmeText);
     toggle.innerHTML = `<span class="toggle-text">${showReadmeText}</span><i class="fas fa-chevron-down"></i>`;
     
-    // Add toggle button inside readme-content (after the border-top divider)
+    // Add toggle button inside readme-content
     readmeContent.appendChild(toggle);
     
     box.appendChild(header);
@@ -751,15 +740,13 @@ function attachExpandHandlers() {
                     icon.classList.add('fa-chevron-down');
                 }
                 if (toggleText) {
-                    toggleText.textContent = safeTranslate('projects.show_readme', 'Show README');
+                    toggleText.textContent = t('projects.show_readme');
                 }
-                const showReadmeText = safeTranslate('projects.show_readme', 'Show README');
+                const showReadmeText = t('projects.show_readme');
                 this.setAttribute('aria-label', showReadmeText);
             } else {
-                // Expand
                 if (!readmeContent.hasAttribute('data-loaded')) {
                     // Fetch README if not already loaded
-                    // Keep the toggle button, add loading message after it
                     const loadingMsg = document.createElement('p');
                     loadingMsg.style.color = 'var(--text-secondary, #b0b0b0)';
                     loadingMsg.textContent = 'Loading README...';
@@ -769,7 +756,6 @@ function attachExpandHandlers() {
                         // Get default branch from data attribute if available
                         const defaultBranch = box.getAttribute('data-branch') || 'main';
                         const html = await fetchReadmeHTML(repoName, defaultBranch);
-                        // Remove loading message
                         if (loadingMsg.parentNode) {
                             loadingMsg.parentNode.removeChild(loadingMsg);
                         }
@@ -787,7 +773,7 @@ function attachExpandHandlers() {
                         }
                         const errorMsg = document.createElement('p');
                         errorMsg.style.color = '#ff6b6b';
-                        errorMsg.textContent = safeTranslate('projects.unable_to_load', 'Error loading README. Please try again later.');
+                        errorMsg.textContent = t('projects.unable_to_load');
                         readmeContent.appendChild(errorMsg);
                     }
                 }
@@ -797,9 +783,9 @@ function attachExpandHandlers() {
                     icon.classList.add('fa-chevron-up');
                 }
                 if (toggleText) {
-                    toggleText.textContent = safeTranslate('projects.hide_readme', 'Hide README');
+                    toggleText.textContent = t('projects.hide_readme');
                 }
-                const hideReadmeText = safeTranslate('projects.hide_readme', 'Hide README');
+                const hideReadmeText = t('projects.hide_readme');
                 this.setAttribute('aria-label', hideReadmeText);
             }
         });
@@ -849,7 +835,7 @@ function setCachedData(key, value, metadata = {}) {
         }
         localStorage.setItem(key, JSON.stringify(data));
     } catch (e) {
-        // Ignore storage errors (e.g., quota exceeded)
+        // Ignore storage errors (quota exceeded) for now
     }
 }
 
@@ -919,8 +905,6 @@ function buildProjectsTOC() {
     if (typeof initTOC === 'function') {
         initTOC();
         
-        // Trigger an immediate update of active section after projects load
-        // This ensures the TOC tracking works with dynamically loaded content
         setTimeout(() => {
             if (typeof window !== 'undefined' && window.dispatchEvent) {
                 window.dispatchEvent(new Event('scroll'));
@@ -930,7 +914,7 @@ function buildProjectsTOC() {
 }
 
 function showEmptyState() {
-    const noProjectsText = safeTranslate('projects.no_projects', 'No projects configured. Add repositories to the <code>repositories:</code> list in <code>_config.yml</code>.');
+    const noProjectsText = t('projects.no_projects');
     
     // Show empty state message on home page
     const gridContainer = document.getElementById('projects-grid');

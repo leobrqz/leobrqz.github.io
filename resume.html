@@ -89,12 +89,6 @@ title: Resume
                 <span>{{ site.data.skills.others | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
-            {% if site.data.skills.other %}
-            <div class="skill-group">
-                <strong>{% include i18n.html key="resume_labels.other" %}:</strong>
-                <span>{{ site.data.skills.other | map: 'name' | join: ', ' }}</span>
-            </div>
-            {% endif %}
         </div>
     </div>
     {% endif %}

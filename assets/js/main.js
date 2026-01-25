@@ -1,8 +1,8 @@
 // Main JavaScript file
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize TOC functionality
+    initSidebarCollapse();
     initTOC();
-    
+
     // Smooth scroll for anchor links (general)
     document.querySelectorAll('a[href^="#"]:not(.toc-link)').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -17,6 +17,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function initSidebarCollapse() {
+    const sidebar = document.querySelector('.sidebar');
+    const toggle = document.querySelector('.sidebar-toggle');
+    const icon = document.querySelector('.sidebar-toggle-icon');
+    const root = document.documentElement;
+    if (!sidebar || !toggle || !icon) return;
+
+    const ICON_EXPANDED = 'fa-chevron-left';
+    const ICON_COLLAPSED = 'fa-chevron-right';
+    const STORAGE_KEY = 'sidebarCollapsed';
+
+    function setCollapsed(collapsed) {
+        if (collapsed) {
+            sidebar.classList.add('sidebar--collapsed');
+            root.classList.add('sidebar-collapsed');
+            icon.classList.remove(ICON_EXPANDED);
+            icon.classList.add(ICON_COLLAPSED);
+            toggle.setAttribute('aria-expanded', 'false');
+        } else {
+            sidebar.classList.remove('sidebar--collapsed');
+            root.classList.remove('sidebar-collapsed');
+            icon.classList.remove(ICON_COLLAPSED);
+            icon.classList.add(ICON_EXPANDED);
+            toggle.setAttribute('aria-expanded', 'true');
+        }
+        try {
+            localStorage.setItem(STORAGE_KEY, String(collapsed));
+        } catch (e) {}
+    }
+
+    let saved = null;
+    try {
+        saved = localStorage.getItem(STORAGE_KEY);
+    } catch (e) {
+        saved = null;
+    }
+    if (saved === 'true') {
+        setCollapsed(true);
+    } else {
+        setCollapsed(false);
+    }
+
+    toggle.addEventListener('click', function() {
+        const collapsed = sidebar.classList.contains('sidebar--collapsed');
+        setCollapsed(!collapsed);
+    });
+}
 
 // TOC functionality - global state for scroll tracking
 let tocScrollHandler = null;
@@ -83,10 +131,6 @@ function initTOC() {
                 const lastSectionBottom = lastSection.element.offsetTop + lastSection.element.offsetHeight;
                 const lastSectionRect = lastSection.element.getBoundingClientRect();
                 
-                // More lenient detection for last section:
-                // 1. If we're past the last section's top, always select it (regardless of bottom)
-                // 2. If we're near the bottom of the page, select it
-                // 3. If the last section is visible in viewport (even partially), select it
                 const isPastLastSectionTop = scrollPos >= lastSectionTop;
                 const isLastSectionVisible = lastSectionRect.top < windowHeight && lastSectionRect.bottom > 0;
                 const isAtVeryBottom = scrollBottom >= documentHeight - 50; // Within 50px of absolute bottom
@@ -105,18 +149,14 @@ function initTOC() {
                     const rect = element.getBoundingClientRect();
                     
                     // Check if scroll position is past this section's top
-                    // Use a more lenient check: within 150px before the top counts as being in the section
-                    // This helps with collapsed projects that have small heights
                     const sectionTopThreshold = top - 150;
                     
                     if (scrollPos >= sectionTopThreshold) {
-                        // If this is the last section, always select it if we're past its threshold
                         // This handles cases where the section is small (collapsed projects)
                         if (i === sections.length - 1) {
                             activeSection = link;
                         } else {
                             // Otherwise, check if we're before the next section starts
-                            // Use threshold for next section too to prevent overlap
                             const nextSectionTop = sections[i + 1].element.offsetTop;
                             const nextSectionThreshold = nextSectionTop - 150;
                             if (scrollPos < nextSectionThreshold) {

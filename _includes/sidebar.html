@@ -1,8 +1,9 @@
-<aside class="sidebar">
+<div class="sidebar-and-toggle">
+    <aside class="sidebar">
     <div class="sidebar-content">
         <div class="sidebar-header">
             <div class="avatar">
-                <img src="https://github.com/{{ site.github_username }}.png" alt="{{ site.author }}" class="avatar-img">
+                <img src="{{ '/imgs/icon.jpg' | relative_url }}" alt="{{ site.author }}" class="avatar-img" width="80" height="80" fetchpriority="high">
             </div>
             <h1 class="sidebar-name">{{ site.author }}</h1>
             <div class="sidebar-subtitle">
@@ -29,25 +30,24 @@
 
         <nav class="sidebar-nav">
             {% if lang == "pt" %}
-                <a href="{{ '/pt/' | relative_url }}" class="nav-link {% if page.url == '/pt/' or page.url == '/pt/index.html' %}active{% endif %}">{% include i18n.html key="nav.home" %}</a>
-                <a href="{{ '/pt/projects' | relative_url }}" class="nav-link {% if page.url == '/pt/projects.html' %}active{% endif %}">{% include i18n.html key="nav.projects" %}</a>
-                <a href="{{ '/pt/resume' | relative_url }}" class="nav-link {% if page.url == '/pt/resume.html' %}active{% endif %}">{% include i18n.html key="nav.resume" %}</a>
-                <a href="{{ '/pt/contact' | relative_url }}" class="nav-link {% if page.url == '/pt/contact.html' %}active{% endif %}">{% include i18n.html key="nav.contact" %}</a>
+                <a href="{{ '/pt/' | relative_url }}" class="nav-link {% if page.url == '/pt/' or page.url == '/pt/index.html' %}active{% endif %}"><i class="fas fa-home" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.home" %}</span></a>
+                <a href="{{ '/pt/projects' | relative_url }}" class="nav-link {% if page.url == '/pt/projects.html' %}active{% endif %}"><i class="fas fa-folder" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.projects" %}</span></a>
+                <a href="{{ '/pt/resume' | relative_url }}" class="nav-link {% if page.url == '/pt/resume.html' %}active{% endif %}"><i class="fas fa-file-lines" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.resume" %}</span></a>
+                <a href="{{ '/pt/contact' | relative_url }}" class="nav-link {% if page.url == '/pt/contact.html' %}active{% endif %}"><i class="fas fa-envelope" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.contact" %}</span></a>
             {% else %}
-                <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">{% include i18n.html key="nav.home" %}</a>
-                <a href="{{ '/projects' | relative_url }}" class="nav-link {% if page.url == '/projects.html' %}active{% endif %}">{% include i18n.html key="nav.projects" %}</a>
-                <a href="{{ '/resume' | relative_url }}" class="nav-link {% if page.url == '/resume.html' %}active{% endif %}">{% include i18n.html key="nav.resume" %}</a>
-                <a href="{{ '/contact' | relative_url }}" class="nav-link {% if page.url == '/contact.html' %}active{% endif %}">{% include i18n.html key="nav.contact" %}</a>
+                <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}"><i class="fas fa-home" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.home" %}</span></a>
+                <a href="{{ '/projects' | relative_url }}" class="nav-link {% if page.url == '/projects.html' %}active{% endif %}"><i class="fas fa-folder" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.projects" %}</span></a>
+                <a href="{{ '/resume' | relative_url }}" class="nav-link {% if page.url == '/resume.html' %}active{% endif %}"><i class="fas fa-file-lines" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.resume" %}</span></a>
+                <a href="{{ '/contact' | relative_url }}" class="nav-link {% if page.url == '/contact.html' %}active{% endif %}"><i class="fas fa-envelope" aria-hidden="true"></i><span class="nav-link-text">{% include i18n.html key="nav.contact" %}</span></a>
             {% endif %}
         </nav>
         
         <div class="language-switcher">
-            <a href="#" class="lang-option {% unless page.url contains '/pt/' %}active{% endunless %}" data-lang="en">
-                <img src="https://hatscripts.github.io/circle-flags/flags/us.svg" alt="US" class="flag-icon" width="20" height="20"> English
-            </a>
-            <span class="lang-separator">|</span>
             <a href="#" class="lang-option {% if page.url contains '/pt/' %}active{% endif %}" data-lang="pt">
                 <img src="https://hatscripts.github.io/circle-flags/flags/br.svg" alt="BR" class="flag-icon" width="20" height="20"> Português
+            </a>
+            <a href="#" class="lang-option {% unless page.url contains '/pt/' %}active{% endunless %}" data-lang="en">
+                <img src="https://hatscripts.github.io/circle-flags/flags/us.svg" alt="US" class="flag-icon" width="20" height="20"> English
             </a>
         </div>
         
@@ -55,4 +55,10 @@
             <p class="copyright">© 2026 {{ site.data.contact.name | default: site.author }}</p>
         </div>
     </div>
-</aside>
+    </aside>
+    <div class="sidebar-toggle-wrap">
+        <button type="button" class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true" title="Toggle sidebar">
+            <i class="fas fa-chevron-left sidebar-toggle-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>

@@ -38,19 +38,20 @@ resume_labels:
   libraries: "Bibliotecas"
   tools: "Ferramentas"
   others: "Outros"
-  other: "Outros"
   technologies: "Tecnologias"
 
 # Contact Page
 contact:
   get_in_touch: "Entre em Contato"
-  connect_with_me: "Conecte-se Comigo"
-  send_email: "Envie-me um email"
+  connect_with_me: "Entre em contato"
+  send_email: "Envie um email"
 
 # Projects
 projects:
   last_updated: "Última Atualização"
   languages: "Linguagens"
+  libraries: "Bibliotecas"
+  tools: "Ferramentas"
   show_readme: "Mostrar README"
   hide_readme: "Ocultar README"
   no_readme: "Nenhum README disponível"
@@ -66,7 +67,6 @@ skills:
   libraries: "Bibliotecas"
   tools: "Ferramentas"
   others: "Outros"
-  other: "Outros"
 
 # Experience/Education Labels
 meta:
