@@ -11,8 +11,8 @@ languages:
   - pt
 
 # GitHub Pages Settings
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
+baseurl: ""
+url: ""
 
 # Build Settings
 markdown: kramdown
@@ -21,7 +21,11 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
 
-# Repository list for projects (manually specified)
+# Include directories
+include:
+  - _pages
+
+# Repository list for projects
 repositories:
   - AutoPot-DR
   - AutoPot-LE

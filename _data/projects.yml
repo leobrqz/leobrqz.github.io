@@ -1,18 +1,3 @@
-# Repository libraries and tools mapping
-# Format: repository name as key, with libraries and tools arrays
-# Languages are automatically fetched from GitHub API
-# Libraries and tools can be manually added here
-
-# Example structure:
-# repo-name:
-#   libraries:
-#     - Library 1
-#     - Library 2
-#   tools:
-#     - Tool 1
-#     - Tool 2
-
-# Add your repositories here
 AutoPot-DR:
   libraries:
     - PyQt5

@@ -1,9 +1,7 @@
 ---
 layout: resume
-title: Currículo
+permalink: /pt/resume
 ---
-
-{% assign lang = "pt" %}
 
 <div class="resume-content">
     <div class="resume-header">
@@ -20,6 +18,11 @@ title: Currículo
             {% endif %}
         </div>
     </div>
+    
+    {% assign lang = "en" %}
+    {% if page.url contains "/pt" %}
+      {% assign lang = "pt" %}
+    {% endif %}
     
     {% if site.data.about.content %}
     <div class="resume-section">

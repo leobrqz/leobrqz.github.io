@@ -1,4 +1,3 @@
-
 const GITHUB_USERNAME = 'leobrqz';
 const API_BASE = 'https://api.github.com';
 const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Determine which page we're on
     const isProjectsPage = document.getElementById('projects-container') !== null;
     const isHomePage = document.getElementById('projects-grid') !== null;
     
@@ -190,7 +188,7 @@ async function enrichProjectsData(repos) {
             languages: languages,
             libraries: projectData?.libraries || [],
             tools: projectData?.tools || [],
-            default_branch: repo.default_branch || 'main' // Store default branch for image URL fixing
+            default_branch: repo.default_branch || 'main'
         };
     }));
     
@@ -255,12 +253,10 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
         let src = img.getAttribute('src');
         if (!src) return;
         
-        // Skip data URIs
         if (src.startsWith('data:')) {
             return;
         }
         
-        // Handle absolute URLs
         if (src.startsWith('http://') || src.startsWith('https://')) {
             if (src.includes('github.com') && src.includes('/blob/')) {
                 img.src = src.replace('/blob/', '/raw/');
@@ -268,7 +264,7 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
             return;
         }
         
-        // Handle relative paths and GitHub-relative URLs
+        // Handle relative paths
         let imagePath = '';
         let branch = defaultBranch;
         
@@ -279,7 +275,6 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
         if (src.startsWith('/')) {
             const pathParts = src.split('/').filter(p => p);
             
-            // Check if it's a full GitHub path: /username/repo/blob/branch/path
             if (pathParts.length >= 5 && 
                 pathParts[0] === GITHUB_USERNAME && 
                 pathParts[1] === repoName && 
@@ -287,20 +282,17 @@ function fixReadmeImageUrls(html, repoName, defaultBranch = 'main') {
                 branch = pathParts[3];
                 imagePath = pathParts.slice(4).join('/');
             } 
-            // Check if it's just /username/repo/path 
             else if (pathParts.length >= 3 && 
                      pathParts[0] === GITHUB_USERNAME && 
                      pathParts[1] === repoName) {
                 imagePath = pathParts.slice(2).join('/');
             }
-            // Simple relative path starting with /
             else {
                 imagePath = pathParts.join('/');
             }
         } 
 
         else {
-            // Remove leading ./ if present
             imagePath = src.replace(/^\.\//, '');
         }
         
@@ -405,9 +397,6 @@ async function fetchReadmeHTML(repoName, defaultBranch = 'main') {
 }
 
 function getProjectData(repoName) {
-    // This would come from _data/projects.yml, but since it's static,
-    // need to pass it via a data attribute or inline script
-    // returns empty object
     try {
         const scriptTag = document.getElementById('projects-data');
         if (scriptTag && scriptTag.textContent) {
@@ -415,7 +404,7 @@ function getProjectData(repoName) {
             return projectsData[repoName] || null;
         }
     } catch (e) {
-        // Ignore errors
+        // TODO: treat errors
     }
     return null;
 }
@@ -447,12 +436,10 @@ function getLanguageIcon(lang) {
         'Solidity': 'fab fa-ethereum'
     };
     
-    // Try exact match first
     if (iconMap[lang]) {
         return iconMap[lang];
     }
     
-    // Try case-insensitive match
     const langLower = lang.toLowerCase();
     for (const [key, icon] of Object.entries(iconMap)) {
         if (key.toLowerCase() === langLower) {
@@ -460,7 +447,6 @@ function getLanguageIcon(lang) {
         }
     }
     
-    // Default icon
     return 'fas fa-code';
 }
 
@@ -501,7 +487,6 @@ function createProjectCard(project) {
     
     const sections = [];
     
-    // Languages
     if (Object.keys(project.languages || {}).length > 0) {
         const languagesSection = document.createElement('div');
         languagesSection.className = 'tech-section languages-section';
@@ -576,7 +561,6 @@ function createProjectCard(project) {
         sections.push(toolsSection);
     }
     
-    // Append all sections
     sections.forEach(section => rightBox.appendChild(section));
     
     container.appendChild(leftBox);
@@ -609,7 +593,6 @@ function createProjectBox(project) {
     
     header.appendChild(title);
     
-    // Create content wrapper with horizontal layout
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'project-content-wrapper';
     
@@ -694,7 +677,6 @@ function createProjectBox(project) {
     toggle.setAttribute('aria-label', showReadmeText);
     toggle.innerHTML = `<span class="toggle-text">${showReadmeText}</span><i class="fas fa-chevron-down"></i>`;
     
-    // Add toggle button inside readme-content
     readmeContent.appendChild(toggle);
     
     box.appendChild(header);
@@ -733,7 +715,6 @@ function attachExpandHandlers() {
             const toggleText = this.querySelector('.toggle-text');
             
             if (readmeContent.classList.contains('expanded')) {
-                // Collapse
                 readmeContent.classList.remove('expanded');
                 if (icon) {
                     icon.classList.remove('fa-chevron-up');
@@ -759,7 +740,6 @@ function attachExpandHandlers() {
                         if (loadingMsg.parentNode) {
                             loadingMsg.parentNode.removeChild(loadingMsg);
                         }
-                        // Create a container for the README content (after toggle)
                         const readmeContainer = document.createElement('div');
                         readmeContainer.className = 'readme-container';
                         readmeContainer.innerHTML = html;
@@ -767,7 +747,6 @@ function attachExpandHandlers() {
                         readmeContent.setAttribute('data-loaded', 'true');
                     } catch (error) {
                         console.error('Error loading README:', error);
-                        // Remove loading message
                         if (loadingMsg.parentNode) {
                             loadingMsg.parentNode.removeChild(loadingMsg);
                         }
@@ -802,7 +781,7 @@ function getCachedEntry(key, allowExpired = false) {
         const now = Date.now();
         
         if (!allowExpired && data.expiry && now > data.expiry) {
-            return null; // Cache expired
+            return null;
         }
         
         if (!data || typeof data !== 'object' || typeof data.value === 'undefined') {
@@ -835,7 +814,7 @@ function setCachedData(key, value, metadata = {}) {
         }
         localStorage.setItem(key, JSON.stringify(data));
     } catch (e) {
-        // Ignore storage errors (quota exceeded) for now
+        // TODO: treat errors
     }
 }
 
@@ -886,7 +865,6 @@ function buildProjectsTOC() {
         const titleElement = box.querySelector('h3 a');
         if (titleElement && repoName) {
             const id = box.id || `project-${repoName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-            // Ensure box has the ID
             if (!box.id) {
                 box.id = id;
             }
@@ -916,13 +894,11 @@ function buildProjectsTOC() {
 function showEmptyState() {
     const noProjectsText = t('projects.no_projects');
     
-    // Show empty state message on home page
     const gridContainer = document.getElementById('projects-grid');
     if (gridContainer) {
         gridContainer.innerHTML = `<p style="color: var(--text-secondary, #b0b0b0); text-align: center; padding: 2rem;">${noProjectsText}</p>`;
     }
     
-    // Show empty state message on projects page
     const projectsContainer = document.getElementById('projects-container');
     if (projectsContainer) {
         projectsContainer.innerHTML = `<p style="color: var(--text-secondary, #b0b0b0); text-align: center; padding: 2rem;">${noProjectsText}</p>`;
