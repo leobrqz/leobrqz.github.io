@@ -2,6 +2,9 @@
 
 My personal portfolio. Features dynamic GitHub project integration and support for English or Portuguese.
 
+- **Live site**: Available at [leonardobriquezi.me](https://leonardobriquezi.me) and [leobrqz.github.io](https://leobrqz.github.io)
+
+
 ## 🛠️ Tech Stack
 
 - **Jekyll**: Static site generator
@@ -9,7 +12,6 @@ My personal portfolio. Features dynamic GitHub project integration and support f
 - **GitHub API**: Client-side integration for fetching repository data and READMEs
 
 ## Features
-
 - **Multilanguage Support**: Full English/Portuguese translation with URL-based routing (`/` for English, `/pt` for Portuguese)
 - **Dynamic Project Display**: Automatically fetches and displays GitHub repositories via GitHub API
 - **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
