@@ -7,15 +7,26 @@
 <div class="education-section">
     {% for edu in site.data.education %}
     <div class="education-item">
-        <h3>{% if edu.degree[lang] %}{{ edu.degree[lang] }}{% else %}{{ edu.degree }}{% endif %}</h3>
-        <div class="meta">
-            <strong>{{ edu.institution }}</strong>{% if edu.location %} | {{ edu.location }}{% endif %}
-            <br>
-            {{ edu.start_date }} - {{ edu.end_date }}
+        <div class="education-header">
+            <div class="education-title-block">
+                <h3>{% if edu.degree[lang] %}{{ edu.degree[lang] }}{% else %}{{ edu.degree }}{% endif %}</h3>
+                <div class="education-institution">
+                    {{ edu.institution }}{% if edu.subtitle %} · {% if edu.subtitle[lang] %}{{ edu.subtitle[lang] }}{% else %}{{ edu.subtitle }}{% endif %}{% endif %}
+                </div>
+            </div>
+            <div class="education-date-location">
+                <div class="education-date">{{ edu.start_date }} – {{ edu.end_date }}</div>
+                {% if edu.location %}<div class="education-location">{{ edu.location }}</div>{% endif %}
+            </div>
         </div>
         {% if edu.description %}
         <div class="description">
-            <p>{% if edu.description[lang] %}{{ edu.description[lang] }}{% else %}{{ edu.description }}{% endif %}</p>
+            {% assign desc = edu.description[lang] | default: edu.description %}
+            {% if desc contains '-' or desc contains '•' %}
+                {{ desc | markdownify }}
+            {% else %}
+                <p>{{ desc }}</p>
+            {% endif %}
         </div>
         {% endif %}
     </div>

@@ -28,14 +28,17 @@ resume:
   education: "Formação Acadêmica"
   skills: "Habilidades"
   projects: "Projetos"
-  certifications: "Certificados e Cursos"
+  certifications: "Certificações e Cursos"
+  languages_spoken: "Idiomas"
   academic_formation: "Formação Acadêmica"
+  download_pdf: "Baixar currículo em PDF"
 
 # Resume Labels
 resume_labels:
   languages: "Linguagens"
   frameworks: "Frameworks"
   libraries: "Bibliotecas"
+  databases: "Banco de Dados"
   tools: "Ferramentas"
   others: "Outros"
   technologies: "Tecnologias"
@@ -65,6 +68,7 @@ skills:
   languages: "Linguagens"
   frameworks: "Frameworks"
   libraries: "Bibliotecas"
+  databases: "Banco de Dados"
   tools: "Ferramentas"
   others: "Outros"
 

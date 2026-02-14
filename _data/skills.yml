@@ -1,17 +1,23 @@
-# Skills data structure
-# Categories: Languages, Frameworks, Libraries, Others
+# Skills (content aligned with CV PDF / tex)
+# Categories: Languages, Frameworks, Libraries, Tools
 
 languages:
   - name: Python
     icon: python
+  - name: Java
+    icon: java
   - name: JavaScript
     icon: js
-  - name: HTML/CSS
+  - name: TypeScript
+    icon: js
+  - name: SQL
+    icon: database
+  - name: HTML
+    icon: html5
+  - name: CSS
     icon: html5
   - name: Solidity
     icon: ethereum
-  - name: SQL
-    icon: database
 
 frameworks:
   - name: FastAPI
@@ -20,7 +26,11 @@ frameworks:
     icon: link
 
 libraries:
-  - name: NumPy, Pandas, Matplotlib
+  - name: NumPy
+    icon: chart-line
+  - name: Pandas
+    icon: chart-line
+  - name: Matplotlib
     icon: chart-line
   - name: PyQt
     icon: desktop
@@ -28,20 +38,15 @@ libraries:
     icon: desktop
   - name: Pymem
     icon: memory
-  - name: Psycopg2
+  - name: SQLAlchemy
     icon: database
-  - name: OpenAI
-    icon: brain
-  - name: HuggingFace
-    icon: brain
 
-
-others:
+tools:
   - name: Git
     icon: git
   - name: Docker
     icon: docker
-  - name: PostgreSQL
-    icon: database
   - name: Linux
     icon: linux
+  - name: PostgreSQL
+    icon: database

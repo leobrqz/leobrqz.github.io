@@ -12,7 +12,7 @@ languages:
 
 # GitHub Pages Settings
 baseurl: ""
-url: ""
+url: "https://leonardobriquezi.me"
 
 # Build Settings
 markdown: kramdown

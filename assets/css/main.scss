@@ -1,7 +1,6 @@
 ---
 ---
 
-// Error: "{ expected" is expected, not a error 
 @import "variables";
 
 // Reset and Base Styles
@@ -1088,6 +1087,7 @@ section {
 
 // Resume Page
 .resume-content {
+    position: relative;
     background-color: $bg-card;
     border: 1px solid $border;
     border-radius: 8px;
@@ -1095,7 +1095,43 @@ section {
     max-width: $resume-max-width;
     width: 100%;
     margin: 0 auto;
-    
+
+    .resume-download-btn {
+        position: fixed;
+        bottom: 1rem;
+        right: unquote('max(1rem, calc((100vw - min(#{$resume-max-width}, 100vw)) / 2 + 1rem))');
+        width: 48px;
+        height: 48px;
+        min-width: 44px;
+        min-height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $accent;
+        color: $bg-primary;
+        border: 1px solid mix(black, $accent, 10%);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        z-index: 10;
+        text-decoration: none;
+        flex-shrink: 0;
+
+        i {
+            font-size: 1.25rem;
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    @media (min-width: $layout-sidebar-breakpoint) {
+        .resume-download-btn {
+            $content-offset: $sidebar-width + $sidebar-toggle-width;
+            right: unquote('max(1rem, calc((100vw - #{$content-offset} - min(#{$resume-max-width}, 100vw - #{$content-offset})) / 2 + 1rem))');
+        }
+    }
+
     @media print {
         border: none;
         padding: 0;
@@ -1134,11 +1170,10 @@ section {
         
         a {
             color: $text-secondary;
-            text-decoration: none;
+            text-decoration: underline;
             
             &:hover {
                 color: $text-primary;
-                text-decoration: underline;
             }
         }
     }
@@ -1146,13 +1181,15 @@ section {
 
 .resume-section {
     margin-bottom: 2rem;
-    
+
     h2 {
         color: $text-primary;
         font-size: 1.5rem;
         margin-bottom: 1rem;
         border-bottom: 1px solid $border;
         padding-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
     }
 }
 
@@ -1161,29 +1198,87 @@ section {
     line-height: 1.8;
 }
 
-.experience-item, .education-item {
+.experience-item {
     margin-bottom: 1.5rem;
-    
+
     h3 {
         color: $text-primary;
         margin-bottom: 0.25rem;
     }
-    
+
     .meta {
         color: $text-secondary;
         font-size: 0.9rem;
         margin-bottom: 0.5rem;
     }
-    
+
     .description {
         color: $text-secondary;
         margin-top: 0.5rem;
     }
-    
+
     ul {
         margin-top: 0.5rem;
         padding-left: 1.5rem;
-        
+
+        li {
+            color: $text-secondary;
+            margin-bottom: 0.25rem;
+        }
+    }
+}
+
+.education-item {
+    margin-bottom: 1.5rem;
+
+    .education-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .education-title-block {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .education-item h3 {
+        color: $text-primary;
+        margin-bottom: 0.2rem;
+    }
+
+    .education-institution {
+        color: $text-secondary;
+        font-size: 0.95em;
+        font-weight: normal;
+    }
+
+    .education-date-location {
+        text-align: right;
+        color: $text-secondary;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .education-date {
+        white-space: nowrap;
+    }
+
+    .education-location {
+        margin-top: 0.15rem;
+    }
+
+    .description {
+        color: $text-secondary;
+        margin-top: 0.5rem;
+    }
+
+    .description ul {
+        margin-top: 0.5rem;
+        padding-left: 1.5rem;
+
         li {
             color: $text-secondary;
             margin-bottom: 0.25rem;
@@ -1192,29 +1287,44 @@ section {
 }
 
 .certifications-list {
-    list-style: none;
     padding: 0;
-    
-    li {
-        color: $text-secondary;
-        margin-bottom: 0.75rem;
-        padding-left: 1.5rem;
-        position: relative;
-        
-        &::before {
-            content: "•";
-            color: $text-secondary;
-            position: absolute;
-            left: 0;
-        }
-        
+
+    .certification-item {
+        margin-bottom: 1.25rem;
+    }
+
+    .certification-header {
+        color: $text-primary;
+
         a {
-            color: $text-secondary;
-            text-decoration: none;
-            
+            color: $text-primary;
+            text-decoration: underline;
+            font-weight: bold;
+
             &:hover {
                 color: $text-primary;
-                text-decoration: underline;
+            }
+        }
+
+        .cert-meta {
+            color: $text-secondary;
+            font-weight: normal;
+            font-size: 0.95em;
+        }
+    }
+
+    .certification-description {
+        color: $text-secondary;
+        margin-top: 0.35rem;
+        padding-left: 1rem;
+        font-size: 0.95rem;
+
+        ul {
+            margin: 0.25rem 0 0 0;
+            padding-left: 1.25rem;
+
+            li {
+                margin-bottom: 0.15rem;
             }
         }
     }
@@ -1223,13 +1333,66 @@ section {
 .resume-skills {
     .skill-group {
         margin-bottom: 1rem;
-        
+
         strong {
             color: $text-primary;
         }
-        
+
         span {
             color: $text-secondary;
+        }
+    }
+}
+
+.resume-languages-spoken {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    color: $text-secondary;
+    line-height: 1.6;
+
+    .language-item {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 36rem) {
+    .resume-languages-spoken {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0.35rem;
+
+        .language-item {
+            white-space: normal;
+            width: 100%;
+            min-width: 0;
+        }
+    }
+}
+
+.resume-projects .project-item {
+    margin-bottom: 2rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    h3 {
+        .project-tech-inline {
+            font-size: 0.85em;
+            font-weight: normal;
+            color: $text-secondary;
+        }
+    }
+
+    h3 a {
+        color: inherit;
+        text-decoration: underline;
+
+        &:hover {
+            color: $text-primary;
         }
     }
 }

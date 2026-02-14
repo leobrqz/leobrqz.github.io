@@ -1,11 +1,22 @@
-# Education History
+# Education (content aligned with CV PDF / tex)
 - degree:
     en: "Computer Science"
-    pt: "Ciências da Computação"
+    pt: "Ciência da Computação"
   institution: "Estácio"
   location: "Florianópolis"
   start_date: "2024"
   end_date: "2028"
+  subtitle:
+    en: "Undergraduate (3rd period)"
+    pt: "Graduação (3º período)"
   description:
-    en: "Third semester"
-    pt: "Terceiro período"
+    en: |
+      - Applied academic projects, including the development of the school management system "MiniSchool".
+      - Practical application of Scrum, Kanban and Extreme Programming in planning and incremental development.
+      - Contact with fundamentals of cloud computing and AWS services.
+      - System structuring and modeling with focus on requirement clarity and code organization.
+    pt: |
+      - Projetos acadêmicos aplicados, incluindo o desenvolvimento do sistema de gestão escolar "MiniSchool".
+      - Aplicação prática de Scrum, Kanban e Extreme Programming no planejamento e desenvolvimento incremental.
+      - Contato com fundamentos de computação em nuvem e serviços da AWS.
+      - Estruturação e modelagem de sistemas com foco em clareza de requisitos e organização do código.

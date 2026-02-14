@@ -1,6 +1,7 @@
 ---
 layout: resume
 permalink: /resume
+description: "Resume of Leonardo Briquezi — Computer Science student. Python, JavaScript, FastAPI, PostgreSQL. Projects, skills, certifications and education."
 ---
 
 {% assign lang = "en" %}
@@ -9,61 +10,49 @@ permalink: /resume
 {% endif %}
 
 <div class="resume-content">
-    <div class="resume-header">
-        <h1>{{ site.data.contact.name | default: site.author }}</h1>
+    <header class="resume-header" aria-labelledby="resume-name">
+        <h1 id="resume-name">{{ site.data.contact.name | default: site.author }}</h1>
         <div class="contact-info">
-            {% if site.data.contact.email %}
-            <span><i class="fas fa-envelope"></i> <a href="mailto:{{ site.data.contact.email }}">{{ site.data.contact.email }}</a></span>
-            {% endif %}
-            {% if site.data.contact.phone %}
-            <span><i class="fas fa-phone"></i> {{ site.data.contact.phone }}</span>
-            {% endif %}
             {% if site.data.contact.location %}
             <span><i class="fas fa-map-marker-alt"></i> {{ site.data.contact.location }}</span>
             {% endif %}
+            {% if site.data.contact.email %}
+            <span><i class="fas fa-envelope"></i> <a href="mailto:{{ site.data.contact.email }}">{{ site.data.contact.email }}</a></span>
+            {% endif %}
         </div>
-    </div>
-    
+    </header>
+
     {% if site.data.about.content %}
-    <div class="resume-section">
-        <h2>{% include i18n.html key="resume.summary" %}</h2>
+    <section class="resume-section" aria-labelledby="resume-summary">
+        <h2 id="resume-summary">{% include i18n.html key="resume.summary" %}</h2>
         <div class="professional-summary">
             {{ site.data.about.content[lang] | markdownify }}
         </div>
-    </div>
+    </section>
     {% endif %}
-    
-    {% if site.data.experience %}
-    <div class="resume-section">
-        <h2>{% include i18n.html key="resume.experience" %}</h2>
-        {% include experience.html %}
-    </div>
-    {% endif %}
-    
+
     {% if site.data.resume_projects %}
-    <div class="resume-section">
-        <h2>{% include i18n.html key="resume.projects" %}</h2>
+    <section class="resume-section" aria-labelledby="resume-projects">
+        <h2 id="resume-projects">{% include i18n.html key="resume.projects" %}</h2>
         <div class="resume-projects">
             {% for project in site.data.resume_projects %}
             <div class="project-item">
-                <h3>{% if project.name[lang] %}{{ project.name[lang] }}{% else %}{{ project.name }}{% endif %}</h3>
+                <h3>
+                    {% if project.url %}<a href="{{ project.url }}" target="_blank" rel="noopener noreferrer">{% endif %}{% if project.name[lang] %}{{ project.name[lang] }}{% else %}{{ project.name }}{% endif %}{% if project.url %}</a>{% endif %}
+                    {% if project.technologies %}<span class="project-tech-inline"> | {{ project.technologies | join: ', ' }}</span>{% endif %}
+                </h3>
                 <div class="project-description">
                     {% if project.description[lang] %}{{ project.description[lang] | markdownify }}{% else %}{{ project.description | markdownify }}{% endif %}
                 </div>
-                {% if project.technologies %}
-                <div class="project-technologies">
-                    <strong>{% include i18n.html key="resume_labels.technologies" %}:</strong> {{ project.technologies | join: ', ' }}
-                </div>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
-    </div>
+    </section>
     {% endif %}
-    
+
     {% if site.data.skills %}
-    <div class="resume-section">
-        <h2>{% include i18n.html key="resume.skills" %}</h2>
+    <section class="resume-section" aria-labelledby="resume-skills">
+        <h2 id="resume-skills">{% include i18n.html key="resume.skills" %}</h2>
         <div class="resume-skills">
             {% if site.data.skills.languages %}
             <div class="skill-group">
@@ -83,6 +72,18 @@ permalink: /resume
                 <span>{{ site.data.skills.libraries | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
+            {% if site.data.skills.databases %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.databases" %}:</strong>
+                <span>{{ site.data.skills.databases | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
+            {% if site.data.skills.tools %}
+            <div class="skill-group">
+                <strong>{% include i18n.html key="resume_labels.tools" %}:</strong>
+                <span>{{ site.data.skills.tools | map: 'name' | join: ', ' }}</span>
+            </div>
+            {% endif %}
             {% if site.data.skills.others %}
             <div class="skill-group">
                 <strong>{% include i18n.html key="resume_labels.others" %}:</strong>
@@ -90,26 +91,57 @@ permalink: /resume
             </div>
             {% endif %}
         </div>
-    </div>
+    </section>
     {% endif %}
-    
-    {% if site.data.certifications %}
-    <div class="resume-section">
-        <h2>{% include i18n.html key="resume.certifications" %}</h2>
-        <ul class="certifications-list">
-            {% for cert in site.data.certifications %}
-            <li>
-                {% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}{% if cert.issuer %} | {{ cert.issuer }}{% endif %}{% if cert.date %} | {{ cert.date }}{% endif %}
-            </li>
+
+    {% if site.data.languages_spoken %}
+    <section class="resume-section" aria-labelledby="resume-languages">
+        <h2 id="resume-languages">{% include i18n.html key="resume.languages_spoken" %}</h2>
+        <div class="resume-languages-spoken">
+            {% for item in site.data.languages_spoken %}
+            <span class="language-item">{% if item.name[lang] %}{{ item.name[lang] }}{% else %}{{ item.name }}{% endif %} — {% if item.level[lang] %}{{ item.level[lang] }}{% else %}{{ item.level }}{% endif %}</span>
             {% endfor %}
-        </ul>
-    </div>
+        </div>
+    </section>
     {% endif %}
-    
+
+    {% if site.data.certifications %}
+    <section class="resume-section" aria-labelledby="resume-certifications">
+        <h2 id="resume-certifications">{% include i18n.html key="resume.certifications" %}</h2>
+        <div class="certifications-list">
+            {% for cert in site.data.certifications %}
+            <div class="certification-item">
+                <div class="certification-header">
+                    {% if cert.url %}
+                    <a href="{{ cert.url }}" target="_blank" rel="noopener noreferrer">{% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}</a>
+                    {% else %}
+                    <strong>{% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}</strong>
+                    {% endif %}
+                    {% if cert.issuer or cert.date %}
+                    <span class="cert-meta"> — {% if cert.issuer %}{{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</span>
+                    {% endif %}
+                </div>
+                {% if cert.description and cert.description[lang] %}
+                <div class="certification-description">
+                    {{ cert.description[lang] | markdownify }}
+                </div>
+                {% elsif cert.description %}
+                <div class="certification-description">
+                    {{ cert.description | markdownify }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     {% if site.data.education %}
-    <div class="resume-section">
-        <h2>{% include i18n.html key="resume.education" %}</h2>
+    <section class="resume-section" aria-labelledby="resume-education">
+        <h2 id="resume-education">{% include i18n.html key="resume.education" %}</h2>
         {% include education.html %}
-    </div>
+    </section>
     {% endif %}
+
+    <a href="{{ '/assets/cv/Leonardo_Briquezi_CV.pdf' | relative_url }}" download="Leonardo_Briquezi_CV.pdf" class="resume-download-btn" aria-label="{% include i18n.html key='resume.download_pdf' %}"><i class="fas fa-download" aria-hidden="true"></i></a>
 </div>

@@ -17,7 +17,7 @@ My personal portfolio. Features dynamic GitHub project integration and support f
 - **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
 - **Sidebar Navigation**: Responsive sidebar: drawer with hamburger menu on small viewports, fixed toggleable sidebar on larger ones, language selector
 - **Table of Contents**: Dynamic TOC sidebar for easy navigation on home and projects pages
-- **Resume Page**: Professional CV format
+- **Resume Page**: Professional CV format with a download button for the PDF curriculum
 
 
 
