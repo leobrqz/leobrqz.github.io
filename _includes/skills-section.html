@@ -50,11 +50,17 @@
             </ul>
         </div>
         {% endif %}
-        
-        {% if site.data.skills.tools %}
+
+        {% if site.data.skills.databases or site.data.skills.tools or site.data.skills.others %}
         <div class="skill-category">
-            <h3>{% include i18n.html key="skills.tools" %}</h3>
+            <h3>{% include i18n.html key="skills.others" %}</h3>
             <ul class="skill-list">
+                {% for skill in site.data.skills.databases %}
+                <li class="skill-item">
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
                 {% for skill in site.data.skills.tools %}
                 <li class="skill-item">
                     {% if skill.icon == 'database' %}
@@ -65,14 +71,6 @@
                     <span>{{ skill.name }}</span>
                 </li>
                 {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-
-        {% if site.data.skills.others %}
-        <div class="skill-category">
-            <h3>{% include i18n.html key="skills.others" %}</h3>
-            <ul class="skill-list">
                 {% for skill in site.data.skills.others %}
                 <li class="skill-item">
                     {% if skill.icon == 'database' %}

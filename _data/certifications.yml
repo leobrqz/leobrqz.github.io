@@ -1,5 +1,17 @@
 # Certifications and Courses (content aligned with CV PDF / tex)
 - name:
+    en: "Associate Python Developer"
+    pt: "Associate Python Developer"
+  issuer: "DataCamp"
+  date: "2026"
+  url: "https://www.datacamp.com/completed/statement-of-accomplishment/track/6054dcb4213e5a02bde29b4dd0fb81141fba479d"
+  description:
+    en: |
+      - Advanced data structures with comprehensions and specialized collections, iterators and generators for lazy evaluation. Temporal data manipulation and transformation, pattern matching with regex and exception handling.
+    pt: |
+      - Estruturas de dados avançadas com comprehensions e collections especializadas, iteradores e geradores para lazy evaluation. Manipulação e transformação de dados temporais, pattern matching com regex e tratamento de exceções.
+
+- name:
     en: "Python Programming"
     pt: "Python Programming"
   issuer: "DataCamp"

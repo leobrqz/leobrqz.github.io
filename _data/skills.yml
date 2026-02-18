@@ -1,5 +1,5 @@
 # Skills (content aligned with CV PDF / tex)
-# Categories: Languages, Frameworks, Libraries, Tools
+# Categories: Languages, Frameworks, Libraries, Databases, Tools
 
 languages:
   - name: Python
@@ -22,16 +22,20 @@ languages:
 frameworks:
   - name: FastAPI
     icon: bolt
-  - name: LangChain
-    icon: link
+  - name: NextJS
+    icon: code
 
 libraries:
+  - name: Scikit-learn
+    icon: chart-line
   - name: NumPy
     icon: chart-line
   - name: Pandas
     icon: chart-line
   - name: Matplotlib
     icon: chart-line
+  - name: LangChain
+    icon: link
   - name: PyQt
     icon: desktop
   - name: Tkinter
@@ -41,6 +45,12 @@ libraries:
   - name: SQLAlchemy
     icon: database
 
+databases:
+  - name: PostgreSQL
+    icon: database
+  - name: MySQL
+    icon: database
+
 tools:
   - name: Git
     icon: git
@@ -48,5 +58,3 @@ tools:
     icon: docker
   - name: Linux
     icon: linux
-  - name: PostgreSQL
-    icon: database
