@@ -1,0 +1,18 @@
+export const about = {
+  home_content: {
+    en: `I'm a Computer Science student with experience in Python, JavaScript and Solidity. I have practical knowledge in database systems like PostgreSQL, containerization with Docker and version control with Git. My work spans desktop application development, web development, data analytics and AI integration, using frameworks such as FastAPI for backend services and LangChain for AI applications.
+
+I've developed projects including AutoPot-DR, a game automation tool built with PyQt5 and Pymem that provides automated gameplay features through memory manipulation, and SmokeShopERP-DataAnalytics, an ERP system with data analytics capabilities using NumPy and Matplotlib. I have knowledge and practical experience in artificial intelligence, using it for automation tasks and integrating with APIs such as OpenAI.`,
+    pt: `Sou estudante de Ciência da Computação com experiência em Python, JavaScript e Solidity. Tenho conhecimento prático em sistemas de banco de dados como PostgreSQL, containerização com Docker e controle de versão com Git. Tenho experiência em desenvolvimento de aplicações desktop, desenvolvimento web, análise de dados e integração com IA, utilizando frameworks como FastAPI para serviços backend e LangChain para aplicações de IA.
+
+Desenvolvi projetos incluindo AutoPot-DR, uma ferramenta para um jogo desenvolvida com PyQt5 e Pymem que fornece recursos de gameplay automatizados através da leitura de memória, e SmokeShopERP-DataAnalytics, um sistema ERP com capacidades de análise de dados usando NumPy e Matplotlib. Tenho conhecimento e experiência prática em inteligência artificial, utilizando-a para tarefas automatizadas e integração com APIs como OpenAI.`,
+  },
+  content: {
+    en: `Computer Science student with experience in Python, Java and JavaScript/TypeScript. I develop desktop and web applications with React, Next.js and Vite and APIs with FastAPI. I work with databases like PostgreSQL and MySQL. I do data analysis with Pandas and Matplotlib, machine learning with Scikit-learn and AI integration with LangChain and HuggingFace.
+
+I'm familiar with AWS services and agile methodologies like Scrum and Kanban. I'm a fast learner with strong technical proficiency in English and I quickly apply new technologies in practical projects. I really value planning and clear, effective communication.`,
+    pt: `Estudante de Ciência da Computação com experiência em Python, Java e JavaScript/TypeScript. Desenvolvo aplicações desktop e web com React, Next.js e Vite, APIs com FastAPI e bancos de dados como PostgreSQL e MySQL. Tenho conhecimento em análise de dados usando Pandas e Matplotlib, Machine Learning com Scikit-learn e integração com modelos de IA usando LangChain e HuggingFace.
+
+Tenho familiaridade com serviços da AWS e com metodologias ágeis como Scrum e Kanban. Sou autodidata e proficiente em inglês com forte compreensão técnica na língua, aprendo rapidamente novas tecnologias aplicando o conhecimento em projetos. Valorizo muito planejamento e comunicação clara e eficiente em equipe.`,
+  },
+} as const;

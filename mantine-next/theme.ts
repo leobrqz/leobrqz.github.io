@@ -2,6 +2,7 @@
 
 import { createTheme } from '@mantine/core';
 
+/** Dark-first app theme. Default color scheme is set in root layout (ColorSchemeScript + MantineProvider). */
 export const theme = createTheme({
-  /* Put your mantine theme override here */
+  primaryColor: 'blue',
 });
