@@ -11,10 +11,16 @@
             <ul class="skill-list">
                 {% for skill in site.data.skills.languages %}
                 <li class="skill-item">
+                    {% if skill.icon_url %}
+                    <img src="{{ skill.icon_url }}" alt="" class="skill-icon-img{% if skill.name == 'Solidity' %} skill-icon-solidity{% endif %}{% if skill.name == 'Java' %} skill-icon-zoom{% endif %}" width="20" height="20">
+                    {% elsif skill.simple_icon %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.simple_icon }}?viewbox=auto&size=20" alt="" class="skill-icon-img{% if skill.name == 'Solidity' %} skill-icon-solidity{% endif %}{% if skill.name == 'Java' %} skill-icon-zoom{% endif %}" width="20" height="20">
+                    {% else %}
                     {% if skill.icon == 'database' %}
                     <i class="fas fa-{{ skill.icon }}"></i>
                     {% else %}
                     <i class="fab fa-{{ skill.icon }}"></i>
+                    {% endif %}
                     {% endif %}
                     <span>{{ skill.name }}</span>
                 </li>
@@ -29,21 +35,17 @@
             <ul class="skill-list">
                 {% for skill in site.data.skills.frameworks %}
                 <li class="skill-item">
+                    {% if skill.icon_url %}
+                    <img src="{{ skill.icon_url }}" alt="" class="skill-icon-img" width="20" height="20">
+                    {% elsif skill.simple_icon %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.simple_icon }}?viewbox=auto&size=20" alt="" class="skill-icon-img" width="20" height="20">
+                    {% else %}
+                    {% if skill.icon == 'react' %}
+                    <i class="fab fa-{{ skill.icon }}"></i>
+                    {% else %}
                     <i class="fas fa-{{ skill.icon }}"></i>
-                    <span>{{ skill.name }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-        
-        {% if site.data.skills.libraries %}
-        <div class="skill-category">
-            <h3>{% include i18n.html key="skills.libraries" %}</h3>
-            <ul class="skill-list">
-                {% for skill in site.data.skills.libraries %}
-                <li class="skill-item {% if skill.name contains ',' %}skill-item-full{% endif %}">
-                    <i class="fas fa-{{ skill.icon }}"></i>
+                    {% endif %}
+                    {% endif %}
                     <span>{{ skill.name }}</span>
                 </li>
                 {% endfor %}
@@ -51,32 +53,82 @@
         </div>
         {% endif %}
 
-        {% if site.data.skills.databases or site.data.skills.tools or site.data.skills.others %}
+        {% if site.data.skills.libraries %}
         <div class="skill-category">
-            <h3>{% include i18n.html key="skills.others" %}</h3>
+            <h3>{% include i18n.html key="skills.libraries" %}</h3>
             <ul class="skill-list">
-                {% for skill in site.data.skills.databases %}
-                <li class="skill-item">
+                {% for skill in site.data.skills.libraries %}
+                <li class="skill-item {% if skill.name contains ',' %}skill-item-full{% endif %}">
+                    {% if skill.icon_url %}
+                    <img src="{{ skill.icon_url }}" alt="" class="skill-icon-img{% if skill.name == 'LangChain' %} skill-icon-langchain{% endif %}" width="20" height="20">
+                    {% elsif skill.simple_icon %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.simple_icon }}?viewbox=auto&size=20" alt="" class="skill-icon-img{% if skill.name == 'LangChain' %} skill-icon-langchain{% endif %}" width="20" height="20">
+                    {% else %}
                     <i class="fas fa-{{ skill.icon }}"></i>
+                    {% endif %}
                     <span>{{ skill.name }}</span>
                 </li>
                 {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if site.data.skills.data %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.data" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.data %}
+                <li class="skill-item">
+                    {% if skill.icon_url %}
+                    <img src="{{ skill.icon_url }}" alt="" class="skill-icon-img{% if skill.name == 'NumPy' %} skill-icon-numpy{% endif %}{% if skill.name == 'Pandas' %} skill-icon-pandas{% endif %}" width="20" height="20">
+                    {% elsif skill.simple_icon %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.simple_icon }}?viewbox=auto&size=20" alt="" class="skill-icon-img{% if skill.name == 'NumPy' %} skill-icon-numpy{% endif %}{% if skill.name == 'Pandas' %} skill-icon-pandas{% endif %}" width="20" height="20">
+                    {% else %}
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    {% endif %}
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if site.data.skills.databases %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.databases" %}</h3>
+            <ul class="skill-list">
+                {% for skill in site.data.skills.databases %}
+                <li class="skill-item">
+                    {% if skill.icon_url %}
+                    <img src="{{ skill.icon_url }}" alt="" class="skill-icon-img{% if skill.name == 'MySQL' %} skill-icon-zoom{% endif %}" width="20" height="20">
+                    {% elsif skill.simple_icon %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.simple_icon }}?viewbox=auto&size=20" alt="" class="skill-icon-img{% if skill.name == 'MySQL' %} skill-icon-zoom{% endif %}" width="20" height="20">
+                    {% else %}
+                    <i class="fas fa-{{ skill.icon }}"></i>
+                    {% endif %}
+                    <span>{{ skill.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if site.data.skills.tools %}
+        <div class="skill-category">
+            <h3>{% include i18n.html key="skills.tools" %}</h3>
+            <ul class="skill-list">
                 {% for skill in site.data.skills.tools %}
                 <li class="skill-item">
+                    {% if skill.icon_url %}
+                    <img src="{{ skill.icon_url }}" alt="" class="skill-icon-img{% if skill.name == 'AWS' %} skill-icon-aws{% endif %}" width="20" height="20">
+                    {% elsif skill.simple_icon %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.simple_icon }}?viewbox=auto&size=20" alt="" class="skill-icon-img{% if skill.name == 'AWS' %} skill-icon-aws{% endif %}" width="20" height="20">
+                    {% else %}
                     {% if skill.icon == 'database' %}
                     <i class="fas fa-{{ skill.icon }}"></i>
                     {% else %}
                     <i class="fab fa-{{ skill.icon }}"></i>
                     {% endif %}
-                    <span>{{ skill.name }}</span>
-                </li>
-                {% endfor %}
-                {% for skill in site.data.skills.others %}
-                <li class="skill-item">
-                    {% if skill.icon == 'database' %}
-                    <i class="fas fa-{{ skill.icon }}"></i>
-                    {% else %}
-                    <i class="fab fa-{{ skill.icon }}"></i>
                     {% endif %}
                     <span>{{ skill.name }}</span>
                 </li>

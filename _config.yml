@@ -27,8 +27,8 @@ include:
 
 # Repository list for projects
 repositories:
+  - ShScriptHub
   - AutoPot-DR
-  - AutoPot-LE
   - SmokeShopERP-DataAnalytics
   - MiniSchool
   - Cheatsheet-LabAI

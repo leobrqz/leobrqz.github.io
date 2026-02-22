@@ -47,44 +47,38 @@ description: "Currículo de Leonardo Briquezi — Estudante de Ciência da Compu
     </section>
     {% endif %}
 
-    {% if site.data.skills %}
+    {% if site.data.resume_skills %}
     <section class="resume-section" aria-labelledby="resume-skills">
         <h2 id="resume-skills">{% include i18n.html key="resume.skills" %}</h2>
         <div class="resume-skills">
-            {% if site.data.skills.languages %}
+            {% if site.data.resume_skills.languages %}
             <div class="skill-group">
                 <strong>{% include i18n.html key="resume_labels.languages" %}:</strong>
-                <span>{{ site.data.skills.languages | map: 'name' | join: ', ' }}</span>
+                <span>{{ site.data.resume_skills.languages | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
-            {% if site.data.skills.frameworks %}
+            {% if site.data.resume_skills.frameworks %}
             <div class="skill-group">
                 <strong>{% include i18n.html key="resume_labels.frameworks" %}:</strong>
-                <span>{{ site.data.skills.frameworks | map: 'name' | join: ', ' }}</span>
+                <span>{{ site.data.resume_skills.frameworks | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
-            {% if site.data.skills.libraries %}
+            {% if site.data.resume_skills.libraries %}
             <div class="skill-group">
                 <strong>{% include i18n.html key="resume_labels.libraries" %}:</strong>
-                <span>{{ site.data.skills.libraries | map: 'name' | join: ', ' }}</span>
+                <span>{{ site.data.resume_skills.libraries | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
-            {% if site.data.skills.databases %}
+            {% if site.data.resume_skills.databases %}
             <div class="skill-group">
                 <strong>{% include i18n.html key="resume_labels.databases" %}:</strong>
-                <span>{{ site.data.skills.databases | map: 'name' | join: ', ' }}</span>
+                <span>{{ site.data.resume_skills.databases | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
-            {% if site.data.skills.tools %}
+            {% if site.data.resume_skills.tools %}
             <div class="skill-group">
                 <strong>{% include i18n.html key="resume_labels.tools" %}:</strong>
-                <span>{{ site.data.skills.tools | map: 'name' | join: ', ' }}</span>
-            </div>
-            {% endif %}
-            {% if site.data.skills.others %}
-            <div class="skill-group">
-                <strong>{% include i18n.html key="resume_labels.others" %}:</strong>
-                <span>{{ site.data.skills.others | map: 'name' | join: ', ' }}</span>
+                <span>{{ site.data.resume_skills.tools | map: 'name' | join: ', ' }}</span>
             </div>
             {% endif %}
         </div>
@@ -96,7 +90,7 @@ description: "Currículo de Leonardo Briquezi — Estudante de Ciência da Compu
         <h2 id="resume-languages">{% include i18n.html key="resume.languages_spoken" %}</h2>
         <div class="resume-languages-spoken">
             {% for item in site.data.languages_spoken %}
-            <span class="language-item">{% if item.name[lang] %}{{ item.name[lang] }}{% else %}{{ item.name }}{% endif %} — {% if item.level[lang] %}{{ item.level[lang] }}{% else %}{{ item.level }}{% endif %}</span>
+            <span class="language-item">{% if item.name[lang] %}{{ item.name[lang] }}{% else %}{{ item.name }}{% endif %} ({% if item.level[lang] %}{{ item.level[lang] }}{% else %}{{ item.level }}{% endif %})</span>
             {% endfor %}
         </div>
     </section>
@@ -109,14 +103,15 @@ description: "Currículo de Leonardo Briquezi — Estudante de Ciência da Compu
             {% for cert in site.data.certifications %}
             <div class="certification-item">
                 <div class="certification-header">
-                    {% if cert.url %}
-                    <a href="{{ cert.url }}" target="_blank" rel="noopener noreferrer">{% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}</a>
-                    {% else %}
-                    <strong>{% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}</strong>
-                    {% endif %}
-                    {% if cert.issuer or cert.date %}
-                    <span class="cert-meta"> — {% if cert.issuer %}{{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</span>
-                    {% endif %}
+                    <div class="certification-title-block">
+                        {% if cert.url %}
+                        <a href="{{ cert.url }}" target="_blank" rel="noopener noreferrer">{% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}</a>
+                        {% else %}
+                        <strong>{% if cert.name[lang] %}{{ cert.name[lang] }}{% else %}{{ cert.name }}{% endif %}</strong>
+                        {% endif %}
+                        {% if cert.date %}<span class="cert-date"> — ({{ cert.date }})</span>{% endif %}
+                    </div>
+                    {% if cert.issuer %}<div class="certification-issuer">{{ cert.issuer }}</div>{% endif %}
                 </div>
                 {% if cert.description and cert.description[lang] %}
                 <div class="certification-description">

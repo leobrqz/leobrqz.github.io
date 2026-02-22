@@ -1,60 +1,73 @@
-# Skills (content aligned with CV PDF / tex)
-# Categories: Languages, Frameworks, Libraries, Databases, Tools
+# Home page skills only (resume uses _data/resume_skills.yml)
+# Categories: Languages, Frameworks, Data, Libraries, Databases, Tools
+# Icons: icon_url = direct SVG URL; simple_icon = Simple Icons CDN; icon = Font Awesome fallback
 
 languages:
   - name: Python
-    icon: python
+    icon_url: https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg
   - name: Java
-    icon: java
+    icon_url: https://upload.wikimedia.org/wikipedia/pt/3/30/Java_programming_language_logo.svg
   - name: JavaScript
-    icon: js
+    simple_icon: javascript
   - name: TypeScript
-    icon: js
+    simple_icon: typescript
   - name: SQL
-    icon: database
+    simple_icon: postgresql
   - name: HTML
-    icon: html5
+    simple_icon: html5
   - name: CSS
-    icon: html5
+    simple_icon: css
   - name: Solidity
-    icon: ethereum
+    simple_icon: solidity
 
 frameworks:
   - name: FastAPI
-    icon: bolt
+    simple_icon: fastapi
   - name: NextJS
-    icon: code
+    simple_icon: nextdotjs
+  - name: React
+    simple_icon: react
+
+data:
+  - name: Scikit-learn
+    simple_icon: scikitlearn
+  - name: NumPy
+    simple_icon: numpy
+  - name: Pandas
+    simple_icon: pandas
+  - name: Matplotlib
+    icon_url: https://upload.wikimedia.org/wikipedia/commons/8/84/Matplotlib_icon.svg
 
 libraries:
-  - name: Scikit-learn
-    icon: chart-line
-  - name: NumPy
-    icon: chart-line
-  - name: Pandas
-    icon: chart-line
-  - name: Matplotlib
-    icon: chart-line
   - name: LangChain
-    icon: link
+    simple_icon: langchain
   - name: PyQt
-    icon: desktop
+    simple_icon: qt
   - name: Tkinter
-    icon: desktop
+    simple_icon: python
   - name: Pymem
     icon: memory
   - name: SQLAlchemy
-    icon: database
+    simple_icon: sqlalchemy
+  - name: OpenAI
+    icon_url: https://www.svgrepo.com/show/306500/openai.svg
+  - name: HuggingFace
+    simple_icon: huggingface
 
 databases:
   - name: PostgreSQL
-    icon: database
+    simple_icon: postgresql
   - name: MySQL
-    icon: database
+    simple_icon: mysql
 
 tools:
+  - name: Vite
+    simple_icon: vite
   - name: Git
-    icon: git
+    simple_icon: git
   - name: Docker
-    icon: docker
+    simple_icon: docker
   - name: Linux
-    icon: linux
+    simple_icon: linux
+  - name: AWS
+    icon_url: /assets/icons/aws.svg

@@ -57,11 +57,16 @@ GitHub API responses are cached in localStorage. **ETag** and **Last-Modified** 
 
 **Leonardo Briquezi**
 
-- GitHub: [@leobrqz](https://github.com/leobrqz)
+- GitHub: [leobrqz](https://github.com/leobrqz)
 - LinkedIn: [leonardobri](https://linkedin.com/in/leonardobri)
 
-## Acknowledgments
 
-- Built with [Jekyll](https://jekyllrb.com/)
-- Icons by [Font Awesome](https://fontawesome.com/)
-- Deployed on [GitHub Pages](https://pages.github.com/)
+### Credits
+
+Skill and brand logos are used from the following sources:
+
+- [Font Awesome](https://fontawesome.com/)
+- [Simple Icons](https://simpleicons.org/)
+- [Wikimedia Commons](https://commons.wikimedia.org/)
+- [SVG Repo](https://www.svgrepo.com/)
+- [Python Software Foundation](https://www.python.org/community/logos/)

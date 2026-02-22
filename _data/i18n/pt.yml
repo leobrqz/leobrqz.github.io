@@ -28,7 +28,7 @@ resume:
   education: "Formação Acadêmica"
   skills: "Habilidades"
   projects: "Projetos"
-  certifications: "Certificações e Cursos"
+  certifications: "Certificações"
   languages_spoken: "Idiomas"
   academic_formation: "Formação Acadêmica"
   download_pdf: "Baixar currículo em PDF"
@@ -67,6 +67,7 @@ projects:
 skills:
   languages: "Linguagens"
   frameworks: "Frameworks"
+  data: "Data"
   libraries: "Bibliotecas"
   databases: "Banco de Dados"
   tools: "Ferramentas"
@@ -80,4 +81,4 @@ meta:
 # Sidebar
 sidebar:
   role: "Desenvolvedor"
-  education: "Estudante de Ciência da Computação"
+  education: "Ciência da Computação"

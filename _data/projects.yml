@@ -1,3 +1,10 @@
+ShScriptHub:
+  libraries:
+    - PySide6
+    - Psutil
+  tools:
+
+
 AutoPot-DR:
   libraries:
     - PyQt5
@@ -5,15 +12,6 @@ AutoPot-DR:
     - Ctypes
     - Threading
 
-  tools:
-    - Cheat Engine
-
-
-AutoPot-LE:
-  libraries:
-    - PyQt5
-    - Pymem
-    - Threading
   tools:
     - Cheat Engine
 

@@ -28,7 +28,7 @@ resume:
   education: "Education"
   skills: "Skills"
   projects: "Projects"
-  certifications: "Certifications & Courses"
+  certifications: "Certifications"
   languages_spoken: "Languages"
   academic_formation: "Academic Formation"
   download_pdf: "Download PDF curriculum"
@@ -67,6 +67,7 @@ projects:
 skills:
   languages: "Languages"
   frameworks: "Frameworks"
+  data: "Data"
   libraries: "Libraries"
   databases: "Databases"
   tools: "Tools"
@@ -80,4 +81,4 @@ meta:
 # Sidebar
 sidebar:
   role: "Developer"
-  education: "Computer Science Student"
+  education: "Computer Science"
