@@ -1,10 +1,13 @@
 ---
 layout: resume
-permalink: /pt/resume
-description: "Currículo de Leonardo Briquezi — Estudante de Ciência da Computação. Python, JavaScript, FastAPI, PostgreSQL. Projetos, habilidades, certificações e formação."
+permalink: /en/resume
+description: "Resume of Leonardo Briquezi — Computer Science student. Python, JavaScript, FastAPI, PostgreSQL. Projects, skills, certifications and education."
 ---
 
 {% assign lang = "pt" %}
+{% if page.url contains "/en" %}
+  {% assign lang = "en" %}
+{% endif %}
 
 <div class="resume-content">
     <header class="resume-header" aria-labelledby="resume-name">

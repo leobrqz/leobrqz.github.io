@@ -1,6 +1,6 @@
-{% assign lang = "en" %}
-{% if page.url contains "/pt" %}
-  {% assign lang = "pt" %}
+{% assign lang = "pt" %}
+{% if page.url contains "/en" %}
+  {% assign lang = "en" %}
 {% endif %}
 <!DOCTYPE html>
 <html lang="{{ lang }}">
@@ -16,13 +16,13 @@
             } catch (e) {}
         })();
     </script>
-    {% assign lang = "en" %}
-    {% if page.url contains "/pt" %}
-      {% assign lang = "pt" %}
+    {% assign lang = "pt" %}
+    {% if page.url contains "/en" %}
+      {% assign lang = "en" %}
     {% endif %}
     {% assign page_title = page.title %}
     {% unless page_title %}
-      {% if page.url == '/' or page.url == '/index.html' or page.url == '/pt' or page.url == '/pt/index.html' %}
+      {% if page.url == '/' or page.url == '/index.html' or page.url == '/en' or page.url == '/en/index.html' %}
         {% assign page_title = site.data.i18n[lang].pages.home %}
       {% elsif page.url contains '/contact' %}
         {% assign page_title = site.data.i18n[lang].pages.contact %}

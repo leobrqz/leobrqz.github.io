@@ -1,15 +1,15 @@
 // Detect current language from URL
 function getCurrentLanguage() {
     const path = window.location.pathname;
-    if (path === '/pt' || path.startsWith('/pt/')) {
-        return 'pt';
+    if (path === '/en' || path.startsWith('/en/')) {
+        return 'en';
     }
-    return 'en';
+    return 'pt';
 }
 
 // Get language preference from localStorage
 function getLanguagePreference() {
-    return localStorage.getItem('preferred_language') || 'en';
+    return localStorage.getItem('preferred_language') || 'pt';
 }
 
 // Set language preference in localStorage
@@ -51,28 +51,26 @@ function t(key, lang) {
 
 function switchLanguage(lang) {
     const currentPath = window.location.pathname;
-    const currentLang = getCurrentLanguage();
     
     setLanguagePreference(lang);
     
     let newPath;
     
     if (lang === 'en') {
-        if (currentPath.startsWith('/pt/')) {
-            newPath = currentPath.replace('/pt/', '/');
-            if (newPath === '') newPath = '/';
-        } else if (currentPath === '/pt') {
-            newPath = '/';
-        } else {
+        if (currentPath === '/' || currentPath === '') {
+            newPath = '/en';
+        } else if (currentPath.startsWith('/en')) {
             newPath = currentPath;
+        } else {
+            newPath = '/en' + currentPath;
         }
     } else {
-        if (currentPath === '/' || currentPath === '') {
-            newPath = '/pt';
-        } else if (currentPath === '/pt' || currentPath.startsWith('/pt/')) {
-            newPath = currentPath;
+        if (currentPath === '/en' || currentPath === '/en/') {
+            newPath = '/';
+        } else if (currentPath.startsWith('/en/')) {
+            newPath = currentPath.replace('/en', '') || '/';
         } else {
-            newPath = '/pt' + currentPath;
+            newPath = currentPath;
         }
     }
     

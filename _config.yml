@@ -5,10 +5,10 @@ author: "Leonardo Briquezi"
 github_username: "leobrqz"
 
 # Language Settings
-default_lang: en
+default_lang: pt
 languages:
-  - en
   - pt
+  - en
 
 # GitHub Pages Settings
 baseurl: ""

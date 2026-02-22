@@ -822,7 +822,16 @@ async function fetchWithConditionalCache(url, cacheKey, fetchOptions, parseRespo
     const cachedEntry = getCachedEntry(cacheKey, true);
     const headers = new Headers((fetchOptions && fetchOptions.headers) ? fetchOptions.headers : {});
     const hasCachedValue = cachedEntry && typeof cachedEntry.value !== 'undefined';
-    
+
+    if (url.includes('api.github.com')) {
+        if (!headers.has('User-Agent')) {
+            headers.set('User-Agent', 'leobrqz-portfolio (https://leonardobriquezi.me)');
+        }
+        if (!headers.has('Accept')) {
+            headers.set('Accept', 'application/vnd.github+json');
+        }
+    }
+
     if (hasCachedValue) {
         if (cachedEntry.etag) {
             headers.set('If-None-Match', cachedEntry.etag);
@@ -831,7 +840,7 @@ async function fetchWithConditionalCache(url, cacheKey, fetchOptions, parseRespo
             headers.set('If-Modified-Since', cachedEntry.lastModified);
         }
     }
-    
+
     const response = await fetch(url, {
         ...fetchOptions,
         headers: headers

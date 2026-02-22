@@ -12,7 +12,7 @@ My personal portfolio. Features dynamic GitHub project integration and support f
 - **GitHub API**: Client-side integration for fetching repository data and READMEs
 
 ## Features
-- **Multilanguage Support**: Full English/Portuguese translation with URL-based routing (`/` for English, `/pt` for Portuguese)
+- **Multilanguage Support**: Full Portuguese (default) and English with URL-based routing: Portuguese at `/`, `/projects`, `/resume`, `/contact`; English at `/en`, `/en/projects`, `/en/resume`, `/en/contact`
 - **Dynamic Project Display**: Automatically fetches and displays GitHub repositories via GitHub API
 - **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
 - **Sidebar Navigation**: Responsive sidebar: drawer with hamburger menu on small viewports, fixed toggleable sidebar on larger ones, language selector
@@ -23,10 +23,10 @@ My personal portfolio. Features dynamic GitHub project integration and support f
 
 ## 🌐 Multilanguage Support
 
-The site supports English (default) and Portuguese through URL-based routing:
+The site supports Portuguese (default) and English through URL-based routing:
 
-- English: `/`, `/projects`, `/resume`, `/contact`
-- Portuguese: `/pt`, `/pt/projects`, `/pt/resume`, `/pt/contact`
+- Portuguese: `/`, `/projects`, `/resume`, `/contact`
+- English: `/en`, `/en/projects`, `/en/resume`, `/en/contact`
 
 ### Implementation
 
