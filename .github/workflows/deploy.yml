@@ -32,20 +32,18 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-          cache-dependency-path: mantine-next/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: mantine-next
 
       - name: Build
         run: pnpm run build
-        working-directory: mantine-next
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: mantine-next/out
+          path: out
 
   deploy:
     environment:

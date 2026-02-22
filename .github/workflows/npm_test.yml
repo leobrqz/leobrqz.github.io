@@ -19,15 +19,12 @@ jobs:
           version: 9
       - uses: actions/setup-node@v6
         with:
-          node-version-file: 'mantine-next/.nvmrc'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
-          cache-dependency-path: 'mantine-next/pnpm-lock.yaml'
+          cache-dependency-path: 'pnpm-lock.yaml'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: mantine-next
       - name: Run build
         run: pnpm run build
-        working-directory: mantine-next
       - name: Run tests
         run: pnpm test
-        working-directory: mantine-next

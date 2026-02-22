@@ -1,56 +1,91 @@
-# leobrqz.github.io
+<div align="center">
+  <h1><a href="https://leonardobriquezi.me">leonardobriquezi.me</a></h1>
+  Built with Next.js and Mantine. <br>
+  Static export for GitHub Pages.
+</div>
 
-My personal portfolio. Features dynamic GitHub project integration and support for English or Portuguese.
+<div align="center">
+  <a href="https://leonardobriquezi.me">leonardobriquezi.me</a> · <a href="https://leobrqz.github.io">leobrqz.github.io</a>
+</div>
 
-- **Live site**: Available at [leonardobriquezi.me](https://leonardobriquezi.me) and [leobrqz.github.io](https://leobrqz.github.io)
 
 
-## 🛠️ Tech Stack
+## Tech stack
 
-- **Jekyll**: Static site generator
-- **JavaScript**: Dynamic content loading and language switching
-- **GitHub API**: Client-side integration for fetching repository data and READMEs
+<table>
+<tr>
+<td><strong>Framework</strong></td>
+<td>Next.js 16 (App Router, static export)</td>
+</tr>
+<tr>
+<td><strong>UI</strong></td>
+<td>Mantine 8, Framer Motion, circle-flags</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>TypeScript, React 19</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>GitHub API (repos, languages, README), local i18n (PT/EN)</td>
+</tr>
+</table>
+
 
 ## Features
-- **Multilanguage Support**: Full Portuguese (default) and English with URL-based routing: Portuguese at `/`, `/projects`, `/resume`, `/contact`; English at `/en`, `/en/projects`, `/en/resume`, `/en/contact`
-- **Dynamic Project Display**: Automatically fetches and displays GitHub repositories via GitHub API
-- **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
-- **Sidebar Navigation**: Responsive sidebar: drawer with hamburger menu on small viewports, fixed toggleable sidebar on larger ones, language selector
-- **Table of Contents**: Dynamic TOC sidebar for easy navigation on home and projects pages
-- **Resume Page**: Professional CV format with a download button for the PDF curriculum
+
+- **Multilanguage** — Portuguese (default) and English; URL-based routes; language switcher keeps you on the same page.
+- **Projects** — Fetches repositories from GitHub; project page with languages/libs/tools and expandable README; home shows recent projects only.
+- **Resume** — Structured CV with skills, certifications, education; PDF download from repo (<code>assets/cv/Leonardo_Briquezi_CV.pdf</code>).
+- **Contact** — Links to GitHub, LinkedIn, and email.
+- **Layout** — Floating nav (no separate header bar), single full-height background, typewriter hero on home.
+
+<details>
+<summary><strong>Routes (PT / EN)</strong></summary>
+
+| Portuguese | English |
+|------------|---------|
+| <code>/</code> | <code>/en</code> |
+| <code>/projects</code> | <code>/en/projects</code> |
+| <code>/resume</code> | <code>/en/resume</code> |
+| <code>/contact</code> | <code>/en/contact</code> |
+
+</details>
 
 
 
-## 🌐 Multilanguage Support
+## Setup and run
 
-The site supports Portuguese (default) and English through URL-based routing:
+<pre><code>pnpm install
+pnpm run build</code></pre>
 
-- Portuguese: `/`, `/projects`, `/resume`, `/contact`
-- English: `/en`, `/en/projects`, `/en/resume`, `/en/contact`
+Static output is in <code>out/</code>. For local dev:
 
-### Implementation
+<pre><code>pnpm run dev</code></pre>
 
-- Language detection from URL path
-- Translation data stored in `_data/i18n/` YAML files
-- Language switcher in sidebar with flag icons
-- All UI elements, navigation, and content are translatable
-- Language preference stored in localStorage
 
-## 📦 GitHub API Integration
 
-The site uses the GitHub API to:
+## Deploy (GitHub Pages)
 
-- Fetch repository information (name, description, last updated)
-- Get repository languages with percentages
-- Fetch and render README content on demand
+- **Workflow:** <code>.github/workflows/deploy.yml</code>
+- **Trigger:** Push to <code>main</code>
+- **Build:** <code>pnpm install</code> and <code>pnpm run build</code> at repo root
+- **Artifact:** <code>out</code> is uploaded and deployed to GitHub Pages
 
-### Caching
 
-GitHub API responses are cached in localStorage. **ETag** and **Last-Modified** are used for conditional revalidation:
+## Project structure (main folders)
 
-- Sends stored ETag/Last-Modified on subsequent requests; 304 → reuse cache, 200 → store new response and metadata
-- 1-hour expiry
-- Reduces API calls and mitigates rate limiting
+All paths below are at repo root.
+
+| Path | Purpose |
+|------|---------|
+| <code>app/</code> | Next.js App Router: <code>(pt)</code> and <code>en</code> layouts and pages |
+| <code>components/</code> | Shell, Home, Projects, Resume, Contact, IDE background |
+| <code>config/</code> | Site and repo constants, repo list |
+| <code>data/</code> | i18n (pt/en), about, contact, skills, resume data |
+| <code>lib/</code> | i18n helper, GitHub API, useProjects hook |
+| <code>public/</code> | Favicon, flags (PT/EN), assets |
+
 
 
 ## Author
@@ -60,6 +95,7 @@ GitHub API responses are cached in localStorage. **ETag** and **Last-Modified** 
 - GitHub: [leobrqz](https://github.com/leobrqz)
 - LinkedIn: [leonardobri](https://linkedin.com/in/leonardobri)
 
+<hr>
 
 ### Credits
 
