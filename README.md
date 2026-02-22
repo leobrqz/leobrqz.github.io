@@ -36,7 +36,7 @@
 
 - **Multilanguage** — Portuguese (default) and English; URL-based routes; language switcher keeps you on the same page.
 - **Projects** — Fetches repositories from GitHub; project page with languages/libs/tools and expandable README; home shows recent projects only.
-- **Resume** — Structured CV with skills, certifications, education; PDF download from repo (<code>assets/cv/Leonardo_Briquezi_CV.pdf</code>).
+- **Resume** — Structured CV with skills, certifications, education. The PDF download link fetches directly from this repo (<code>assets/cv/Leonardo_Briquezi_CV.pdf</code>), not from the built site.
 - **Contact** — Links to GitHub, LinkedIn, and email.
 - **Layout** — Floating nav (no separate header bar), single full-height background, typewriter hero on home.
 
@@ -64,27 +64,19 @@ Static output is in <code>out/</code>. For local dev:
 <pre><code>pnpm run dev</code></pre>
 
 
-
-## Deploy (GitHub Pages)
-
-- **Workflow:** <code>.github/workflows/deploy.yml</code>
-- **Trigger:** Push to <code>main</code>
-- **Build:** <code>pnpm install</code> and <code>pnpm run build</code> at repo root
-- **Artifact:** <code>out</code> is uploaded and deployed to GitHub Pages
-
-
-## Project structure (main folders)
+## Project structure
 
 All paths below are at repo root.
 
 | Path | Purpose |
 |------|---------|
+| <code>assets/</code> | Repo-only: <code>assets/cv/</code> for the resume PDF (fetched directly from the repo, not served by the app) |
 | <code>app/</code> | Next.js App Router: <code>(pt)</code> and <code>en</code> layouts and pages |
 | <code>components/</code> | Shell, Home, Projects, Resume, Contact, IDE background |
 | <code>config/</code> | Site and repo constants, repo list |
 | <code>data/</code> | i18n (pt/en), about, contact, skills, resume data |
 | <code>lib/</code> | i18n helper, GitHub API, useProjects hook |
-| <code>public/</code> | Favicon, flags (PT/EN), assets |
+| <code>public/</code> | Favicon, flags (PT/EN), <code>assets/</code> (icons and other app assets) |
 
 
 
