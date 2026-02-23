@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { AsteroidLayer } from '@/components/AsteroidLayer';
 import { SpaceBackground } from '@/components/SpaceBackground';
 
 export type IdeBackgroundProps = {
@@ -25,6 +26,7 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
     >
       <SpaceBackground />
       <Box style={{ position: 'relative', zIndex: 1 }}>{children}</Box>
+      <AsteroidLayer />
     </Box>
   );
 }

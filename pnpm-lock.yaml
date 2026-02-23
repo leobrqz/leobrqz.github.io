@@ -23,7 +23,13 @@ importers:
       '@tsparticles/react':
         specifier: ^3.0.0
         version: 3.0.0(@tsparticles/engine@3.9.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@tsparticles/shape-image':
+        specifier: ^3.9.1
+        version: 3.9.1
       '@tsparticles/slim':
+        specifier: ^3.9.1
+        version: 3.9.1
+      '@tsparticles/updater-opacity':
         specifier: ^3.9.1
         version: 3.9.1
       '@tsparticles/updater-twinkle':
@@ -87,6 +93,9 @@ importers:
       '@types/eslint-plugin-jsx-a11y':
         specifier: ^6
         version: 6.10.1(jiti@2.6.1)
+      '@types/howler':
+        specifier: ^2.2.12
+        version: 2.2.12
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -1864,6 +1873,9 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/howler@2.2.12':
+    resolution: {integrity: sha512-hy769UICzOSdK0Kn1FBk4gN+lswcj1EKRkmiDtMkUGvFfYJzgaDXmVXkSShS2m89ERAatGIPnTUlp2HhfkVo5g==}
 
   '@types/html-minifier-terser@6.1.0':
     resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
@@ -7651,6 +7663,8 @@ snapshots:
       '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.8': {}
+
+  '@types/howler@2.2.12': {}
 
   '@types/html-minifier-terser@6.1.0': {}
 
