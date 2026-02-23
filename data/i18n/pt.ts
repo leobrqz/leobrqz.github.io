@@ -55,6 +55,7 @@ export const pt = {
     no_projects:
       'Nenhum projeto configurado. Adicione repositórios à lista <code>repositories:</code> em <code>_config.yml</code>.',
     error_loading: 'Erro ao carregar projetos. Verifique o console para detalhes.',
+    error_rate_limit: 'Limite de requisições do GitHub atingido. Tente novamente em alguns minutos.',
     no_repos:
       'Nenhum repositório encontrado. Verifique os nomes dos repositórios em <code>_config.yml</code>.',
   },

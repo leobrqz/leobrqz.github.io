@@ -247,11 +247,13 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   }
 
   if (state.status === 'error') {
+    const errorMessage =
+      state.kind === 'rate_limit' ? t(lang, 'projects.error_rate_limit') : t(lang, 'projects.error_loading');
     return (
       <Box component="main" py="xl">
         <Container size="md">
           <Alert icon={<IconAlertCircle size={16} />} title={t(lang, 'pages.projects')} color="red">
-            {t(lang, 'projects.error_loading')}
+            {errorMessage}
           </Alert>
           <Button variant="light" mt="md" onClick={refetch}>
             Retry

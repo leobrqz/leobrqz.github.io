@@ -53,9 +53,27 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Text size="sm" c="dimmed">
                   {contact.location}
                 </Text>
-                <Anchor href={`mailto:${contact.email}`} size="sm">
-                  {contact.email}
-                </Anchor>
+                <Group gap="sm" justify="center" wrap="wrap">
+                  <Anchor href={`mailto:${contact.email}`} size="sm">
+                    {contact.email}
+                  </Anchor>
+                  <Anchor
+                    href={`https://github.com/${contact.github}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="sm"
+                  >
+                    GitHub
+                  </Anchor>
+                  <Anchor
+                    href={`https://linkedin.com/in/${contact.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="sm"
+                  >
+                    LinkedIn
+                  </Anchor>
+                </Group>
               </Stack>
               <Divider />
               {/* Summary */}
@@ -63,6 +81,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.summary')}
                 </Title>
+                <Divider color="dark.4" size="xs" />
                 <Text style={{ whiteSpace: 'pre-line' }}>{about.content[lang]}</Text>
               </Stack>
 
@@ -71,16 +90,17 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.projects')}
                 </Title>
+                <Divider color="dark.4" size="xs" />
                 {resume_projects.map((project, i) => (
                   <Stack key={i} gap={4}>
                     <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600}>
                       {project.name[lang]}
                     </Anchor>
-                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                      {project.description[lang]}
-                    </Text>
                     <Text size="xs" c="dimmed">
                       {project.technologies.join(' · ')}
+                    </Text>
+                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
+                      {project.description[lang]}
                     </Text>
                   </Stack>
                 ))}
@@ -91,6 +111,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.skills')}
                 </Title>
+                <Divider color="dark.4" size="xs" />
                 {RESUME_SKILL_CATEGORIES.map((category) => {
                   const items = resume_skills[category];
                   if (!items?.length) {
@@ -112,11 +133,35 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.languages_spoken')}
                 </Title>
-                <Text size="sm">
-                  {languages_spoken
-                    .map((entry) => `${entry.name[lang]} (${entry.level[lang]})`)
-                    .join(', ')}
-                </Text>
+                <Divider color="dark.4" size="xs" />
+                <Stack gap="xs" hiddenFrom="sm">
+                  {languages_spoken.map((entry, i) => (
+                    <Text key={i} size="sm">
+                      {entry.name[lang]} ({entry.level[lang]})
+                    </Text>
+                  ))}
+                </Stack>
+                <Box
+                  visibleFrom="sm"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    gap: 'var(--mantine-spacing-md)',
+                  }}
+                >
+                  {languages_spoken.map((entry, i) => (
+                    <Text
+                      key={i}
+                      size="sm"
+                      style={{
+                        flex: 1,
+                        textAlign: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
+                      }}
+                    >
+                      {entry.name[lang]} ({entry.level[lang]})
+                    </Text>
+                  ))}
+                </Box>
               </Stack>
 
               {/* Certifications */}
@@ -124,6 +169,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.certifications')}
                 </Title>
+                <Divider color="dark.4" size="xs" />
                 {certifications.map((cert, i) => (
                   <Stack key={i} gap={4}>
                     <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
@@ -134,8 +180,9 @@ export function ResumePage({ lang }: ResumePageProps) {
                       ) : (
                         <Text fw={600}>{cert.name[lang]}</Text>
                       )}
-                      <Text size="sm" c="dimmed" style={{ textAlign: 'right' }}>
-                        {cert.issuer} · {cert.date}
+                      <Text size="md" fw={700} style={{ letterSpacing: '0.01em', textAlign: 'right' }}>
+                        {cert.issuer}
+                        <Text span size="sm" fw={400} c="dimmed"> ({cert.date})</Text>
                       </Text>
                     </Group>
                     <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
@@ -150,6 +197,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.education')}
                 </Title>
+                <Divider color="dark.4" size="xs" />
                 {education.map((entry, i) => (
                   <Group key={i} justify="space-between" align="flex-start" wrap="wrap" gap="md">
                     <Stack gap={2}>
@@ -160,8 +208,9 @@ export function ResumePage({ lang }: ResumePageProps) {
                       </Text>
                     </Stack>
                     <Stack gap={2} align="flex-end">
-                      <Text size="sm" c="dimmed">
-                        {entry.institution}, {entry.start_date} – {entry.end_date}
+                      <Text size="md" fw={700} style={{ letterSpacing: '0.01em', textAlign: 'right' }}>
+                        {entry.institution}
+                        <Text span size="sm" fw={400} c="dimmed"> ({entry.start_date} – {entry.end_date})</Text>
                       </Text>
                       <Text size="sm" c="dimmed">
                         {entry.location}
@@ -181,7 +230,7 @@ export function ResumePage({ lang }: ResumePageProps) {
           position: 'fixed',
           bottom: 24,
           right:
-            'max(var(--mantine-spacing-md), calc((100vw - min(48rem, 100vw - 2 * var(--mantine-spacing-md))) / 2 + var(--mantine-spacing-md) - 120px))',
+            'max(var(--mantine-spacing-md), calc((100vw - min(48rem, 100vw - 2 * var(--mantine-spacing-md))) / 2 + var(--mantine-spacing-md) - 125px))',
           zIndex: 200,
         }}
       >

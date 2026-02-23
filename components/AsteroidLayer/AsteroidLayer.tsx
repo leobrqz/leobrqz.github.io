@@ -153,22 +153,12 @@ export function AsteroidLayer() {
     }
   }, []);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const px = (e.clientX - rect.left) * scaleX;
-      const py = (e.clientY - rect.top) * scaleY;
-
+  const tryExplodeAt = useCallback(
+    (px: number, py: number): boolean => {
       const asteroids = asteroidsRef.current;
       for (let i = 0; i < asteroids.length; i++) {
         const a = asteroids[i];
         if (pointInPolygon(px, py, a.shape, a.radius, a.x, a.y)) {
-          e.preventDefault();
-          e.stopPropagation();
           asteroidsRef.current = asteroids.filter((ast) => ast.id !== a.id);
 
           const particleCount = 8 + Math.floor(Math.random() * 7);
@@ -195,31 +185,46 @@ export function AsteroidLayer() {
 
           playPopSound();
           scheduleSpawn();
-          return;
+          return true;
         }
       }
-
-      canvas.style.pointerEvents = 'none';
-      const target = document.elementFromPoint(e.clientX, e.clientY);
-      requestAnimationFrame(() => {
-        canvas.style.pointerEvents = 'auto';
-      });
-      if (target && target !== canvas) {
-        target.dispatchEvent(
-          new MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            clientX: e.clientX,
-            clientY: e.clientY,
-            button: e.button,
-            buttons: e.buttons,
-          })
-        );
-      }
+      return false;
     },
     [playPopSound, scheduleSpawn]
   );
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleDocumentClick = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        target &&
+        document.body.contains(target) &&
+        (target instanceof HTMLAnchorElement ||
+          target instanceof HTMLButtonElement ||
+          (target instanceof HTMLElement &&
+            (target.closest('a') || target.closest('button') || target.closest('[role="button"]'))))
+      ) {
+        return;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const px = (e.clientX - rect.left) * scaleX;
+      const py = (e.clientY - rect.top) * scaleY;
+
+      if (tryExplodeAt(px, py)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick, true);
+    return () => document.removeEventListener('click', handleDocumentClick, true);
+  }, [tryExplodeAt]);
 
   useEffect(() => {
     scheduleSpawn();
@@ -358,14 +363,13 @@ export function AsteroidLayer() {
   return (
     <canvas
       ref={canvasRef}
-      onClick={handleClick}
       style={{
         position: 'fixed',
         inset: 0,
         width: '100%',
         height: '100%',
-        zIndex: 2,
-        pointerEvents: 'auto',
+        zIndex: 1,
+        pointerEvents: 'none',
         display: 'block',
       }}
     />

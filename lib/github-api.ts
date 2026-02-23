@@ -26,6 +26,9 @@ export async function fetchRepos(): Promise<GhRepo[]> {
   const res = await fetch(url, {
     headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' },
   });
+  if (res.status === 403) {
+    throw new Error('GITHUB_RATE_LIMIT');
+  }
   if (!res.ok) {
     throw new Error(`GitHub repos: ${res.status}`);
   }
@@ -57,7 +60,7 @@ export async function fetchLanguages(owner: string, repo: string): Promise<GhLan
   return data;
 }
 
-/** Extract default branch from GitHub readme response html_url (e.g. .../blob/main/README.md). */
+/** Extract default branch from GitHub readme response html_url. */
 function defaultBranchFromReadmeResponse(data: { html_url?: string }): string {
   const url = data?.html_url;
   if (typeof url !== 'string') {
@@ -110,6 +113,9 @@ export async function fetchReadmeHtml(owner: string, repo: string): Promise<stri
   if (res.status === 404) {
     setCached(cacheKey, { html: null }, CACHE_TTL);
     return null;
+  }
+  if (res.status === 403) {
+    throw new Error('GITHUB_RATE_LIMIT');
   }
   if (!res.ok) {
     throw new Error(`GitHub readme: ${res.status}`);

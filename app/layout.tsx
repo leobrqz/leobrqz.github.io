@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { SITE_TITLE, SITE_URL } from '@/config/site';
 import { theme } from '@/theme';
 
-const DEFAULT_DESCRIPTION = 'Portfolio and resume of Leonardo Briquez.';
+const DEFAULT_DESCRIPTION = 'Portfolio and resume of Leonardo Briquezi.';
 
 export const metadata = {
   title: { default: SITE_TITLE, template: `%s | ${SITE_TITLE}` },
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </head>
       <body>

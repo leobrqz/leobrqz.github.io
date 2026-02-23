@@ -55,6 +55,7 @@ export const en = {
     no_projects:
       'No projects configured. Add repositories to the <code>repositories:</code> list in <code>_config.yml</code>.',
     error_loading: 'Error loading projects. Please check the console for details.',
+    error_rate_limit: 'GitHub rate limit reached. Please try again in a few minutes.',
     no_repos:
       'No repositories found. Please check your repository names in <code>_config.yml</code>.',
   },

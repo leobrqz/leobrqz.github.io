@@ -25,7 +25,7 @@ export interface EnrichedProject {
 export type ProjectsState =
   | { status: 'loading' }
   | { status: 'empty'; kind: 'no_config' | 'no_repos' }
-  | { status: 'error'; message: string }
+  | { status: 'error'; kind: 'rate_limit' | 'generic'; message: string }
   | { status: 'success'; projects: EnrichedProject[] };
 
 function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
@@ -73,7 +73,8 @@ export function useProjects(): {
       setState({ status: 'success', projects: withLangs });
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
-      setState({ status: 'error', message });
+      const kind = message === 'GITHUB_RATE_LIMIT' ? 'rate_limit' : 'generic';
+      setState({ status: 'error', kind, message });
     }
   }, []);
 
