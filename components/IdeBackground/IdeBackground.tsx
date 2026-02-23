@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { SpaceBackground } from '@/components/SpaceBackground';
 
 export type IdeBackgroundProps = {
   children: React.ReactNode;
@@ -22,7 +23,8 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
         backgroundAttachment: 'fixed',
       }}
     >
-      {children}
+      <SpaceBackground />
+      <Box style={{ position: 'relative', zIndex: 1 }}>{children}</Box>
     </Box>
   );
 }

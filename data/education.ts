@@ -19,12 +19,12 @@ export const education: EducationEntry[] = [
     start_date: '2024',
     end_date: '2028',
     description: {
-      en: `- Practical application of Scrum, Kanban and Extreme Programming in planning and incremental development.
-      - Contact with fundamentals of cloud computing and AWS services.
-      - System structuring and modeling with focus on requirement clarity and code organization.`,
-      pt: `- Aplicação prática de Scrum, Kanban e Extreme Programming no planejamento e desenvolvimento incremental.
-      - Contato com fundamentos de computação em nuvem e serviços da AWS.
-      - Estruturação e modelagem de sistemas com foco em clareza de requisitos e organização do código.`,
+      en: `Practical application of Scrum, Kanban and Extreme Programming in planning and incremental development.
+Contact with fundamentals of cloud computing and AWS services.
+System structuring and modeling with focus on requirement clarity and code organization.`,
+      pt: `Aplicação prática de Scrum, Kanban e Extreme Programming no planejamento e desenvolvimento incremental.
+Contato com fundamentos de computação em nuvem e serviços da AWS.
+Estruturação e modelagem de sistemas com foco em clareza de requisitos e organização do código.`,
     },
   },
 ];

@@ -9,7 +9,6 @@ import {
   Container,
   Divider,
   Group,
-  List,
   Paper,
   Stack,
   Text,
@@ -113,13 +112,11 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Title order={2} size="h3">
                   {t(lang, 'resume.languages_spoken')}
                 </Title>
-                <List size="sm" spacing={2}>
-                  {languages_spoken.map((entry, i) => (
-                    <List.Item key={i}>
-                      {entry.name[lang]} — {entry.level[lang]}
-                    </List.Item>
-                  ))}
-                </List>
+                <Text size="sm">
+                  {languages_spoken
+                    .map((entry) => `${entry.name[lang]} (${entry.level[lang]})`)
+                    .join(', ')}
+                </Text>
               </Stack>
 
               {/* Certifications */}
@@ -149,29 +146,28 @@ export function ResumePage({ lang }: ResumePageProps) {
               </Stack>
 
               {/* Education */}
-              <Stack gap="xs">
+              <Stack gap="xs" style={{ listStyle: 'none', paddingLeft: 0 }}>
                 <Title order={2} size="h3">
                   {t(lang, 'resume.education')}
                 </Title>
                 {education.map((entry, i) => (
-                  <Stack key={i} gap={4}>
-                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
-                      <Text fw={600}>
-                        {entry.degree[lang]}
+                  <Group key={i} justify="space-between" align="flex-start" wrap="wrap" gap="md">
+                    <Stack gap={2}>
+                      <Text fw={600}>{entry.degree[lang]}</Text>
+                      <Text size="sm" c="dimmed">
+                        {entry.level[lang]}
                         {entry.period[lang]}
                       </Text>
-                      <Text size="sm" c="dimmed" style={{ textAlign: 'right' }}>
-                        {entry.institution}
-                        {entry.location ? ` · ${entry.location}` : ''}
+                    </Stack>
+                    <Stack gap={2} align="flex-end">
+                      <Text size="sm" c="dimmed">
+                        {entry.institution}, {entry.start_date} – {entry.end_date}
                       </Text>
-                    </Group>
-                    <Text size="sm" c="dimmed">
-                      {entry.start_date} — {entry.end_date}
-                    </Text>
-                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                      {entry.description[lang]}
-                    </Text>
-                  </Stack>
+                      <Text size="sm" c="dimmed">
+                        {entry.location}
+                      </Text>
+                    </Stack>
+                  </Group>
                 ))}
               </Stack>
             </Stack>

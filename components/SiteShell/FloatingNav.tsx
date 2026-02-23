@@ -4,15 +4,21 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Anchor,
+  Avatar,
   Box,
   Burger,
+  Divider,
   Drawer,
   Group,
+  Paper,
   Stack,
+  Text,
+  Title,
   UnstyledButton,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { contact } from '@/data/contact';
 import { t } from '@/lib/i18n';
 
 const NAV_ITEMS: { href: string; labelKey: string }[] = [
@@ -167,7 +173,9 @@ export function FloatingNav({ lang }: FloatingNavProps) {
         >
           {navPills}
         </Group>
-        <Box style={{ marginLeft: 'auto' }}>{langSwitcher}</Box>
+        <Box style={{ marginLeft: 'auto' }} visibleFrom="sm">
+          {langSwitcher}
+        </Box>
       </Box>
 
       <Drawer
@@ -178,54 +186,104 @@ export function FloatingNav({ lang }: FloatingNavProps) {
         position="left"
         styles={{
           header: { display: 'none' },
+          body: {
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            minHeight: 0,
+            padding: 0,
+          },
         }}
       >
-        <Stack gap="xs" pt="md">
-          {NAV_ITEMS.map(({ href, labelKey }) => {
-            const active = isNavActive(href);
-            return (
-              <Anchor
-                key={href}
-                component={Link}
-                href={navHref(basePath, href)}
-                size="md"
-                fw={active ? 600 : 400}
-                c={active ? 'blue' : undefined}
-                underline="never"
-                onClick={closeDrawer}
-              >
-                {t(lang, labelKey)}
-              </Anchor>
-            );
-          })}
-          <Group gap="sm" pt="md" style={{ borderTop: `1px solid ${theme.colors.dark[4]}` }}>
-            {LANG_OPTIONS.map(({ lang: l, flag, label }) => (
-              <UnstyledButton
-                key={l}
-                component={Link}
-                href={getLangHref(pathname, l)}
-                onClick={closeDrawer}
-                title={label}
-                style={{
-                  width: 40,
-                  height: 40,
-                  padding: 0,
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <img
-                  src={flag}
-                  alt=""
-                  width={32}
-                  height={32}
-                  style={{ borderRadius: '50%', objectFit: 'cover', display: 'block' }}
-                />
-              </UnstyledButton>
-            ))}
-          </Group>
+        <Stack gap={0} style={{ flex: 1, minHeight: 0 }}>
+          <Stack align="center" gap="xs" pt="xl" pb="md" px="md">
+            <Avatar src="/imgs/profile.jpg" alt="" size={80} radius="xl" />
+            <Title order={4} ta="center" fw={600}>
+              {contact.name}
+            </Title>
+            <Text size="sm" c="dimmed" ta="center" fw={500}>
+              {t(lang, 'sidebar.role')}
+            </Text>
+            <Text size="xs" c="dimmed" ta="center">
+              {t(lang, 'sidebar.education')}
+            </Text>
+            <Divider my="md" w="100%" />
+          </Stack>
+
+          <Stack gap="xs" px="md" style={{ flex: 1, overflow: 'auto' }}>
+            {NAV_ITEMS.map(({ href, labelKey }) => {
+              const active = isNavActive(href);
+              return (
+                <Anchor
+                  key={href}
+                  component={Link}
+                  href={navHref(basePath, href)}
+                  underline="never"
+                  onClick={closeDrawer}
+                >
+                  <Paper
+                    p="md"
+                    radius="md"
+                    withBorder
+                    style={{
+                      backgroundColor: active ? theme.colors.blue[9] : theme.colors.dark[6],
+                      borderLeft: `4px solid ${active ? theme.colors.blue[5] : 'transparent'}`,
+                      transition: 'background-color 0.15s ease, border-color 0.15s ease',
+                    }}
+                  >
+                    <Text size="md" fw={active ? 600 : 500} c={active ? 'white' : 'gray.3'}>
+                      {t(lang, labelKey)}
+                    </Text>
+                  </Paper>
+                </Anchor>
+              );
+            })}
+          </Stack>
+
+          <Box
+            py="lg"
+            px="md"
+            style={{
+              borderTop: `1px solid ${theme.colors.dark[4]}`,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Group gap="md" wrap="nowrap">
+              {LANG_OPTIONS.map(({ lang: l, flag, label }) => {
+                const isActive = l === 'en' ? isEn : !isEn;
+                return (
+                  <UnstyledButton
+                    key={l}
+                    component={Link}
+                    href={getLangHref(pathname, l)}
+                    onClick={closeDrawer}
+                    title={label}
+                    style={{
+                      width: 44,
+                      height: 44,
+                      padding: 0,
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: isActive ? `2px solid ${theme.colors.blue[5]}` : '2px solid transparent',
+                      boxShadow: isActive ? `0 0 0 1px ${theme.colors.blue[7]}` : undefined,
+                    }}
+                  >
+                    <img
+                      src={flag}
+                      alt=""
+                      width={32}
+                      height={32}
+                      style={{ borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+                    />
+                  </UnstyledButton>
+                );
+              })}
+            </Group>
+          </Box>
         </Stack>
       </Drawer>
     </>
