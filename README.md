@@ -1,56 +1,60 @@
-# leobrqz.github.io
+<div align="center">
+  <h1><a href="https://leonardobriquezi.me">leonardobriquezi.me</a></h1>
+  Built with Next.js and Mantine. <br>
+  Static export, deployed to GitHub Pages.
+</div>
 
-My personal portfolio. Features dynamic GitHub project integration and support for English or Portuguese.
+<div align="center">
+  <a href="https://leonardobriquezi.me">leonardobriquezi.me</a> · <a href="https://leobrqz.github.io">leobrqz.github.io</a>
+</div>
 
-- **Live site**: Available at [leonardobriquezi.me](https://leonardobriquezi.me) and [leobrqz.github.io](https://leobrqz.github.io)
 
 
-## 🛠️ Tech Stack
+## Tech stack
 
-- **Jekyll**: Static site generator
-- **JavaScript**: Dynamic content loading and language switching
-- **GitHub API**: Client-side integration for fetching repository data and READMEs
+<table>
+<tr>
+<td><strong>Framework</strong></td>
+<td>Next.js 16, Mantine 8</td>
+</tr>
+<tr>
+<td><strong>Libraries</strong></td>
+<td>tsparticles, Howler, canvas,Tabler Icons, circle-flags, Framer Motion</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>TypeScript 5.9, React 19</td>
+</tr>
+</table>
+
 
 ## Features
-- **Multilanguage Support**: Full Portuguese (default) and English with URL-based routing: Portuguese at `/`, `/projects`, `/resume`, `/contact`; English at `/en`, `/en/projects`, `/en/resume`, `/en/contact`
-- **Dynamic Project Display**: Automatically fetches and displays GitHub repositories via GitHub API
-- **Expandable README**: Projects page with expandable boxes that fetch and render README content from GitHub
-- **Sidebar Navigation**: Responsive sidebar: drawer with hamburger menu on small viewports, fixed toggleable sidebar on larger ones, language selector
-- **Table of Contents**: Dynamic TOC sidebar for easy navigation on home and projects pages
-- **Resume Page**: Professional CV format with a download button for the PDF curriculum
+
+- **Multilanguage** — Portuguese (default) and English; URL-based routes; language switcher.
+- **Projects** — Repos from GitHub; project page with languages, libs, tools, expandable README.
+- **Resume** — CV with skills, certifications, education; PDF from repo (<code>assets/cv/Leonardo_Briquezi_CV.pdf</code>).
+- **Contact** — GitHub, LinkedIn, email.
+- **Layout** — Floating nav, full-height background, typewriter hero. Nav pills hover glow; mobile drawer with GitHub/LinkedIn below role/education.
+- **Background** — Starfield with parallax; floating asteroids. Content layer on top so the page stays interactive.
+- **Home** — About me, skills grid and recent projects.
+- **SEO** — Sitemap, robots, per-page meta and OG/Twitter, canonical and hreflang, JSON-LD Person.
 
 
 
-## 🌐 Multilanguage Support
 
-The site supports Portuguese (default) and English through URL-based routing:
+## Project structure
 
-- Portuguese: `/`, `/projects`, `/resume`, `/contact`
-- English: `/en`, `/en/projects`, `/en/resume`, `/en/contact`
 
-### Implementation
+| Path | Purpose |
+|------|---------|
+| <code>assets/</code> | Repo-only: <code>assets/cv/</code> for the resume PDF |
+| <code>app/</code> | Next.js App Router: <code>(pt)</code> and <code>en</code> layouts and pages; <code>sitemap.ts</code>, <code>robots.ts</code> for static SEO files |
+| <code>components/</code> | Shell (FloatingNav, SiteShell), Home, Projects, Resume, Contact; IdeBackground, SpaceBackground (stars), AsteroidLayer; ClientOnlyChildren (hydration); JsonLd (Person schema) |
+| <code>config/</code> | Site and repo constants, repo list; <code>seo.ts</code> for canonical/hreflang helpers |
+| <code>data/</code> | i18n (pt/en), about (home + resume content), contact, skills, resume data |
+| <code>lib/</code> | i18n helper, GitHub API, useProjects hook |
+| <code>public/</code> | Favicon, flags (PT/EN), <code>assets/</code> (icons and other app assets) |
 
-- Language detection from URL path
-- Translation data stored in `_data/i18n/` YAML files
-- Language switcher in sidebar with flag icons
-- All UI elements, navigation, and content are translatable
-- Language preference stored in localStorage
-
-## 📦 GitHub API Integration
-
-The site uses the GitHub API to:
-
-- Fetch repository information (name, description, last updated)
-- Get repository languages with percentages
-- Fetch and render README content on demand
-
-### Caching
-
-GitHub API responses are cached in localStorage. **ETag** and **Last-Modified** are used for conditional revalidation:
-
-- Sends stored ETag/Last-Modified on subsequent requests; 304 → reuse cache, 200 → store new response and metadata
-- 1-hour expiry
-- Reduces API calls and mitigates rate limiting
 
 
 ## Author
@@ -60,13 +64,16 @@ GitHub API responses are cached in localStorage. **ETag** and **Last-Modified** 
 - GitHub: [leobrqz](https://github.com/leobrqz)
 - LinkedIn: [leonardobri](https://linkedin.com/in/leonardobri)
 
+<hr>
 
 ### Credits
 
-Skill and brand logos are used from the following sources:
+Icons and assets:
 
+- [Tabler Icons](https://tabler.io/icons)
+- [Simple Icons](https://simpleicons.org/) 
+- [Circle Flags](https://github.com/HatScripts/circle-flags)
 - [Font Awesome](https://fontawesome.com/)
-- [Simple Icons](https://simpleicons.org/)
 - [Wikimedia Commons](https://commons.wikimedia.org/)
-- [SVG Repo](https://www.svgrepo.com/)
+- [SVG Repo](https://www.svgrepo.com/) 
 - [Python Software Foundation](https://www.python.org/community/logos/)

@@ -1,0 +1,4 @@
+/* Scope: README content on Projects page only. Hide GitHub heading anchor (chain-link) icons. */
+.readmeWrapper a.anchor {
+  display: none;
+}

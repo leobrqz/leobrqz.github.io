@@ -1,0 +1,49 @@
+export interface CertificationEntry {
+  name: { en: string; pt: string };
+  issuer: string;
+  date: string;
+  url?: string;
+  description: { en: string; pt: string };
+}
+
+export const certifications: CertificationEntry[] = [
+  {
+    name: { en: 'Associate Python Developer', pt: 'Associate Python Developer' },
+    issuer: 'DataCamp',
+    date: '2026',
+    url: 'https://www.datacamp.com/completed/statement-of-accomplishment/track/6054dcb4213e5a02bde29b4dd0fb81141fba479d',
+    description: {
+      en: `- Advanced data structures with comprehensions and specialized collections, iterators and generators for lazy evaluation. Temporal data manipulation and transformation, pattern matching with regex and exception handling.`,
+      pt: `- Estruturas de dados avançadas com comprehensions e collections especializadas, iteradores e geradores para lazy evaluation. Manipulação e transformação de dados temporais, pattern matching com regex e tratamento de exceções.`,
+    },
+  },
+  {
+    name: { en: 'Python Programming', pt: 'Python Programming' },
+    issuer: 'DataCamp',
+    date: '2025',
+    url: 'https://www.datacamp.com/completed/statement-of-accomplishment/track/855c0fd421f92fb8c08ea517266d5cde97bb8323',
+    description: {
+      en: `- Object-oriented programming in Python with TDD, automated tests with pytest and use of decorators and context managers. Data manipulation and visualization with NumPy, Pandas and Matplotlib.`,
+      pt: `- Programação orientada a objetos em Python com aplicação de TDD, testes automatizados com pytest e uso de recursos como decoradores e gerenciadores de contexto. Manipulação e visualização de dados com NumPy, Pandas e Matplotlib.`,
+    },
+  },
+  {
+    name: { en: 'AI Fundamentals', pt: 'AI Fundamentals' },
+    issuer: 'DataCamp',
+    date: '2025',
+    url: 'https://www.datacamp.com/completed/statement-of-accomplishment/track/3a6e3594b221780b932d4bdbe252a8e354890b5f',
+    description: {
+      en: `- Fundamentals of Artificial Intelligence with machine learning, neural networks and generative AI. NLP applications, predictive models and discussion of ethical aspects related to algorithmic bias.`,
+      pt: `- Fundamentos de Inteligência Artificial com aprendizado de máquina, redes neurais e IA generativa. Aplicações de NLP, modelos preditivos e discussão de aspectos éticos relacionados a vieses algorítmicos.`,
+    },
+  },
+  {
+    name: { en: 'AWS Cloud Computing', pt: 'AWS Cloud Computing' },
+    issuer: 'Ka Solution',
+    date: '2025',
+    description: {
+      en: `- Fundamentals of cloud computing and main AWS services, including EC2, S3, RDS, IAM and VPC.`,
+      pt: `- Fundamentos de computação em nuvem e principais serviços da AWS, incluindo EC2, S3, RDS, IAM e VPC.`,
+    },
+  },
+];

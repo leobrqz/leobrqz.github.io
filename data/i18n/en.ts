@@ -1,0 +1,87 @@
+/** English translations (from Jekyll _data/i18n/en.yml) */
+export const en = {
+  nav: {
+    home: 'Home',
+    projects: 'Projects',
+    resume: 'Resume',
+    contact: 'Contact',
+  },
+  pages: {
+    home: 'Home',
+    projects: 'Projects',
+    resume: 'Resume',
+    contact: 'Contact',
+  },
+  sections: {
+    about_me: 'About me',
+    skills: 'Skills',
+    projects: 'Projects',
+    contents: 'Contents',
+  },
+  resume: {
+    summary: 'Summary',
+    experience: 'Experience',
+    education: 'Education',
+    skills: 'Skills',
+    projects: 'Projects',
+    certifications: 'Certifications',
+    languages_spoken: 'Languages',
+    academic_formation: 'Academic Formation',
+    download_pdf: 'Download PDF curriculum',
+  },
+  resume_labels: {
+    languages: 'Languages',
+    frameworks: 'Frameworks',
+    libraries: 'Libraries',
+    databases: 'Databases',
+    tools: 'Tools',
+    others: 'Others',
+    technologies: 'Technologies',
+  },
+  contact: {
+    get_in_touch: 'Get In Touch',
+    connect_with_me: 'Connect With Me',
+    send_email: 'Send me an email',
+  },
+  projects: {
+    last_updated: 'Last Updated',
+    languages: 'Languages',
+    libraries: 'Libraries',
+    tools: 'Tools',
+    show_readme: 'Show README',
+    hide_readme: 'Hide README',
+    no_readme: 'No README available',
+    unable_to_load: 'Unable to load README. Please try again later.',
+    no_projects:
+      'No projects configured. Add repositories to the <code>repositories:</code> list in <code>_config.yml</code>.',
+    error_loading: 'Error loading projects. Please check the console for details.',
+    error_rate_limit: 'GitHub rate limit reached. Please try again in a few minutes.',
+    no_repos:
+      'No repositories found. Please check your repository names in <code>_config.yml</code>.',
+  },
+  skills: {
+    languages: 'Languages',
+    frameworks: 'Frameworks',
+    data: 'Data',
+    libraries: 'Libraries',
+    databases: 'Databases',
+    tools: 'Tools',
+    others: 'Others',
+  },
+  meta: {
+    location: 'Location',
+    date_range: 'Date Range',
+    description_home: "Leonardo Briquezi's portfolio and resume.",
+    description_projects: 'Projects by Leonardo Briquezi.',
+    description_resume: 'Resume and CV of Leonardo Briquezi.',
+    description_contact: 'Contact Leonardo Briquezi.',
+  },
+  sidebar: {
+    role: 'Developer',
+    education: 'Computer Science',
+  },
+  home: {
+    recent_projects: 'Recent Projects',
+    see_all_projects: 'See all projects',
+  },
+} as const;
