@@ -42,6 +42,7 @@ interface FloatText {
 }
 
 let nextId = 1;
+let asteroidScore = 0;
 
 function pointInPolygon(
   px: number,
@@ -65,7 +66,7 @@ function pointInPolygon(
   return inside;
 }
 
-const POP_SOUND_PATH = '/sounds/asteroid-pop.mp3';
+const POP_SOUND_PATH = '/sounds/mixkit-short-laser-gun-shot-1670.wav';
 
 export function AsteroidLayer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -183,6 +184,7 @@ export function AsteroidLayer() {
             duration: 800,
           });
 
+          asteroidScore += 1;
           playPopSound();
           scheduleSpawn();
           return true;
@@ -192,6 +194,16 @@ export function AsteroidLayer() {
     },
     [playPopSound, scheduleSpawn]
   );
+
+  useEffect(() => {
+    const win = window as Window & { __printAsteroidScore?: () => void };
+    win.__printAsteroidScore = () => {
+      console.log('Asteroid score:', asteroidScore);
+    };
+    return () => {
+      delete win.__printAsteroidScore;
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;

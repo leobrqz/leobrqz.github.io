@@ -242,21 +242,37 @@ export function FloatingNav({ lang }: FloatingNavProps) {
         opened={drawerOpened}
         onClose={closeDrawer}
         title={null}
-        size="sm"
         position="left"
+        withCloseButton
         styles={{
-          header: { display: 'none' },
+          root: { '--drawer-size': '70vw' } as React.CSSProperties,
+          content: {
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100vh',
+            maxHeight: '100vh',
+            overflow: 'hidden',
+          },
+          header: {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: theme.spacing.sm,
+            minHeight: 'unset',
+            flexShrink: 0,
+          },
           body: {
             display: 'flex',
             flexDirection: 'column',
-            height: '100%',
+            flex: 1,
             minHeight: 0,
             padding: 0,
+            overflow: 'hidden',
           },
         }}
       >
-        <Stack gap={0} style={{ flex: 1, minHeight: 0 }}>
-          <Stack align="center" gap="xs" pt="xl" pb="md" px="md">
+        <Stack gap={0} style={{ flex: 1, minHeight: 0, height: '100%' }}>
+          <Stack align="center" gap="xs" pt="md" pb="md" px="md" style={{ flexShrink: 0 }}>
             <Avatar src="/imgs/profile.jpg" alt="" size={80} radius="xl" />
             <Title order={4} ta="center" fw={600}>
               {contact.name}
@@ -302,7 +318,7 @@ export function FloatingNav({ lang }: FloatingNavProps) {
             <Divider my="md" w="100%" />
           </Stack>
 
-          <Stack gap="xs" px="md" style={{ flex: 1, overflow: 'auto' }}>
+          <Stack gap="xs" px="md" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
             {NAV_ITEMS.map(({ href, labelKey }) => {
               const active = isNavActive(href);
               return (
@@ -340,6 +356,7 @@ export function FloatingNav({ lang }: FloatingNavProps) {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              flexShrink: 0,
             }}
           >
             <Group gap="md" wrap="nowrap">

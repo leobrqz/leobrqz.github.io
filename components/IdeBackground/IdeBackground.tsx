@@ -21,7 +21,6 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
       style={{
         minHeight: '100vh',
         background: bgColor,
-        backgroundAttachment: 'fixed',
       }}
     >
       <SpaceBackground />
