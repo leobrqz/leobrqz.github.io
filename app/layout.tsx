@@ -2,14 +2,29 @@ import '@mantine/core/styles.css';
 
 import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import { ClientOnlyChildren } from '@/components/ClientOnlyChildren';
+import { JsonLd } from '@/components/JsonLd';
 import { SITE_TITLE, SITE_URL } from '@/config/site';
 import { theme } from '@/theme';
 
+const DEFAULT_DESCRIPTION = 'Portfolio and resume of Leonardo Briquez.';
+
 export const metadata = {
   title: { default: SITE_TITLE, template: `%s | ${SITE_TITLE}` },
-  description: 'Portfolio and resume of Leonardo Briquez.',
+  description: DEFAULT_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
-  openGraph: { url: SITE_URL, siteName: SITE_TITLE },
+  openGraph: {
+    url: SITE_URL,
+    siteName: SITE_TITLE,
+    title: SITE_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: SITE_TITLE,
+    description: DEFAULT_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -26,8 +41,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="dark">
-          {children}
+          <ClientOnlyChildren>{children}</ClientOnlyChildren>
         </MantineProvider>
+        <JsonLd />
       </body>
     </html>
   );

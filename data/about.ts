@@ -1,11 +1,13 @@
 export const about = {
   home_content: {
-    en: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    en: `Computer Science student with experience in Python, Java and JavaScript/TypeScript. I build web apps with React and Next.js, APIs with FastAPI, and work with data and ML. I value clear communication and quickly apply new tech in practice.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-    pt: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+[Second paragraph placeholder.]`,
+    pt: `Estudante de Ciência da Computação com experiência em Python, Java e JavaScript/TypeScript. Desenvolvo aplicações desktop e web com React e Next.js, APIs com FastAPI e trabalho com dados e ML.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+Me interesso pela área de IA/ML, backend e automação.
+
+Tem alguns easter eggs no site, tente encontrar :)`,
   },
   content: {
     en: `Computer Science student with experience in Python, Java and JavaScript/TypeScript. I develop desktop and web applications with React, Next.js and Vite and APIs with FastAPI. I work with databases like PostgreSQL and MySQL. I do data analysis with Pandas and Matplotlib, machine learning with Scikit-learn and AI integration with LangChain and HuggingFace.

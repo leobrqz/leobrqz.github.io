@@ -70,6 +70,10 @@ export const pt = {
   meta: {
     location: 'Localização',
     date_range: 'Período',
+    description_home: 'Portfólio e currículo de Leonardo Briquezi.',
+    description_projects: 'Projetos de Leonardo Briquezi.',
+    description_resume: 'Currículo e CV de Leonardo Briquezi.',
+    description_contact: 'Contato de Leonardo Briquezi.',
   },
   sidebar: {
     role: 'Desenvolvedor',

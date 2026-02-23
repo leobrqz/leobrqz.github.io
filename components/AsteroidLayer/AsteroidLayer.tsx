@@ -13,6 +13,7 @@ const SPEED_PX_PER_MS = 0.22;
 const SPAWN_MARGIN = 20;
 const SPAWN_DELAY_MS_MIN = 60000;
 const SPAWN_DELAY_MS_RANGE = 60000;
+const OFF_SCREEN_MARGIN = 50;
 
 interface Asteroid {
   id: number;

@@ -25,8 +25,8 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
       }}
     >
       <SpaceBackground />
-      <Box style={{ position: 'relative', zIndex: 1 }}>{children}</Box>
       <AsteroidLayer />
+      <Box style={{ position: 'relative', zIndex: 2 }}>{children}</Box>
     </Box>
   );
 }

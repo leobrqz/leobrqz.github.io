@@ -70,6 +70,10 @@ export const en = {
   meta: {
     location: 'Location',
     date_range: 'Date Range',
+    description_home: "Leonardo Briquezi's portfolio and resume.",
+    description_projects: 'Projects by Leonardo Briquezi.',
+    description_resume: 'Resume and CV of Leonardo Briquezi.',
+    description_contact: 'Contact Leonardo Briquezi.',
   },
   sidebar: {
     role: 'Developer',
