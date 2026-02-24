@@ -7,6 +7,19 @@ export interface ResumeProjectEntry {
 
 export const resume_projects: ResumeProjectEntry[] = [
   {
+    name: { en: 'ShScriptHub', pt: 'ShScriptHub' },
+    url: 'https://github.com/leobrqz/ShScriptHub',
+    description: {
+      en: `- Scans the project folder and lists all .sh scripts with a dedicated terminal per script.
+      - Auto-detection of Python (venv, .venv) and Node (node_modules) environments; configurable Git Bash and venv paths.
+      - Script cards with favorites, categories, live metrics (CPU, RAM, elapsed) and per-script run/kill controls.`,
+      pt: `- Escaneia a pasta do projeto e lista todos os scripts .sh com terminal independente por script.
+      - Detecção automática de ambientes Python (venv, .venv) e Node (node_modules); paths configuráveis para Git Bash e venv.
+      - Cards de script com favoritos, categorias, métricas em tempo real (CPU, RAM, tempo) e controles de executar/parar por script.`,
+    },
+    technologies: ['Python', 'PySide6', 'Psutil'],
+  },
+  {
     name: { en: 'AutoPot-DR', pt: 'AutoPot-DR' },
     url: 'https://github.com/leobrqz/AutoPot-DR',
     description: {

@@ -1,14 +1,16 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Box, Text, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Anchor, Box, Group, Text, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { IconBrandGithub, IconBrandLinkedin } from '@tabler/icons-react';
 import { contact } from '@/data/contact';
 import { t, type Lang } from '@/lib/i18n';
 
 const TYPE_SPEED_MS = 80;
 const CURSOR_BLINK_MS = 530;
 const DELAY_AFTER_NAME_MS = 400;
-const SUBTITLE_SPEED_MS = 36;
+const SUBTITLE_SPEED_MS = 22;
 
 export type LandingHeroProps = {
   lang: Lang;
@@ -62,6 +64,7 @@ export function LandingHero({ lang }: LandingHeroProps) {
     nameDone ? DELAY_AFTER_NAME_MS : 999999,
     nameDone
   );
+  const subtitleDone = subtitleDisplay.length >= subtitle.length;
   const cursorOn = useCursorBlink();
 
   const gradientStyle = {
@@ -133,6 +136,40 @@ export function LandingHero({ lang }: LandingHeroProps) {
             </span>
           )}
         </Text>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{
+            opacity: subtitleDone ? 1 : 0,
+            y: subtitleDone ? 0 : 8,
+          }}
+          transition={{
+            delay: subtitleDone ? 0.25 : 0,
+            duration: 0.35,
+          }}
+        >
+          <Group justify="center" gap="md" mt="sm">
+            <Anchor
+              href={`https://github.com/${contact.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              c="dimmed"
+              style={{ lineHeight: 0 }}
+              aria-label="GitHub"
+            >
+              <IconBrandGithub size={30} stroke={1.5} />
+            </Anchor>
+            <Anchor
+              href={`https://linkedin.com/in/${contact.linkedin}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              c="dimmed"
+              style={{ lineHeight: 0 }}
+              aria-label="LinkedIn"
+            >
+              <IconBrandLinkedin size={30} stroke={1.5} />
+            </Anchor>
+          </Group>
+        </motion.div>
       </Box>
     </Box>
   );

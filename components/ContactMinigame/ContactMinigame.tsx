@@ -167,7 +167,7 @@ export function ContactMinigame() {
       if (!hitHowlRef.current) {
         hitHowlRef.current = new Howl({
           src: [HIT_SOUND],
-          volume: 0.5,
+          volume: 0.30,
           onloaderror: () => {},
           onplayerror: () => {},
         });
@@ -511,6 +511,7 @@ export function ContactMinigame() {
     if (gameState !== 'playing') return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === ' ') e.preventDefault();
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
       keysRef.current[e.key] = true;
     };
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -541,11 +542,11 @@ export function ContactMinigame() {
 
   const showIdleOverlay = gameState === 'idle';
   const showGameOverOverlay = gameState === 'gameover';
-  const showPlayingOverlay = gameState === 'playing';
+  const showHudBar = gameState === 'playing' || gameState === 'gameover';
 
   return (
     <Box w="100%" py="md" style={{ position: 'relative' }}>
-      {showPlayingOverlay && (
+      {showHudBar && (
         <Box
           style={{
             width: GAME_WIDTH,

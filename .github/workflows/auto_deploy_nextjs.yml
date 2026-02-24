@@ -4,6 +4,9 @@ name: Deploy Next.js to Pages
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - "README.md"
+      - "assets/cv/Leonardo_Briquezi_CV.pdf"
   workflow_dispatch:
 
 permissions:

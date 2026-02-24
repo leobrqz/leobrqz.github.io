@@ -70,6 +70,7 @@
 
 Icons:
 
+- [Favicon](https://favicon.io/favicon-generator/) - [Font Tiny5](https://fonts.google.com/specimen/Tiny5)
 - [Tabler Icons](https://tabler.io/icons)
 - [Simple Icons](https://simpleicons.org/) 
 - [Circle Flags](https://github.com/HatScripts/circle-flags)

@@ -31,7 +31,7 @@ export const certifications: CertificationEntry[] = [
     name: { en: 'AI Fundamentals', pt: 'AI Fundamentals' },
     issuer: 'DataCamp',
     date: '2025',
-    url: 'https://www.datacamp.com/completed/statement-of-accomplishment/track/3a6e3594b221780b932d4bdbe252a8e354890b5f',
+    url: 'https://www.datacamp.com/skill-verification/AIF0024854341667',
     description: {
       en: `- Fundamentals of Artificial Intelligence with machine learning, neural networks and generative AI. NLP applications, predictive models and discussion of ethical aspects related to algorithmic bias.`,
       pt: `- Fundamentos de Inteligência Artificial com aprendizado de máquina, redes neurais e IA generativa. Aplicações de NLP, modelos preditivos e discussão de aspectos éticos relacionados a vieses algorítmicos.`,
