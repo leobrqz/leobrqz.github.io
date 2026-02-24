@@ -14,7 +14,7 @@ const CANVAS_HEIGHT_DESKTOP = 1440;
 const CANVAS_WIDTH_MOBILE = 1280;
 const CANVAS_HEIGHT_MOBILE = 720;
 const MOBILE_BREAKPOINT = 768;
-const SCROLL_PARALLAX_FACTOR = 0.06;
+export const SCROLL_PARALLAX_FACTOR = 0.06;
 
 function getCanvasSize(): { w: number; h: number } {
   if (typeof window === 'undefined') {
@@ -90,7 +90,12 @@ function getCoverScale(canvasW: number, canvasH: number): number {
   );
 }
 
-export function SpaceBackground() {
+export type SpaceBackgroundProps = {
+  /** When true, outer wrapper is absolute (no fixed, no scroll). Parent applies parallax. */
+  parallaxControlled?: boolean;
+};
+
+export function SpaceBackground({ parallaxControlled = false }: SpaceBackgroundProps) {
   const [ready, setReady] = useState(false);
   const [canvasSize, setCanvasSize] = useState(getCanvasSize);
   const [scale, setScale] = useState(() => {
@@ -120,7 +125,7 @@ export function SpaceBackground() {
   }, []);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || parallaxControlled) return;
 
     const onScroll = () => {
       scrollYRef.current = window.scrollY;
@@ -140,9 +145,46 @@ export function SpaceBackground() {
       window.removeEventListener('scroll', onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [ready]);
+  }, [ready, parallaxControlled]);
 
   if (!ready) return null;
+
+  const inner = (
+    <div
+      style={{
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        width: canvasSize.w,
+        height: canvasSize.h,
+        transform: `translate(-50%, -50%) scale(${scale})`,
+        transformOrigin: 'center center',
+      }}
+    >
+      <Particles
+        key={`stars-${canvasSize.w}-${canvasSize.h}`}
+        id="space-background-particles"
+        options={getParticleOptions()}
+      />
+    </div>
+  );
+
+  if (parallaxControlled) {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        {inner}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -165,23 +207,7 @@ export function SpaceBackground() {
           height: '100%',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            width: canvasSize.w,
-            height: canvasSize.h,
-            transform: `translate(-50%, -50%) scale(${scale})`,
-            transformOrigin: 'center center',
-          }}
-        >
-          <Particles
-            key={`stars-${canvasSize.w}-${canvasSize.h}`}
-            id="space-background-particles"
-            options={getParticleOptions()}
-          />
-        </div>
+        {inner}
       </div>
     </div>
   );

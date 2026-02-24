@@ -204,7 +204,6 @@ export function ResumePage({ lang }: ResumePageProps) {
                       <Text fw={600}>{entry.degree[lang]}</Text>
                       <Text size="sm" c="dimmed">
                         {entry.level[lang]}
-                        {entry.period[lang]}
                       </Text>
                     </Stack>
                     <Stack gap={2} align="flex-end">

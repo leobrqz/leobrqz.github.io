@@ -1,15 +1,38 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from '@tabler/icons-react';
 import { Anchor, Box, Container, Group, Stack, Title } from '@mantine/core';
 import { contact } from '@/data';
 import { t, type Lang } from '@/lib/i18n';
+
+const MOBILE_BREAKPOINT = 768;
+
+function isMobile(): boolean {
+  if (typeof window === 'undefined') return true;
+  return (
+    window.innerWidth < MOBILE_BREAKPOINT ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  );
+}
+
+const ContactMinigame = dynamic(
+  () => import('@/components/ContactMinigame').then((mod) => ({ default: mod.ContactMinigame })),
+  { ssr: false }
+);
 
 export type ContactPageProps = {
   lang: Lang;
 };
 
 export function ContactPage({ lang }: ContactPageProps) {
+  const [showMinigame, setShowMinigame] = useState(false);
+
+  useEffect(() => {
+    setShowMinigame(!isMobile());
+  }, []);
+
   return (
     <Box component="main" py="xl">
       <Container size="md" mx="auto" maw={640}>
@@ -49,6 +72,7 @@ export function ContactPage({ lang }: ContactPageProps) {
           </Stack>
         </Stack>
       </Container>
+      {showMinigame && <ContactMinigame />}
     </Box>
   );
 }

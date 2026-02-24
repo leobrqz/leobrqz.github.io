@@ -1,0 +1,1 @@
+export { ContactMinigame } from './ContactMinigame';

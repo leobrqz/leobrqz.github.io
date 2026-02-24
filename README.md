@@ -68,7 +68,7 @@
 
 ### Credits
 
-Icons and assets:
+Icons:
 
 - [Tabler Icons](https://tabler.io/icons)
 - [Simple Icons](https://simpleicons.org/) 
@@ -77,3 +77,9 @@ Icons and assets:
 - [Wikimedia Commons](https://commons.wikimedia.org/)
 - [SVG Repo](https://www.svgrepo.com/) 
 - [Python Software Foundation](https://www.python.org/community/logos/)
+
+Assets:
+- [Space Background](https://space-spheremaps.itch.io/pixelart-starfields)
+- [Space Background Generator](deep-fold.itch.io/space-background-generator)
+- [Space Ships](https://disruptorart.itch.io/tiny-ships-free-spaceships)
+- [Sound Effects](https://mixkit.co/)
