@@ -1,11 +1,12 @@
 <div align="center">
-  <h1><a href="https://leonardobriquezi.me">leonardobriquezi.me</a></h1>
+  <img src="public/assets/favicons/android-chrome-512x512.png" alt="Favicon" width="100" height="100"> <br>
   Built with Next.js and Mantine. <br>
   Static export, deployed to GitHub Pages.
 </div>
-
 <div align="center">
-  <a href="https://leonardobriquezi.me">leonardobriquezi.me</a> · <a href="https://leobrqz.github.io">leobrqz.github.io</a>
+  <h2>
+  <a href="https://leonardobriquezi.me">leonardobriquezi.me</a>
+</h2>
 </div>
 
 
@@ -19,7 +20,7 @@
 </tr>
 <tr>
 <td><strong>Libraries</strong></td>
-<td>tsparticles, Howler, canvas,Tabler Icons, circle-flags, Framer Motion</td>
+<td>Pixi.js, tsParticles, Framer Motion, Howler, Tabler Icons, circle-flags</td>
 </tr>
 <tr>
 <td><strong>Language</strong></td>
