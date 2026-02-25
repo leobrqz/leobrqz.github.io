@@ -15,6 +15,7 @@ import {
   Title,
 } from '@mantine/core';
 import { t, type Lang } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
 import styles from './ProjectsPage.module.css';
 
@@ -59,7 +60,11 @@ function ProjectCard({
     readmeState.status === 'error';
 
   const handleToggle = useCallback(() => {
-    onToggleReadme(project.name, !showContent);
+    const expanding = !showContent;
+    if (expanding) {
+      trackEvent('readme_expand', { project: project.name });
+    }
+    onToggleReadme(project.name, expanding);
   }, [project.name, showContent, onToggleReadme]);
 
   return (
@@ -77,6 +82,7 @@ function ProjectCard({
                   inherit
                   c="var(--mantine-color-anchor)"
                   style={{ textDecoration: 'underline' }}
+                  onClick={() => trackEvent('github_repo', { repo: project.name })}
                 >
                   {project.name}
                 </Text>

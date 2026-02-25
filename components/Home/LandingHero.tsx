@@ -6,6 +6,7 @@ import { Anchor, Box, Group, Text, useMantineColorScheme, useMantineTheme } from
 import { IconBrandGithub, IconBrandLinkedin } from '@tabler/icons-react';
 import { contact } from '@/data/contact';
 import { t, type Lang } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
 
 const TYPE_SPEED_MS = 80;
 const CURSOR_BLINK_MS = 530;
@@ -155,6 +156,7 @@ export function LandingHero({ lang }: LandingHeroProps) {
               c="dimmed"
               style={{ lineHeight: 0 }}
               aria-label="GitHub"
+              onClick={() => trackEvent('github')}
             >
               <IconBrandGithub size={30} stroke={1.5} />
             </Anchor>
@@ -165,6 +167,7 @@ export function LandingHero({ lang }: LandingHeroProps) {
               c="dimmed"
               style={{ lineHeight: 0 }}
               aria-label="LinkedIn"
+              onClick={() => trackEvent('linkedin')}
             >
               <IconBrandLinkedin size={30} stroke={1.5} />
             </Anchor>

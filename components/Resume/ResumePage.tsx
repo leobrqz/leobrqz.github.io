@@ -25,6 +25,7 @@ import {
   resume_skills,
 } from '@/data';
 import { t, type Lang } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
 
 const RESUME_SKILL_CATEGORIES = [
   'languages',
@@ -62,6 +63,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     size="sm"
+                    onClick={() => trackEvent('github')}
                   >
                     GitHub
                   </Anchor>
@@ -70,6 +72,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     size="sm"
+                    onClick={() => trackEvent('linkedin')}
                   >
                     LinkedIn
                   </Anchor>
@@ -93,7 +96,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Divider color="dark.4" size="xs" />
                 {resume_projects.map((project, i) => (
                   <Stack key={i} gap={4}>
-                    <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600}>
+                    <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600} onClick={() => trackEvent('github_repo', { repo: project.name[lang] })}>
                       {project.name[lang]}
                     </Anchor>
                     <Text size="xs" c="dimmed">
@@ -243,6 +246,7 @@ export function ResumePage({ lang }: ResumePageProps) {
           variant="filled"
           size="lg"
           style={{ width: 56, height: 56, padding: 0, borderRadius: '50%' }}
+          onClick={() => trackEvent('resume_download')}
         >
           <IconFileDownload size={24} />
         </Button>

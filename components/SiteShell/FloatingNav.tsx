@@ -22,6 +22,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { contact } from '@/data/contact';
 import { t } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
 
 const NAV_ITEMS: { href: string; labelKey: string }[] = [
   { href: '/', labelKey: 'nav.home' },
@@ -290,6 +291,7 @@ export function FloatingNav({ lang }: FloatingNavProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
+                onClick={() => trackEvent('github')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -305,6 +307,7 @@ export function FloatingNav({ lang }: FloatingNavProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
+                onClick={() => trackEvent('linkedin')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

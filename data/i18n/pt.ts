@@ -62,10 +62,10 @@ export const pt = {
   skills: {
     languages: 'Linguagens',
     frameworks: 'Frameworks',
-    data: 'Data',
+    data: 'Data & IA',
     libraries: 'Bibliotecas',
     databases: 'Banco de Dados',
-    tools: 'Ferramentas',
+    tools: 'Infraestrutura & Dev Tools',
     others: 'Outros',
   },
   meta: {

@@ -6,6 +6,7 @@ import { IconBrandGithub, IconBrandLinkedin, IconMail } from '@tabler/icons-reac
 import { Anchor, Box, Container, Group, Stack, Title } from '@mantine/core';
 import { contact } from '@/data';
 import { t, type Lang } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -45,6 +46,7 @@ export function ContactPage({ lang }: ContactPageProps) {
               rel="noopener noreferrer"
               size="md"
               underline="hover"
+              onClick={() => trackEvent('github')}
             >
               <Group gap="xs">
                 <IconBrandGithub size={20} />
@@ -57,6 +59,7 @@ export function ContactPage({ lang }: ContactPageProps) {
               rel="noopener noreferrer"
               size="md"
               underline="hover"
+              onClick={() => trackEvent('linkedin')}
             >
               <Group gap="xs">
                 <IconBrandLinkedin size={20} />

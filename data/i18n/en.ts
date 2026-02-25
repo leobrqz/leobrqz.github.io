@@ -62,10 +62,10 @@ export const en = {
   skills: {
     languages: 'Languages',
     frameworks: 'Frameworks',
-    data: 'Data',
+    data: 'Data & AI',
     libraries: 'Libraries',
     databases: 'Databases',
-    tools: 'Tools',
+    tools: 'Infrastructure & Dev Tools',
     others: 'Others',
   },
   meta: {

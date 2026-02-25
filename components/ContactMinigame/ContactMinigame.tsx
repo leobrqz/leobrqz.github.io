@@ -5,6 +5,7 @@ import { Application, Assets, Container, Graphics, Rectangle, Sprite, Texture } 
 import { Howl } from 'howler';
 import { Box, Button, Stack, Text } from '@mantine/core';
 import { generateAsteroidShape, type AsteroidVertex } from '@/components/AsteroidLayer/asteroidShape';
+import { trackEvent } from '@/lib/analytics';
 import {
   ASTEROID_BASE_SPEED,
   ASTEROID_RADIUS_MAX,
@@ -483,6 +484,7 @@ export function ContactMinigame() {
           }
           gameStateRef.current = 'gameover';
           setGameState('gameover');
+          trackEvent('game_over', { score: finalScore });
         }
       }
 
@@ -533,10 +535,12 @@ export function ContactMinigame() {
 
   const handlePlayAgain = useCallback(() => {
     destroyApp();
+    trackEvent('game_restart');
     startGame(false);
   }, [destroyApp, startGame]);
 
   const handleRestart = useCallback(() => {
+    trackEvent('game_restart');
     startGame(true);
   }, [startGame]);
 
@@ -598,7 +602,7 @@ export function ContactMinigame() {
             Best: {bestScore}
           </Text>
           <Box style={{ pointerEvents: 'auto' }}>
-            <Button onClick={() => startGame(false)} size="md">
+            <Button onClick={() => { trackEvent('game_start'); startGame(false); }} size="md">
               Play
             </Button>
           </Box>

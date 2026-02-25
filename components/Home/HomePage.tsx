@@ -18,6 +18,7 @@ import {
 import { about } from '@/data/about';
 import { skills, type SkillItem } from '@/data/skills';
 import { t, type Lang } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
 import { LandingHero } from './LandingHero';
 
@@ -88,6 +89,7 @@ function HomeProjectCard({ project }: { project: EnrichedProject }) {
             inherit
             c="var(--mantine-color-anchor)"
             style={{ textDecoration: 'underline' }}
+            onClick={() => trackEvent('github_repo', { repo: project.name })}
           >
             {project.name}
           </Text>
@@ -129,7 +131,7 @@ export function HomePage({ lang }: HomePageProps) {
                       {t(lang, `skills.${category}`)}
                     </Text>
                     <Group gap="xs" wrap="wrap">
-                      {skills[category].map((item) => (
+                      {(skills[category] as SkillItem[]).map((item) => (
                         <Group key={item.name} gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
                           <SkillIcon item={item} />
                           <Text size="sm" lineClamp={1}>

@@ -72,6 +72,7 @@
 Icons:
 
 - [Favicon](https://favicon.io/favicon-generator/) - [Font Tiny5](https://fonts.google.com/specimen/Tiny5)
+- [SQL Icon](https://icons8.com/icon/J6KcaRLsTgpZ/sql) by [Icons8](https://icons8.com/)
 - [Tabler Icons](https://tabler.io/icons)
 - [Simple Icons](https://simpleicons.org/) 
 - [Circle Flags](https://github.com/HatScripts/circle-flags)

@@ -2,6 +2,7 @@ import '@mantine/core/styles.css';
 
 import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 import { ClientOnlyChildren } from '@/components/ClientOnlyChildren';
 import { JsonLd } from '@/components/JsonLd';
 import { SITE_TITLE, SITE_URL } from '@/config/site';
@@ -41,12 +42,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        {/* Google Analytics — plain script tags required for static export */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GZ4JSFHDND" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-GZ4JSFHDND');
+            `,
+          }}
+        />
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="dark">
           <ClientOnlyChildren>{children}</ClientOnlyChildren>
         </MantineProvider>
         <JsonLd />
+        <AnalyticsTracker />
       </body>
     </html>
   );
