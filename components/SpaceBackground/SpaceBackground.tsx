@@ -14,6 +14,8 @@ const CANVAS_HEIGHT_DESKTOP = 1440;
 const CANVAS_WIDTH_MOBILE = 1280;
 const CANVAS_HEIGHT_MOBILE = 720;
 const MOBILE_BREAKPOINT = 768;
+const PARTICLE_COUNT_DESKTOP = 120;
+const PARTICLE_COUNT_MOBILE = 20;
 export const SCROLL_PARALLAX_FACTOR = 0.06;
 
 function getCanvasSize(): { w: number; h: number } {
@@ -26,12 +28,12 @@ function getCanvasSize(): { w: number; h: number } {
   return { w: CANVAS_WIDTH_DESKTOP, h: CANVAS_HEIGHT_DESKTOP };
 }
 
-function getParticleOptions() {
+function getParticleOptions(isMobile: boolean) {
   return {
     fullScreen: { enable: false },
     background: { color: 'transparent' },
     particles: {
-      number: { value: 120 },
+      number: { value: isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP },
       color: { value: '#ffffff' },
       opacity: {
         value: { min: 0.15, max: 0.95 },
@@ -164,7 +166,7 @@ export function SpaceBackground({ parallaxControlled = false }: SpaceBackgroundP
       <Particles
         key={`stars-${canvasSize.w}-${canvasSize.h}`}
         id="space-background-particles"
-        options={getParticleOptions()}
+        options={getParticleOptions(canvasSize.w === CANVAS_WIDTH_MOBILE)}
       />
     </div>
   );

@@ -250,8 +250,8 @@ export function FloatingNav({ lang }: FloatingNavProps) {
           content: {
             display: 'flex',
             flexDirection: 'column',
-            height: '100vh',
-            maxHeight: '100vh',
+            height: '100dvh',
+            maxHeight: '100dvh',
             overflow: 'hidden',
           },
           header: {
