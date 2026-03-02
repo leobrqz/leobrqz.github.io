@@ -127,7 +127,7 @@ export function HomePage({ lang }: HomePageProps) {
               {SKILL_CATEGORIES.map((category) => (
                 <Paper key={category} withBorder p="md" radius="sm">
                   <Stack gap="sm">
-                    <Text size="sm" fw={600} c="dimmed">
+                    <Text size="sm" fw={600} c="gray.5">
                       {t(lang, `skills.${category}`)}
                     </Text>
                     <Group gap="xs" wrap="wrap">

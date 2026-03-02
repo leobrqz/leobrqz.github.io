@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { Box, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { AsteroidLayer } from '@/components/AsteroidLayer';
 import { SpaceBackground, SCROLL_PARALLAX_FACTOR } from '@/components/SpaceBackground';
 
@@ -158,14 +159,19 @@ function StarsLayer() {
   );
 }
 
+const PARALLAX_HEIGHT_DESKTOP = '110vh';
+const PARALLAX_HEIGHT_MOBILE = '250vh';
+
 export function IdeBackground({ children }: IdeBackgroundProps) {
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
+  const isMobile = useMediaQuery('(max-width: 767px)');
   const isDark = colorScheme === 'dark';
   const parallaxContainerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
 
   const bgColor = isDark ? theme.colors.dark[8] : theme.colors.gray[0];
+  const parallaxHeight = isMobile ? PARALLAX_HEIGHT_MOBILE : PARALLAX_HEIGHT_DESKTOP;
 
   useEffect(() => {
     const onScroll = () => {
@@ -203,7 +209,7 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
           top: 0,
           left: 0,
           right: 0,
-          height: '110vh',
+          height: parallaxHeight,
           zIndex: 0,
           pointerEvents: 'none',
           overflow: 'hidden',

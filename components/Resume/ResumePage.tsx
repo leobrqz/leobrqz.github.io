@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
 import { IconFileDownload } from '@tabler/icons-react';
 import {
   Anchor,
@@ -9,12 +10,13 @@ import {
   Container,
   Divider,
   Group,
+  Loader,
   Paper,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
-import { CV_PDF_FILENAME, CV_PDF_URL } from '@/config/site';
+import { CV_PDF_FILENAME, CV_PDF_URL } from "@/config/site";
 import {
   about,
   certifications,
@@ -24,8 +26,11 @@ import {
   resume_projects,
   resume_skills,
 } from '@/data';
-import { t, type Lang } from '@/lib/i18n';
-import { trackEvent } from '@/lib/analytics';
+import { t, type Lang } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
+import styles from "./ResumePage.module.css";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const RESUME_SKILL_CATEGORIES = [
   'languages',
@@ -40,12 +45,115 @@ export type ResumePageProps = {
 };
 
 export function ResumePage({ lang }: ResumePageProps) {
+  const [view, setView] = useState<'web' | 'pdf'>('web');
+  const [pdfWidth, setPdfWidth] = useState<number>(0);
+  const [pdfLoading, setPdfLoading] = useState(true);
+  const pdfContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const pdfRenderWidth = pdfWidth > 0 ? pdfWidth : undefined;
+
+  useEffect(() => {
+    if (view === 'pdf') {
+      setPdfLoading(true);
+    }
+  }, [view]);
+
+  useEffect(() => {
+    if (view !== 'pdf') {
+      return;
+    }
+
+    const el = pdfContainerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const updateWidth = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width) {
+        setPdfWidth(rect.width);
+      }
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(() => {
+      updateWidth();
+    });
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [view]);
+
   return (
-    <Box component="main" py="xl">
+    <Box component="main" pt="md" pb="xl">
       <Container size="md">
-        <Stack gap="xl">
-          <Paper withBorder p="lg" radius="md">
-            <Stack gap="xl">
+        <Stack gap="lg">
+          <Group justify="center">
+            <Group gap="xs">
+              <Button
+                size="xs"
+                variant={view === 'web' ? 'filled' : 'subtle'}
+                onClick={() => setView('web')}
+              >
+                Web
+              </Button>
+              <Button
+                size="xs"
+                variant={view === 'pdf' ? 'filled' : 'subtle'}
+                onClick={() => setView('pdf')}
+              >
+                PDF
+              </Button>
+            </Group>
+          </Group>
+
+          {view === 'pdf' ? (
+            <Box className={styles.pdfViewer} style={{ width: '100%' }}>
+              <Box
+                ref={pdfContainerRef}
+                style={{
+                  width: '100%',
+                  minHeight: 400,
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {pdfLoading && (
+                  <Box
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'var(--mantine-color-body)',
+                      borderRadius: 'var(--mantine-radius-sm)',
+                    }}
+                  >
+                    <Loader size="lg" />
+                  </Box>
+                )}
+                <Document
+                  file={CV_PDF_URL}
+                  onLoadSuccess={() => setPdfLoading(false)}
+                >
+                  <Page
+                    pageNumber={1}
+                    width={pdfRenderWidth}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                </Document>
+              </Box>
+            </Box>
+          ) : (
+            <Paper withBorder p="lg" radius="md">
+              <Stack gap="xl">
               {/* Name and contact inside the box */}
               <Stack gap="xs" align="center" style={{ textAlign: 'center' }}>
                 <Title order={1} size="1.75rem" fw={700}>
@@ -221,8 +329,9 @@ export function ResumePage({ lang }: ResumePageProps) {
                   </Group>
                 ))}
               </Stack>
-            </Stack>
-          </Paper>
+              </Stack>
+            </Paper>
+          )}
         </Stack>
       </Container>
 

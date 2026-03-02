@@ -1,0 +1,25 @@
+.pdfViewer {
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-sm);
+  background-color: var(--mantine-color-body);
+  padding: var(--mantine-spacing-md);
+}
+
+/* Constrain wrappers so the high-res canvas is scaled down to container width */
+.pdfViewer > div {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.pdfViewer div {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.pdfViewer canvas {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  max-width: 100%;
+}
