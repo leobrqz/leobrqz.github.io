@@ -210,33 +210,52 @@ export function FloatingNav({ lang }: FloatingNavProps) {
           top: 20,
           zIndex: 100,
           display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
-          gap: theme.spacing.sm,
           paddingLeft: theme.spacing.md,
           paddingRight: theme.spacing.md,
+          paddingTop: 8,
+          paddingBottom: 8,
           width: '100%',
           maxWidth: '100%',
           boxSizing: 'border-box',
+          pointerEvents: 'none',
         }}
       >
-        <Burger
-          opened={drawerOpened}
-          onClick={openDrawer}
+        <Box
+          style={{ position: 'absolute', left: theme.spacing.md, pointerEvents: 'auto' }}
           hiddenFrom="sm"
-          size="sm"
-          aria-label="Open navigation"
-        />
+        >
+          <Burger
+            opened={drawerOpened}
+            onClick={openDrawer}
+            size="sm"
+            aria-label="Open navigation"
+          />
+        </Box>
+
         <Group
           gap="md"
           wrap="nowrap"
           visibleFrom="sm"
-          style={{ flex: 1, justifyContent: 'center' }}
+          style={{
+            pointerEvents: 'auto',
+            backdropFilter: 'blur(14px)',
+            WebkitBackdropFilter: 'blur(14px)',
+            backgroundColor: 'rgba(10, 12, 20, 0.60)',
+            border: '1px solid rgba(255, 255, 255, 0.07)',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.40)',
+            borderRadius: theme.radius.xl,
+            paddingTop: 6,
+            paddingBottom: 6,
+            paddingLeft: theme.spacing.md,
+            paddingRight: theme.spacing.md,
+          }}
         >
           {navPills}
-        </Group>
-        <Box style={{ marginLeft: 'auto' }} visibleFrom="sm">
+          <Box style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.10)' }} />
           {langSwitcher}
-        </Box>
+        </Group>
       </Box>
 
       <Drawer

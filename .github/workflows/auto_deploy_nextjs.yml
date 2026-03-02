@@ -1,5 +1,5 @@
 # Deploy Next.js static export to GitHub Pages
-name: Deploy Next.js to Pages
+name: Deploy Next.js to Pages (Auto)
 
 on:
   push:

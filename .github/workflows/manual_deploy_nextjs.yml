@@ -1,6 +1,6 @@
 # Deploy branch "next" to GitHub Pages 
 # Based on GitHub's "Deploy Next.js site to Pages" template
-name: Deploy next to Pages
+name: Deploy Next.js to Pages (Manual)
 
 on:
   workflow_dispatch:
