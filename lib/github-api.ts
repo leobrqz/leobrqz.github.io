@@ -92,6 +92,16 @@ function processReadmeHtml(html: string, owner: string, repo: string, branch: st
   // Remove heading anchor elements (chain-link icons): <a class="anchor" ...>...</a>
   out = out.replace(/<a\s+[^>]*class="[^"]*anchor[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '');
 
+  // Rewrite all remaining <a href="..."> to open in a new tab
+  out = out.replace(/<a\s+([^>]*?)href=(["'])([^"']+)\2([^>]*)>/gi, (_, before, quote, href, after) => {
+    const combined = `${before}${after}`;
+    const hasTarget = /target\s*=/i.test(combined);
+    const hasRel = /rel\s*=/i.test(combined);
+    const targetAttr = hasTarget ? '' : ' target="_blank"';
+    const relAttr = hasRel ? '' : ' rel="noopener noreferrer"';
+    return `<a ${combined}href=${quote}${href}${quote}${targetAttr}${relAttr}>`;
+  });
+
   return out;
 }
 

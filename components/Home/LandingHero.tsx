@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Anchor, Box, Group, Text, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Anchor, Box, Group, Text, Tooltip, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { IconBrandGithub, IconBrandLinkedin } from '@tabler/icons-react';
 import { contact } from '@/data/contact';
 import { t, type Lang } from '@/lib/i18n';
@@ -149,28 +149,32 @@ export function LandingHero({ lang }: LandingHeroProps) {
           }}
         >
           <Group justify="center" gap="md" mt="sm">
-            <Anchor
-              href={`https://github.com/${contact.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              c="dimmed"
-              style={{ lineHeight: 0 }}
-              aria-label="GitHub"
-              onClick={() => trackEvent('github')}
-            >
-              <IconBrandGithub size={30} stroke={1.5} />
-            </Anchor>
-            <Anchor
-              href={`https://linkedin.com/in/${contact.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              c="dimmed"
-              style={{ lineHeight: 0 }}
-              aria-label="LinkedIn"
-              onClick={() => trackEvent('linkedin')}
-            >
-              <IconBrandLinkedin size={30} stroke={1.5} />
-            </Anchor>
+            <Tooltip label="GitHub" withArrow>
+              <Anchor
+                href={`https://github.com/${contact.github}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                c="dimmed"
+                style={{ lineHeight: 0 }}
+                aria-label="GitHub"
+                onClick={() => trackEvent('github')}
+              >
+                <IconBrandGithub size={30} stroke={1.5} />
+              </Anchor>
+            </Tooltip>
+            <Tooltip label="LinkedIn" withArrow>
+              <Anchor
+                href={`https://linkedin.com/in/${contact.linkedin}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                c="dimmed"
+                style={{ lineHeight: 0 }}
+                aria-label="LinkedIn"
+                onClick={() => trackEvent('linkedin')}
+              >
+                <IconBrandLinkedin size={30} stroke={1.5} />
+              </Anchor>
+            </Tooltip>
           </Group>
         </motion.div>
       </Box>

@@ -6,7 +6,9 @@ export const GITHUB_REPO: string = 'leobrqz.github.io';
 
 export const SITE_URL: string = 'https://leonardobriquezi.me';
 
-export const SITE_TITLE: string = 'Leobrqz';
+export const SITE_TITLE: string = 'Leonardo Briquezi';
+
+export const GOOGLE_ANALYTICS_ID: string = 'G-GZ4JSFHDND';
 
 export const CV_PDF_FILENAME = 'Leonardo_Briquezi_CV.pdf';
 

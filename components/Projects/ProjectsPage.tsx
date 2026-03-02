@@ -245,7 +245,7 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
             title={t(lang, 'pages.projects')}
             color="gray"
           >
-            <Text size="sm" component="span" dangerouslySetInnerHTML={{ __html: message }} />
+            <Text size="sm">{message}</Text>
           </Alert>
         </Container>
       </Box>

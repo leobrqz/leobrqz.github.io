@@ -52,12 +52,10 @@ export const pt = {
     hide_readme: 'Ocultar README',
     no_readme: 'Nenhum README disponível',
     unable_to_load: 'Não foi possível carregar o README. Tente novamente mais tarde.',
-    no_projects:
-      'Nenhum projeto configurado. Adicione repositórios à lista <code>repositories:</code> em <code>_config.yml</code>.',
+    no_projects: 'Nenhum projeto configurado. Adicione os nomes dos repositórios no array REPOSITORIES em config/site.ts.',
     error_loading: 'Erro ao carregar projetos. Verifique o console para detalhes.',
     error_rate_limit: 'Limite de requisições do GitHub atingido. Tente novamente em alguns minutos.',
-    no_repos:
-      'Nenhum repositório encontrado. Verifique os nomes dos repositórios em <code>_config.yml</code>.',
+    no_repos: 'Nenhum repositório encontrado. Verifique os nomes dos repositórios no array REPOSITORIES em config/site.ts.',
   },
   skills: {
     languages: 'Linguagens',

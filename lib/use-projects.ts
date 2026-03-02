@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
 import { GITHUB_USERNAME, REPOSITORIES } from '@/config/site';
 import { projects_meta } from '@/data/projects_meta';

@@ -5,13 +5,13 @@ import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/c
 import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 import { ClientOnlyChildren } from '@/components/ClientOnlyChildren';
 import { JsonLd } from '@/components/JsonLd';
-import { SITE_TITLE, SITE_URL } from '@/config/site';
+import { GOOGLE_ANALYTICS_ID, SITE_TITLE, SITE_URL } from '@/config/site';
 import { theme } from '@/theme';
 
 const DEFAULT_DESCRIPTION = 'Portfolio and resume of Leonardo Briquezi.';
 
 export const metadata = {
-  title: { default: SITE_TITLE, template: `%s | ${SITE_TITLE}` },
+  title: { default: SITE_TITLE, template: SITE_TITLE },
   description: DEFAULT_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   openGraph: {
@@ -44,14 +44,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {/* Google Analytics — plain script tags required for static export */}
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GZ4JSFHDND" />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`} />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-GZ4JSFHDND');
+              gtag('config', '${GOOGLE_ANALYTICS_ID}');
             `,
           }}
         />

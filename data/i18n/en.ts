@@ -52,12 +52,10 @@ export const en = {
     hide_readme: 'Hide README',
     no_readme: 'No README available',
     unable_to_load: 'Unable to load README. Please try again later.',
-    no_projects:
-      'No projects configured. Add repositories to the <code>repositories:</code> list in <code>_config.yml</code>.',
+    no_projects: 'No projects configured. Add repository names to the REPOSITORIES array in config/site.ts.',
     error_loading: 'Error loading projects. Please check the console for details.',
     error_rate_limit: 'GitHub rate limit reached. Please try again in a few minutes.',
-    no_repos:
-      'No repositories found. Please check your repository names in <code>_config.yml</code>.',
+    no_repos: 'No repositories found. Please check the repository names in the REPOSITORIES array in config/site.ts.',
   },
   skills: {
     languages: 'Languages',

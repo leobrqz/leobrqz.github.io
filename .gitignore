@@ -151,3 +151,10 @@ dist
 
 .DS_Store
 # next-env.d.ts
+
+# Documentation
+docs
+
+# Skills testing
+.cursor
+skills-lock.json
