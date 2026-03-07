@@ -341,9 +341,7 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   return (
     <Box component="main" py="xl">
       <Container size="md">
-        <Stack
-          gap="md"
-          component={motion.div}
+        <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-40px' }}
@@ -352,34 +350,33 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
             visible: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
           }}
         >
-          <Title
-            order={1}
-            component={motion.h1}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
-            }}
-          >
-            {t(lang, 'pages.projects')}
-          </Title>
-          {state.projects.map((project) => (
-            <Box
-              key={project.name}
-              component={motion.div}
+          <Stack gap="md">
+            <motion.div
               variants={{
-                hidden: { opacity: 0, x: 36 },
-                visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
               }}
             >
-              <ProjectCard
-                project={project}
-                lang={lang}
-                readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
-                onToggleReadme={onToggleReadme}
-              />
-            </Box>
-          ))}
-        </Stack>
+              <Title order={1}>{t(lang, 'pages.projects')}</Title>
+            </motion.div>
+            {state.projects.map((project) => (
+              <motion.div
+                key={project.name}
+                variants={{
+                  hidden: { opacity: 0, x: 36 },
+                  visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+                }}
+              >
+                <ProjectCard
+                  project={project}
+                  lang={lang}
+                  readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
+                  onToggleReadme={onToggleReadme}
+                />
+              </motion.div>
+            ))}
+          </Stack>
+        </motion.div>
       </Container>
     </Box>
   );
