@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
 import { IconAlertCircle } from '@tabler/icons-react';
 import {
   Alert,
@@ -42,6 +43,64 @@ function formatDate(iso: string): string {
   }
 }
 
+const PILL_CLASS = 'project-pill';
+
+function SectionPills({ items }: { items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+      {items.map((label) => (
+        <Box
+          key={label}
+          component="li"
+          className={PILL_CLASS}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '4px 10px',
+            borderRadius: 6,
+            fontSize: 'var(--mantine-font-size-xs)',
+            fontWeight: 500,
+            backgroundColor: 'var(--mantine-color-dark-6)',
+            color: 'var(--mantine-color-gray-3)',
+            border: '1px solid var(--mantine-color-dark-4)',
+          }}
+        >
+          {label}
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+function LanguagePills({ items }: { items: { name: string; percent: number }[] }) {
+  if (items.length === 0) return null;
+  return (
+    <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+      {items.map(({ name, percent }) => (
+        <Box
+          key={name}
+          component="li"
+          className={PILL_CLASS}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '4px 10px',
+            borderRadius: 6,
+            fontSize: 'var(--mantine-font-size-xs)',
+            fontWeight: 500,
+            backgroundColor: 'var(--mantine-color-dark-6)',
+            color: 'var(--mantine-color-gray-3)',
+            border: '1px solid var(--mantine-color-dark-4)',
+          }}
+        >
+          {name} {percent}%
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
 function ProjectCard({
   project,
   lang,
@@ -67,11 +126,16 @@ function ProjectCard({
     onToggleReadme(project.name, expanding);
   }, [project.name, showContent, onToggleReadme]);
 
+  const hasLanguages =
+    project.languageBreakdown.length > 0 || project.languages.length > 0 || project.language;
+  const hasLibsOrTools = project.libraries.length > 0 || project.tools.length > 0;
+  const showRightColumn = hasLanguages || hasLibsOrTools;
+
   return (
     <Paper withBorder p="lg" radius="md" shadow="sm">
       <Stack gap="md">
-        <Grid gutter="md">
-          <Grid.Col span={{ base: 12, sm: 8 }}>
+        <Grid gutter="lg">
+          <Grid.Col span={{ base: 12, sm: 7 }}>
             <Stack gap="xs">
               <Title order={3} size="h4">
                 <Text
@@ -97,58 +161,63 @@ function ProjectCard({
               </Text>
             </Stack>
           </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 4 }}>
-            {(project.languages.length > 0 ||
-              project.language ||
-              project.libraries.length > 0 ||
-              project.tools.length > 0) && (
-              <Paper withBorder p="md" radius="sm">
-                <Box
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: `repeat(${
-                      [
-                        project.languages.length > 0 || project.language,
-                        project.libraries.length > 0,
-                        project.tools.length > 0,
-                      ].filter(Boolean).length
-                    }, 1fr)`,
-                    gap: 'var(--mantine-spacing-md)',
-                  }}
-                >
-                  {(project.languages.length > 0 || project.language) && (
-                    <Box style={{ minWidth: 0 }}>
-                      <Text size="xs" fw={600} c="dimmed">
-                        {t(lang, 'projects.languages')}
-                      </Text>
-                      <Text size="xs">
-                        {project.languages.length > 0
-                          ? project.languages.join(', ')
-                          : (project.language ?? '')}
-                      </Text>
-                    </Box>
-                  )}
-                  {project.libraries.length > 0 && (
-                    <Box style={{ minWidth: 0 }}>
-                      <Text size="xs" fw={600} c="dimmed">
-                        {t(lang, 'projects.libraries')}
-                      </Text>
-                      <Text size="xs">{project.libraries.join(', ')}</Text>
-                    </Box>
-                  )}
-                  {project.tools.length > 0 && (
-                    <Box style={{ minWidth: 0 }}>
-                      <Text size="xs" fw={600} c="dimmed">
-                        {t(lang, 'projects.tools')}
-                      </Text>
-                      <Text size="xs">{project.tools.join(', ')}</Text>
-                    </Box>
-                  )}
-                </Box>
-              </Paper>
-            )}
-          </Grid.Col>
+          {showRightColumn && (
+            <Grid.Col span={{ base: 12, sm: 5 }}>
+              <Box
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${
+                    (hasLanguages ? 1 : 0) +
+                    (project.libraries.length > 0 ? 1 : 0) +
+                    (project.tools.length > 0 ? 1 : 0)
+                  }, 1fr)`,
+                  gap: 'var(--mantine-spacing-lg)',
+                  minHeight: 0,
+                  paddingLeft: 'var(--mantine-spacing-sm)',
+                  paddingRight: 'var(--mantine-spacing-md)',
+                }}
+              >
+                {hasLanguages && (
+                  <Stack gap="xs" style={{ minWidth: 0 }}>
+                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      {t(lang, 'projects.languages')}
+                    </Text>
+                    {project.languageBreakdown.length > 0 ? (
+                      <LanguagePills items={project.languageBreakdown} />
+                    ) : (
+                      <SectionPills
+                        items={
+                          project.languages.length > 0
+                            ? project.languages
+                            : project.language
+                              ? [project.language]
+                              : []
+                        }
+                      />
+                    )}
+                  </Stack>
+                )}
+                {project.libraries.length > 0 && (
+                  <Stack gap="xs" style={{ minWidth: 0 }}>
+                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      {t(lang, 'projects.libraries')}
+                    </Text>
+                    <SectionPills items={project.libraries} />
+                  </Stack>
+                )}
+                {project.tools.length > 0 && (
+                  <Stack gap="xs" style={{ minWidth: 0 }}>
+                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      {t(lang, 'projects.tools')}
+                    </Text>
+                    <SectionPills items={project.tools} />
+                  </Stack>
+                )}
+              </Box>
+            </Grid.Col>
+          )}
         </Grid>
+
         <Button variant="light" size="xs" loading={loading} onClick={handleToggle}>
           {showContent ? t(lang, 'projects.hide_readme') : t(lang, 'projects.show_readme')}
         </Button>
@@ -272,19 +341,44 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   return (
     <Box component="main" py="xl">
       <Container size="md">
-        <Stack gap="xl">
-          <Title order={1}>{t(lang, 'pages.projects')}</Title>
-          <Stack gap="md">
-            {state.projects.map((project) => (
+        <Stack
+          gap="md"
+          component={motion.div}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
+          }}
+        >
+          <Title
+            order={1}
+            component={motion.h1}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+            }}
+          >
+            {t(lang, 'pages.projects')}
+          </Title>
+          {state.projects.map((project) => (
+            <Box
+              key={project.name}
+              component={motion.div}
+              variants={{
+                hidden: { opacity: 0, x: 36 },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+              }}
+            >
               <ProjectCard
-                key={project.name}
                 project={project}
                 lang={lang}
                 readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
                 onToggleReadme={onToggleReadme}
               />
-            ))}
-          </Stack>
+            </Box>
+          ))}
         </Stack>
       </Container>
     </Box>

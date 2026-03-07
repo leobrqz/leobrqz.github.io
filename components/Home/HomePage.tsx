@@ -1,6 +1,7 @@
 'use client';
 
 import type { ComponentType } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { IconCpu, IconDatabase } from '@tabler/icons-react';
 import {
@@ -114,41 +115,112 @@ export function HomePage({ lang }: HomePageProps) {
       <LandingHero lang={lang} />
       <Container size="md">
         <Stack gap="xl">
-          {/* About */}
-          <Stack gap="sm">
-            <Title order={2}>{t(lang, 'sections.about_me')}</Title>
-            <Text style={{ whiteSpace: 'pre-line' }}>{about.home_content[lang]}</Text>
+          {/* About — title and each paragraph fade in one after the other */}
+          <Stack
+            gap="lg"
+            component={motion.div}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+            }}
+          >
+            <Title
+              order={2}
+              component={motion.h2}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+              }}
+            >
+              {t(lang, 'sections.about_me')}
+            </Title>
+            {(about.home_content[lang].split(/\n\n+/) as string[])
+              .map((p) => p.trim())
+              .filter(Boolean)
+              .map((paragraph, index) => (
+                <Box
+                  key={index}
+                  component={motion.div}
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+                  }}
+                >
+                  <Text style={{ whiteSpace: 'pre-line' }}>{paragraph}</Text>
+                </Box>
+              ))}
           </Stack>
 
-          {/* Skills */}
-          <Stack gap="md">
-            <Title order={2}>{t(lang, 'sections.skills')}</Title>
-            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
+          {/* Skills — animate in view: title then each card right-to-left in order */}
+          <Stack
+            gap="md"
+            component={motion.div}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+            }}
+          >
+            <Title
+              order={2}
+              component={motion.h2}
+              variants={{
+                hidden: { opacity: 0, x: 36 },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+              }}
+            >
+              {t(lang, 'sections.skills')}
+            </Title>
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg" style={{ alignItems: 'stretch' }}>
               {SKILL_CATEGORIES.map((category) => (
-                <Paper key={category} withBorder p="md" radius="sm">
-                  <Stack gap="sm">
-                    <Text size="sm" fw={600} c="gray.5">
-                      {t(lang, `skills.${category}`)}
-                    </Text>
-                    <Group gap="xs" wrap="wrap">
-                      {(skills[category] as SkillItem[]).map((item) => (
-                        <Group key={item.name} gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
-                          <SkillIcon item={item} />
-                          <Text size="sm" lineClamp={1}>
-                            {item.name}
-                          </Text>
-                        </Group>
-                      ))}
-                    </Group>
-                  </Stack>
-                </Paper>
+                <Box
+                  key={category}
+                  component={motion.div}
+                  style={{ height: '100%', minHeight: 0 }}
+                  variants={{
+                    hidden: { opacity: 0, x: 36 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+                  }}
+                >
+                  <Paper withBorder p="md" radius="sm" style={{ height: '100%' }}>
+                    <Stack gap="sm">
+                      <Text size="sm" fw={600} c="gray.5">
+                        {t(lang, `skills.${category}`)}
+                      </Text>
+                      <Group gap="xs" wrap="wrap">
+                        {(skills[category] as SkillItem[]).map((item) => (
+                          <Group key={item.name} gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
+                            <SkillIcon item={item} />
+                            <Text size="sm" lineClamp={1}>
+                              {item.name}
+                            </Text>
+                          </Group>
+                        ))}
+                      </Group>
+                    </Stack>
+                  </Paper>
+                </Box>
               ))}
             </SimpleGrid>
           </Stack>
 
-          {/* Recent projects: top 3, title + description only */}
-          <Stack gap="md">
-            <Title order={2}>{t(lang, 'home.recent_projects')}</Title>
+          {/* Recent projects: top 3, title + description only — animate in view */}
+          <Stack gap="md" component={motion.div} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-40px' }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}>
+            <Title
+              order={2}
+              component={motion.h2}
+              variants={{
+                hidden: { opacity: 0, x: 36 },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+              }}
+            >
+              {t(lang, 'home.recent_projects')}
+            </Title>
             {state.status === 'loading' && (
               <Group justify="center" py="xl">
                 <Loader size="sm" />
@@ -158,12 +230,30 @@ export function HomePage({ lang }: HomePageProps) {
               <>
                 <Stack gap="md">
                   {projects.map((project) => (
-                    <HomeProjectCard key={project.name} project={project} />
+                    <Box
+                      key={project.name}
+                      component={motion.div}
+                      variants={{
+                        hidden: { opacity: 0, y: 24 },
+                        visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+                      }}
+                    >
+                      <HomeProjectCard project={project} />
+                    </Box>
                   ))}
                 </Stack>
-                <Button component={Link} href={projectsHref} variant="light" size="sm">
-                  {t(lang, 'home.see_all_projects')}
-                </Button>
+                <Box
+                  component={motion.div}
+                  style={{ width: '100%' }}
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { duration: 0.35, ease: 'easeOut' } },
+                  }}
+                >
+                  <Button component={Link} href={projectsHref} variant="light" size="sm" fullWidth>
+                    {t(lang, 'home.see_all_projects')}
+                  </Button>
+                </Box>
               </>
             )}
             {state.status === 'success' && projects.length === 0 && (

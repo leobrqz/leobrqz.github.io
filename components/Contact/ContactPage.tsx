@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from '@tabler/icons-react';
 import { Anchor, Box, Container, Group, Stack, Title } from '@mantine/core';
 import { contact } from '@/data';
@@ -37,9 +38,36 @@ export function ContactPage({ lang }: ContactPageProps) {
   return (
     <Box component="main" py="xl">
       <Container size="md" mx="auto" maw={640}>
-        <Stack gap="xl" align="center" ta="center">
-          <Title order={1}>{t(lang, 'contact.get_in_touch')}</Title>
-          <Stack gap="sm" align="center">
+        <Stack
+          gap="xl"
+          align="center"
+          ta="center"
+          component={motion.div}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+          }}
+        >
+          <Title
+            order={1}
+            component={motion.h1}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+            }}
+          >
+            {t(lang, 'contact.get_in_touch')}
+          </Title>
+          <Box
+            component={motion.div}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+            }}
+          >
             <Anchor
               href={`https://github.com/${contact.github}`}
               target="_blank"
@@ -53,6 +81,14 @@ export function ContactPage({ lang }: ContactPageProps) {
                 GitHub
               </Group>
             </Anchor>
+          </Box>
+          <Box
+            component={motion.div}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+            }}
+          >
             <Anchor
               href={`https://linkedin.com/in/${contact.linkedin}`}
               target="_blank"
@@ -66,13 +102,21 @@ export function ContactPage({ lang }: ContactPageProps) {
                 LinkedIn
               </Group>
             </Anchor>
+          </Box>
+          <Box
+            component={motion.div}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+            }}
+          >
             <Anchor href={`mailto:${contact.email}`} size="md" underline="hover">
               <Group gap="xs">
                 <IconMail size={20} />
                 {t(lang, 'contact.send_email')}
               </Group>
             </Anchor>
-          </Stack>
+          </Box>
         </Stack>
       </Container>
       {showMinigame && <ContactMinigame />}

@@ -9,6 +9,11 @@ import {
   type GhRepo,
 } from './github-api';
 
+export interface LanguageBreakdownItem {
+  name: string;
+  percent: number;
+}
+
 export interface EnrichedProject {
   name: string;
   html_url: string;
@@ -16,6 +21,7 @@ export interface EnrichedProject {
   updated_at: string;
   language: string | null;
   languages: string[];
+  languageBreakdown: LanguageBreakdownItem[];
   libraries: string[];
   tools: string[];
 }
@@ -26,11 +32,20 @@ export type ProjectsState =
   | { status: 'error'; kind: 'rate_limit' | 'generic'; message: string }
   | { status: 'success'; projects: EnrichedProject[] };
 
+function toLanguageBreakdown(langMap: GhLanguages): LanguageBreakdownItem[] {
+  const total = Object.values(langMap).reduce((a, b) => a + b, 0);
+  if (total === 0) return [];
+  return Object.entries(langMap)
+    .map(([name, bytes]) => ({ name, percent: Math.round((bytes / total) * 100) }))
+    .sort((a, b) => b.percent - a.percent);
+}
+
 function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
   const meta = projects_meta[repo.name];
   const libraries = meta?.libraries ?? [];
   const tools = meta?.tools ?? [];
   const languages = Object.keys(langMap);
+  const languageBreakdown = toLanguageBreakdown(langMap);
   return {
     name: repo.name,
     html_url: repo.html_url,
@@ -38,6 +53,7 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
     updated_at: repo.updated_at,
     language: repo.language,
     languages,
+    languageBreakdown,
     libraries,
     tools,
   };
