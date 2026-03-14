@@ -6,6 +6,10 @@ export interface ProjectMetaItem {
 export type ProjectsMeta = Record<string, ProjectMetaItem>;
 
 export const projects_meta: ProjectsMeta = {
+  JobAppliesTracker: {
+    libraries: ['FastAPI', 'Pydantic', 'SQLAlchemy', 'Alembic', 'Next.js', 'React', 'Tailwind', 'shadcn', 'TanStack', 'Recharts', 'schedule-x'],
+    tools: ['Docker', 'Turborepo'],
+  },
   ShScriptHub: {
     libraries: ['PySide6', 'Psutil'],
     tools: [],

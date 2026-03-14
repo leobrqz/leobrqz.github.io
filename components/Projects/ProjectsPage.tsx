@@ -135,7 +135,7 @@ function ProjectCard({
     <Paper withBorder p="lg" radius="md" shadow="sm">
       <Stack gap="md">
         <Grid gutter="lg">
-          <Grid.Col span={{ base: 12, sm: 7 }}>
+          <Grid.Col span={{ base: 12, sm: 5 }}>
             <Stack gap="xs">
               <Title order={3} size="h4">
                 <Text
@@ -162,7 +162,7 @@ function ProjectCard({
             </Stack>
           </Grid.Col>
           {showRightColumn && (
-            <Grid.Col span={{ base: 12, sm: 5 }}>
+            <Grid.Col span={{ base: 12, sm: 7 }}>
               <Box
                 style={{
                   display: 'grid',

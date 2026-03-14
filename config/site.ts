@@ -15,6 +15,7 @@ export const CV_PDF_FILENAME = 'Leonardo_Briquezi_CV.pdf';
 export const CV_PDF_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/assets/cv/${CV_PDF_FILENAME}`;
 
 export const REPOSITORIES: string[] = [
+  'JobAppliesTracker',
   'ShScriptHub',
   'AutoPot-DR',
   'SmokeShopERP-DataAnalytics',
