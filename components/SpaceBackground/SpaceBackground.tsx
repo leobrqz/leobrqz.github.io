@@ -14,8 +14,8 @@ const CANVAS_HEIGHT_DESKTOP = 1440;
 const CANVAS_WIDTH_MOBILE = 1280;
 const CANVAS_HEIGHT_MOBILE = 720;
 const MOBILE_BREAKPOINT = 768;
-const PARTICLE_COUNT_DESKTOP = 120;
-const PARTICLE_COUNT_MOBILE = 20;
+const PARTICLE_COUNT_DESKTOP = 35;
+const PARTICLE_COUNT_MOBILE = 12;
 export const SCROLL_PARALLAX_FACTOR = 0.06;
 
 function getCanvasSize(): { w: number; h: number } {
@@ -172,6 +172,15 @@ export function SpaceBackground({ parallaxControlled = false }: SpaceBackgroundP
   );
 
   if (parallaxControlled) {
+    const innerStyleTopAligned: React.CSSProperties = {
+      position: 'absolute',
+      left: '50%',
+      top: 0,
+      width: canvasSize.w,
+      height: canvasSize.h,
+      transform: `translateX(-50%) scale(${scale})`,
+      transformOrigin: 'top center',
+    };
     return (
       <div
         style={{
@@ -183,7 +192,13 @@ export function SpaceBackground({ parallaxControlled = false }: SpaceBackgroundP
           overflow: 'hidden',
         }}
       >
-        {inner}
+        <div style={innerStyleTopAligned}>
+          <Particles
+            key={`stars-${canvasSize.w}-${canvasSize.h}`}
+            id="space-background-particles"
+            options={getParticleOptions(canvasSize.w === CANVAS_WIDTH_MOBILE)}
+          />
+        </div>
       </div>
     );
   }

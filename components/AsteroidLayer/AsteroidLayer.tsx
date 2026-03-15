@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Howl } from 'howler';
 import {
   generateAsteroidShape,
@@ -68,8 +68,92 @@ function pointInPolygon(
 
 const POP_SOUND_PATH = '/sounds/mixkit-short-laser-gun-shot-1670.wav';
 
+const WORKER_PATH = '/asteroidLayer.worker.js';
+
+function useWorkerAsteroidLayer(
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  setWorkerActive: (active: boolean) => void,
+  canvasTransferredRef?: React.MutableRefObject<boolean> | null
+) {
+  const workerRef = useRef<Worker | null>(null);
+  const lastSizeRef = useRef({ w: 0, h: 0 });
+  const howlRef = useRef<Howl | null>(null);
+
+  const playPop = useCallback(() => {
+    try {
+      if (!howlRef.current) {
+        howlRef.current = new Howl({
+          src: [POP_SOUND_PATH],
+          volume: 0.6,
+          onloaderror: () => {},
+          onplayerror: () => {},
+        });
+      }
+      howlRef.current.play();
+    } catch {
+      // no-op
+    }
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (
+      !canvas ||
+      typeof canvas.transferControlToOffscreen !== 'function'
+    ) {
+      return;
+    }
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    lastSizeRef.current = { w, h };
+    canvas.width = w;
+    canvas.height = h;
+    if (canvasTransferredRef) canvasTransferredRef.current = true;
+    const offscreen = canvas.transferControlToOffscreen();
+    const worker = new Worker(WORKER_PATH);
+    workerRef.current = worker;
+    setWorkerActive(true);
+    worker.postMessage(
+      { type: 'init', offscreenCanvas: offscreen, width: w, height: h },
+      [offscreen]
+    );
+    worker.onmessage = (e: MessageEvent<{ type: string; value?: number }>) => {
+      if (e.data.type === 'playPop') playPop();
+      if (e.data.type === 'score') console.log('Asteroid score:', e.data.value);
+    };
+
+    const onResize = () => {
+      const nw = window.innerWidth;
+      const nh = window.innerHeight;
+      lastSizeRef.current = { w: nw, h: nh };
+      worker.postMessage({ type: 'resize', width: nw, height: nh });
+    };
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      if (canvasTransferredRef) canvasTransferredRef.current = false;
+      setWorkerActive(false);
+      window.removeEventListener('resize', onResize);
+      worker.postMessage({ type: 'resize', width: 0, height: 0 });
+      worker.terminate();
+      workerRef.current = null;
+    };
+  }, [canvasRef, playPop, setWorkerActive, canvasTransferredRef]);
+
+  return { workerRef, lastSizeRef };
+}
+
 export function AsteroidLayer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasTransferredRef = useRef(false);
+  const [workerActive, setWorkerActive] = useState(false);
+
+  const { workerRef, lastSizeRef } = useWorkerAsteroidLayer(
+    canvasRef,
+    setWorkerActive,
+    canvasTransferredRef
+  );
+
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const asteroidsRef = useRef<Asteroid[]>([]);
@@ -156,6 +240,10 @@ export function AsteroidLayer() {
 
   const tryExplodeAt = useCallback(
     (px: number, py: number): boolean => {
+      if (workerRef.current) {
+        workerRef.current.postMessage({ type: 'click', px, py });
+        return false;
+      }
       const asteroids = asteroidsRef.current;
       for (let i = 0; i < asteroids.length; i++) {
         const a = asteroids[i];
@@ -198,7 +286,11 @@ export function AsteroidLayer() {
   useEffect(() => {
     const win = window as Window & { __printAsteroidScore?: () => void };
     win.__printAsteroidScore = () => {
-      console.log('Asteroid score:', asteroidScore);
+      if (workerRef.current) {
+        workerRef.current.postMessage({ type: 'getScore' });
+      } else {
+        console.log('Asteroid score:', asteroidScore);
+      }
     };
     return () => {
       delete win.__printAsteroidScore;
@@ -217,28 +309,38 @@ export function AsteroidLayer() {
         (target instanceof HTMLAnchorElement ||
           target instanceof HTMLButtonElement ||
           (target instanceof HTMLElement &&
-            (target.closest('a') || target.closest('button') || target.closest('[role="button"]'))))
+            (target.closest('a') ||
+              target.closest('button') ||
+              target.closest('[role="button"]'))))
       ) {
         return;
       }
 
       const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
+      const isWorker = !!workerRef.current;
+      const scaleX = isWorker
+        ? lastSizeRef.current.w / rect.width
+        : canvas.width / rect.width;
+      const scaleY = isWorker
+        ? lastSizeRef.current.h / rect.height
+        : canvas.height / rect.height;
       const px = (e.clientX - rect.left) * scaleX;
       const py = (e.clientY - rect.top) * scaleY;
 
-      if (tryExplodeAt(px, py)) {
+      const consumed = tryExplodeAt(px, py);
+      if (consumed) {
         e.preventDefault();
         e.stopPropagation();
       }
     };
 
     document.addEventListener('click', handleDocumentClick, true);
-    return () => document.removeEventListener('click', handleDocumentClick, true);
+    return () =>
+      document.removeEventListener('click', handleDocumentClick, true);
   }, [tryExplodeAt]);
 
   useEffect(() => {
+    if (workerActive) return;
     scheduleSpawn();
     return () => {
       if (spawnTimeoutRef.current) {
@@ -247,31 +349,44 @@ export function AsteroidLayer() {
       }
       spawnScheduledRef.current = false;
     };
-  }, [scheduleSpawn]);
+  }, [workerActive, scheduleSpawn]);
 
   useEffect(() => {
     const win = window as Window & { __forceAsteroidSpawn?: () => void };
-    win.__forceAsteroidSpawn = () => spawnOne(true);
+    win.__forceAsteroidSpawn = () => {
+      if (workerRef.current) {
+        workerRef.current.postMessage({ type: 'forceSpawn' });
+      } else {
+        spawnOne(true);
+      }
+    };
     return () => {
       delete win.__forceAsteroidSpawn;
     };
   }, [spawnOne]);
 
   useEffect(() => {
+    if (workerActive || canvasTransferredRef?.current) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const setSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      if (canvasTransferredRef?.current) return;
+      try {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      } catch {
+        // Canvas was transferred to worker; resize is handled there
+      }
     };
     setSize();
     window.addEventListener('resize', setSize);
 
     return () => window.removeEventListener('resize', setSize);
-  }, []);
+  }, [workerActive]);
 
   useEffect(() => {
+    if (workerActive) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -298,8 +413,6 @@ export function AsteroidLayer() {
         ctx.translate(a.x, a.y);
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 1.2;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = 'rgba(255,255,255,0.4)';
         ctx.beginPath();
         const s = a.shape;
         ctx.moveTo(s[0].x * a.radius, s[0].y * a.radius);
@@ -308,7 +421,6 @@ export function AsteroidLayer() {
         }
         ctx.closePath();
         ctx.stroke();
-        ctx.shadowBlur = 0;
         ctx.restore();
       }
 
@@ -370,7 +482,7 @@ export function AsteroidLayer() {
       mounted = false;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [scheduleSpawn]);
+  }, [workerActive, scheduleSpawn]);
 
   return (
     <canvas

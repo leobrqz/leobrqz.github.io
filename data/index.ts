@@ -6,5 +6,10 @@ export { education, type EducationEntry } from './education';
 export { resume_projects, type ResumeProjectEntry } from './resume_projects';
 export { certifications, type CertificationEntry } from './certifications';
 export { languages_spoken, type LanguageSpokenEntry } from './languages_spoken';
-export { projects_meta, type ProjectMetaItem, type ProjectsMeta } from './projects_meta';
+export {
+  projects_meta,
+  type ProjectLabel,
+  type ProjectMetaItem,
+  type ProjectsMeta,
+} from './projects_meta';
 export { experience, type ExperienceEntry } from './experience';

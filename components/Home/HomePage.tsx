@@ -21,6 +21,7 @@ import { skills, type SkillItem } from '@/data/skills';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
+import { ProjectLabels } from '@/components/Projects/ProjectLabels';
 import { LandingHero } from './LandingHero';
 
 const SKILL_CATEGORIES = [
@@ -77,24 +78,33 @@ function getProjectsHref(lang: Lang): string {
   return lang === 'en' ? '/en/projects' : '/projects';
 }
 
-function HomeProjectCard({ project }: { project: EnrichedProject }) {
+function HomeProjectCard({
+  project,
+  lang,
+}: {
+  project: EnrichedProject;
+  lang: Lang;
+}) {
   return (
     <Paper withBorder p="lg" radius="md" shadow="sm">
       <Stack gap="xs">
-        <Title order={3} size="h4">
-          <Text
-            component="a"
-            href={project.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            inherit
-            c="var(--mantine-color-anchor)"
-            style={{ textDecoration: 'underline' }}
-            onClick={() => trackEvent('github_repo', { repo: project.name })}
-          >
-            {project.name}
-          </Text>
-        </Title>
+        <Group wrap="wrap" align="center" gap={6}>
+          <Title order={3} size="h4" style={{ minWidth: 0 }}>
+            <Text
+              component="a"
+              href={project.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              inherit
+              c="var(--mantine-color-anchor)"
+              style={{ textDecoration: 'underline' }}
+              onClick={() => trackEvent('github_repo', { repo: project.name })}
+            >
+              {project.name}
+            </Text>
+          </Title>
+          <ProjectLabels labels={project.labels} lang={lang} />
+        </Group>
         {project.description && (
           <Text size="sm" c="dimmed">
             {project.description}
@@ -235,7 +245,7 @@ export function HomePage({ lang }: HomePageProps) {
                           visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
                         }}
                       >
-                        <HomeProjectCard project={project} />
+                        <HomeProjectCard project={project} lang={lang} />
                       </motion.div>
                     ))}
                   </Stack>

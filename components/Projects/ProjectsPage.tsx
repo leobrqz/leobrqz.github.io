@@ -9,6 +9,7 @@ import {
   Button,
   Container,
   Grid,
+  Group,
   Loader,
   Paper,
   Stack,
@@ -18,6 +19,7 @@ import {
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
+import { ProjectLabels } from './ProjectLabels';
 import styles from './ProjectsPage.module.css';
 
 export type ProjectsPageProps = {
@@ -137,20 +139,23 @@ function ProjectCard({
         <Grid gutter="lg">
           <Grid.Col span={{ base: 12, sm: 5 }}>
             <Stack gap="xs">
-              <Title order={3} size="h4">
-                <Text
-                  component="a"
-                  href={project.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  inherit
-                  c="var(--mantine-color-anchor)"
-                  style={{ textDecoration: 'underline' }}
-                  onClick={() => trackEvent('github_repo', { repo: project.name })}
-                >
-                  {project.name}
-                </Text>
-              </Title>
+              <Group wrap="wrap" align="center" gap={6}>
+                <Title order={3} size="h4" style={{ minWidth: 0 }}>
+                  <Text
+                    component="a"
+                    href={project.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    inherit
+                    c="var(--mantine-color-anchor)"
+                    style={{ textDecoration: 'underline' }}
+                    onClick={() => trackEvent('github_repo', { repo: project.name })}
+                  >
+                    {project.name}
+                  </Text>
+                </Title>
+                <ProjectLabels labels={project.labels} lang={lang} />
+              </Group>
               {project.description && (
                 <Text size="sm" c="dimmed">
                   {project.description}

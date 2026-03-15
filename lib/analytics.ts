@@ -4,6 +4,7 @@ type GtagEvent =
   | 'game_restart'
   | 'readme_expand'
   | 'resume_download'
+  | 'project_label_changelog'
   | 'github_repo'
   | 'github'
   | 'linkedin';

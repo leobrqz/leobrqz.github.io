@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { GITHUB_USERNAME, REPOSITORIES } from '@/config/site';
-import { projects_meta } from '@/data/projects_meta';
+import { projects_meta, type ProjectLabel } from '@/data/projects_meta';
 import {
   fetchLanguages,
   fetchReadmeHtml,
@@ -24,6 +24,7 @@ export interface EnrichedProject {
   languageBreakdown: LanguageBreakdownItem[];
   libraries: string[];
   tools: string[];
+  labels: ProjectLabel[];
 }
 
 export type ProjectsState =
@@ -44,6 +45,7 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
   const meta = projects_meta[repo.name];
   const libraries = meta?.libraries ?? [];
   const tools = meta?.tools ?? [];
+  const labels = meta?.labels ?? [];
   const languages = Object.keys(langMap);
   const languageBreakdown = toLanguageBreakdown(langMap);
   return {
@@ -56,6 +58,7 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
     languageBreakdown,
     libraries,
     tools,
+    labels,
   };
 }
 

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { Box, useMantineColorScheme, useMantineTheme } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
 import { AsteroidLayer } from '@/components/AsteroidLayer';
 import { SpaceBackground, SCROLL_PARALLAX_FACTOR } from '@/components/SpaceBackground';
 
@@ -14,20 +13,28 @@ const BG_LAYER_SPACE = '/assets/background/background_space.png';
 const BG_LAYER_STARS = '/assets/background/background_stars.png';
 
 const STARS_PARALLAX_FACTOR = 0.04;
-const STARS_CANVAS_MAX = 1024;
 const TWINKLE_SPEED = 2;
+/** Run full twinkle every N frames; lower = less Graphics (getImageData/putImageData) cost. */
+const TWINKLE_FRAME_INTERVAL = 12;
+/** Only twinkle every Nth pixel in each dimension (1/N² of pixels) to reduce loop cost without resizing canvas. */
+const TWINKLE_PIXEL_STEP = 2;
 const TWINKLE_MIN = 0.3;
 const TWINKLE_AMPLITUDE = 0.5;
 
-const BG_LAYER_STYLE: React.CSSProperties = {
+const BG_LAYER_BASE: React.CSSProperties = {
   position: 'absolute',
   inset: 0,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
   transform: 'translateZ(0)',
   backfaceVisibility: 'hidden',
   imageRendering: 'crisp-edges',
+};
+
+/** Tiled at viewport scale so background extends with page height without zooming. */
+const BG_LAYER_SPACE_TILED: React.CSSProperties = {
+  ...BG_LAYER_BASE,
+  backgroundSize: '100vw auto',
+  backgroundPosition: '0 0',
+  backgroundRepeat: 'repeat',
 };
 
 function StarsLayer() {
@@ -35,6 +42,7 @@ function StarsLayer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const rafRef = useRef<number>(0);
+  const frameCountRef = useRef(0);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -60,30 +68,55 @@ function StarsLayer() {
     let width = 0;
     let height = 0;
 
+    const runTwinkleOnData = (data: ImageData) => {
+      const t = performance.now() * 0.001 * TWINKLE_SPEED;
+      const step = TWINKLE_PIXEL_STEP;
+      for (let y = 0; y < height; y += step) {
+        for (let x = 0; x < width; x += step) {
+          const i = (y * width + x) * 4 + 3;
+          const a = data.data[i];
+          if (a === 0) continue;
+          const phase = phaseHash(x * 0.1, y * 0.1);
+          const n = 0.5 + 0.5 * Math.sin(t + phase);
+          const mul = TWINKLE_MIN + TWINKLE_AMPLITUDE * n;
+          data.data[i] = Math.round(a * mul);
+        }
+      }
+    };
+
+    const redrawImmediate = (ctx: CanvasRenderingContext2D) => {
+      drawTiled(ctx);
+      const data = ctx.getImageData(0, 0, width, height);
+      runTwinkleOnData(data);
+      ctx.putImageData(data, 0, 0);
+    };
+
     const setCanvasSize = () => {
       const parent = canvas.parentElement;
       if (!parent) return;
       const w = parent.clientWidth;
       const h = parent.clientHeight;
-      const scale = Math.min(1, STARS_CANVAS_MAX / Math.max(w, h));
-      width = Math.max(1, Math.floor(w * scale));
-      height = Math.max(1, Math.floor(h * scale));
+      width = Math.max(1, w);
+      height = Math.max(1, h);
       canvas.width = width;
       canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (ctx && img.complete && img.naturalWidth) {
+        redrawImmediate(ctx);
+      }
     };
 
-    const drawCover = (ctx: CanvasRenderingContext2D) => {
+    const drawTiled = (ctx: CanvasRenderingContext2D) => {
       const im = imgRef.current;
       if (!im || !im.naturalWidth) return;
       ctx.imageSmoothingEnabled = false;
       const iw = im.naturalWidth;
       const ih = im.naturalHeight;
-      const scale = Math.max(width / iw, height / ih);
-      const sw = iw * scale;
-      const sh = ih * scale;
-      const sx = (width - sw) / 2;
-      const sy = (height - sh) / 2;
-      ctx.drawImage(im, 0, 0, iw, ih, sx, sy, sw, sh);
+      for (let y = 0; y < height; y += ih) {
+        for (let x = 0; x < width; x += iw) {
+          ctx.drawImage(im, 0, 0, iw, ih, x, y, iw, ih);
+        }
+      }
     };
 
     const phaseHash = (x: number, y: number) => {
@@ -97,20 +130,13 @@ function StarsLayer() {
         rafRef.current = requestAnimationFrame(twinkle);
         return;
       }
-      drawCover(ctx);
-      const data = ctx.getImageData(0, 0, width, height);
-      const t = performance.now() * 0.001 * TWINKLE_SPEED;
-      for (let i = 3; i < data.data.length; i += 4) {
-        const a = data.data[i];
-        if (a === 0) continue;
-        const x = (i / 4) % width;
-        const y = Math.floor(i / 4 / width);
-        const phase = phaseHash(x * 0.1, y * 0.1);
-        const n = 0.5 + 0.5 * Math.sin(t + phase);
-        const mul = TWINKLE_MIN + TWINKLE_AMPLITUDE * n;
-        data.data[i] = Math.round(a * mul);
+      frameCountRef.current += 1;
+      if (frameCountRef.current % TWINKLE_FRAME_INTERVAL === 0) {
+        drawTiled(ctx);
+        const data = ctx.getImageData(0, 0, width, height);
+        runTwinkleOnData(data);
+        ctx.putImageData(data, 0, 0);
       }
-      ctx.putImageData(data, 0, 0);
       rafRef.current = requestAnimationFrame(twinkle);
     };
 
@@ -159,19 +185,38 @@ function StarsLayer() {
   );
 }
 
-const PARALLAX_HEIGHT_DESKTOP = '110vh';
-const PARALLAX_HEIGHT_MOBILE = '250vh';
+const PARALLAX_HEIGHT_FALLBACK = '110vh';
+const RESIZE_DEBOUNCE_MS = 120;
 
 export function IdeBackground({ children }: IdeBackgroundProps) {
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
-  const isMobile = useMediaQuery('(max-width: 767px)');
   const isDark = colorScheme === 'dark';
+  const sectionRef = useRef<HTMLElement>(null);
   const parallaxContainerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
+  const resizeDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const bgColor = isDark ? theme.colors.dark[8] : theme.colors.gray[0];
-  const parallaxHeight = isMobile ? PARALLAX_HEIGHT_MOBILE : PARALLAX_HEIGHT_DESKTOP;
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const container = parallaxContainerRef.current;
+    if (!section || !container) return;
+    const flushHeight = () => {
+      container.style.height = `${section.offsetHeight}px`;
+    };
+    flushHeight();
+    const resizeObserver = new ResizeObserver(() => {
+      if (resizeDebounceRef.current) clearTimeout(resizeDebounceRef.current);
+      resizeDebounceRef.current = setTimeout(flushHeight, RESIZE_DEBOUNCE_MS);
+    });
+    resizeObserver.observe(section);
+    return () => {
+      resizeObserver.disconnect();
+      if (resizeDebounceRef.current) clearTimeout(resizeDebounceRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -195,6 +240,7 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
 
   return (
     <Box
+      ref={sectionRef}
       component="section"
       style={{
         position: 'relative',
@@ -209,7 +255,7 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
           top: 0,
           left: 0,
           right: 0,
-          height: parallaxHeight,
+          height: PARALLAX_HEIGHT_FALLBACK,
           zIndex: 0,
           pointerEvents: 'none',
           overflow: 'hidden',
@@ -219,7 +265,7 @@ export function IdeBackground({ children }: IdeBackgroundProps) {
           component="div"
           aria-hidden
           style={{
-            ...BG_LAYER_STYLE,
+            ...BG_LAYER_SPACE_TILED,
             backgroundImage: `url(${BG_LAYER_SPACE})`,
           }}
         />
