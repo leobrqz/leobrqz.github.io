@@ -2,3 +2,60 @@
 .readmeWrapper a.anchor {
   display: none;
 }
+
+/* GitHub markdown CSS uses its own dark background colors; override them to match Mantine dark-4. */
+.readmeWrapper {
+  background-color: var(--mantine-color-dark-7) !important;
+}
+
+/* The fetched GitHub README HTML contains an inner element with class="markdown-body".
+   Override nested markdown-body backgrounds so GitHub's #0d1117/#151b23 don't show through. */
+.readmeWrapper :global(.markdown-body) {
+  background-color: var(--mantine-color-dark-7) !important;
+}
+
+.readmeWrapper :global(.markdown-body) pre {
+  background-color: var(--mantine-color-dark-6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.readmeWrapper :global(.markdown-body) .highlight pre {
+  background-color: var(--mantine-color-dark-6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.readmeWrapper :global(.markdown-body) code {
+  background-color: var(--mantine-color-dark-7) !important;
+}
+
+/* Inline-code background override above also matches <pre><code> blocks.
+   GitHub's markdown CSS expects pre>code to be transparent; restore that. */
+.readmeWrapper :global(.markdown-body) pre code {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+.readmeWrapper table {
+  background-color: transparent !important;
+}
+
+.readmeWrapper table tr {
+  background-color: transparent !important;
+}
+
+.readmeWrapper table tr:nth-child(2n) {
+  background-color: transparent !important;
+}
+
+.readmeWrapper :global(.markdown-body) table {
+  background-color: transparent !important;
+}
+
+.readmeWrapper :global(.markdown-body) table tr {
+  background-color: transparent !important;
+}
+
+.readmeWrapper :global(.markdown-body) table tr:nth-child(2n) {
+  background-color: transparent !important;
+}

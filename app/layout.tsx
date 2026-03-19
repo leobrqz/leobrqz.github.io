@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import 'github-markdown-css/github-markdown-dark.css';
 
 import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
