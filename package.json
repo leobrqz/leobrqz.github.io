@@ -33,7 +33,7 @@
     "circle-flags": "^2.8.2",
     "framer-motion": "^12.34.3",
     "howler": "^2.2.4",
-    "next": "16.1.6",
+    "next": "16.2.0",
     "pdfjs-dist": "^5.5.207",
     "pixi.js": "^8.16.0",
     "react": "19.2.4",

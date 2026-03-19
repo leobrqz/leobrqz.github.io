@@ -7,15 +7,40 @@ export interface ResumeProjectEntry {
 
 export const resume_projects: ResumeProjectEntry[] = [
   {
+    name: { en: 'JobAppliesTracker', pt: 'JobAppliesTracker' },
+    url: 'https://github.com/leobrqz/JobAppliesTracker',
+    description: {
+      en: `- Web platform to centralize job applications, companies, job boards, resumes/cvs, profile data, interview calendar events with meeting URLs, and performance metrics dashboard.
+      - Pipeline funnel per application with stage history, filters by status/stages/platform/company, and archiving.
+      - REST API organized by resource/domain route prefixes, persistence via SQLAlchemy ORM and PostgreSQL, schema versioning via Alembic, and service orchestration with Docker Compose.`,
+      pt: `- Plataforma web para centralizar candidaturas, empresas, plataformas de vagas, currículos, dados de perfil e calendário de entrevistas com URLs de reunião, além de um dashboard de métricas.
+      - Funil por candidatura com histórico de etapas, filtros por status/etapas/plataforma/empresa e arquivamento.
+      - API REST organizada por recurso (rotas prefixadas por domínio), persistência com SQLAlchemy (ORM) e PostgreSQL, schema versionado e evoluído via Alembic e orquestração dos serviços com Docker Compose.`,
+    },
+    technologies: [
+      'TypeScript',
+      'Python',
+      'React',
+      'Next.js',
+      'FastAPI',
+      'PostgreSQL',
+      'SQLAlchemy',
+      'Turborepo',
+      'Docker',
+    ],
+  },
+  {
     name: { en: 'ShScriptHub', pt: 'ShScriptHub' },
     url: 'https://github.com/leobrqz/ShScriptHub',
     description: {
-      en: `- Scans the project folder and lists all .sh scripts with a dedicated terminal per script.
-      - Auto-detection of Python (venv, .venv) and Node (node_modules) environments; configurable Git Bash and venv paths.
-      - Script cards with favorites, categories, live metrics (CPU, RAM, elapsed) and per-script run/kill controls.`,
-      pt: `- Escaneia a pasta do projeto e lista todos os scripts .sh com terminal independente por script.
-      - Detecção automática de ambientes Python (venv, .venv) e Node (node_modules); paths configuráveis para Git Bash e venv.
-      - Cards de script com favoritos, categorias, métricas em tempo real (CPU, RAM, tempo) e controles de executar/parar por script.`,
+      en: `- Centralizes .sh scripts from a project into a single hub for automation of builds, deploys and other tasks.
+      - Runs each script in its own terminal with CWD set to the script directory; detects and activates venv for Python scripts, and kills the full process tree when stopping.
+      - Shows real-time metrics (CPU, RSS, threads) and a read-only script viewer with syntax highlighting.
+      - Supports scheduling by specific time or interval; background execution captures stdout/stderr with tee and persists run logs as JSON displayed inside the app.`,
+      pt: `- Centraliza scripts .sh de um projeto em um hub para automação de builds, deploys e outras tarefas.
+      - Executa cada script em um terminal separado com CWD no diretório do script; detecção e ativação de venv em scripts Python, além de Kill da árvore de processos.
+      - Métricas em tempo real (CPU, RSS, threads) e viewer do script com syntax highlighting.
+      - Agendamento por horário ou intervalo, execução em background com captura de stdout/stderr via tee e persistência dos logs por run em JSON visualizados dentro do aplicativo.`,
     },
     technologies: ['Python', 'PySide6', 'Psutil'],
   },
@@ -44,20 +69,5 @@ export const resume_projects: ResumeProjectEntry[] = [
       - Dashboard de análise de dados com métricas de vendas, margem de lucro, giro de estoque entre outros indicadores.`,
     },
     technologies: ['Python', 'PyQt6', 'PostgreSQL', 'NumPy', 'Matplotlib'],
-  },
-  {
-    name: { en: 'MiniSchool', pt: 'MiniSchool' },
-    url: 'https://github.com/leobrqz/MiniSchool',
-    description: {
-      en: `- Desktop school management system for courses, subjects, students and grades.
-      - Tkinter interface with tabbed navigation and forms for CRUD operations.
-      - Data persistence in PostgreSQL with relational modeling.
-      - Grade system with multiple components (exam, assignment, simulators) and automatic final grade calculation.`,
-      pt: `- Sistema desktop de gestão escolar para cursos, matérias, alunos e notas.
-      - Interface Tkinter com navegação em abas e formulários para operações CRUD.
-      - Persistência de dados em PostgreSQL com modelagem relacional.
-      - Sistema de notas com múltiplos componentes (prova, trabalho, simulados) e cálculo automático da nota final.`,
-    },
-    technologies: ['Python', 'Tkinter', 'PostgreSQL', 'Psycopg2'],
   },
 ];
