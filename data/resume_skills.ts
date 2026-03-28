@@ -1,6 +1,6 @@
 export interface ResumeSkillItem {
   name: string;
-  icon: string;
+  icon?: string;
 }
 
 export interface ResumeSkillsData {
@@ -39,6 +39,8 @@ export const resume_skills: ResumeSkillsData = {
     { name: 'SQLAlchemy', icon: 'database' },
     { name: 'OpenAI', icon: 'link' },
     { name: 'HuggingFace', icon: 'link' },
+    { name: 'Playwright', icon: 'code' },
+    { name: 'BeautifulSoup' },
   ],
   databases: [
     { name: 'PostgreSQL', icon: 'database' },

@@ -54,6 +54,11 @@ export const skills: SkillsData = {
     { name: 'SQLAlchemy', simple_icon: 'sqlalchemy' },
     { name: 'OpenAI SDK', icon_url: 'https://www.svgrepo.com/show/306500/openai.svg' },
     { name: 'HuggingFace Hub', simple_icon: 'huggingface' },
+    {
+      name: 'Playwright',
+      icon_url: 'https://playwright.dev/img/playwright-logo.svg',
+    },
+    { name: 'BeautifulSoup' },
   ],
   databases: [
     { name: 'PostgreSQL', simple_icon: 'postgresql' },

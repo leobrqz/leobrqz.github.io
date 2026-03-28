@@ -1,6 +1,6 @@
 export type ProjectLabel =
   | { type: 'new' }
-  | { type: 'update'; changelogUrl: string };
+  | { type: 'update'; changelogUrl?: string };
 
 export interface ProjectMetaItem {
   libraries: string[];
@@ -10,19 +10,24 @@ export interface ProjectMetaItem {
 
 export type ProjectsMeta = Record<string, ProjectMetaItem>;
 
-const SHSCRIPTHUB_RELEASE_V3_2 =
-  'https://github.com/leobrqz/ShScriptHub/releases/tag/v3.2.0';
+const SHSCRIPTHUB_RELEASE_V3_5 =
+  'https://github.com/leobrqz/ShScriptHub/releases/tag/v3.5.0';
 
 export const projects_meta: ProjectsMeta = {
+  'TrackLyrics-ytdlp': {
+    libraries: ['beautifulsoup4', 'yt-dlp', 'curl_cffi', 'PySide6'],
+    tools: [],
+    labels: [{ type: 'new' }],
+  },
   JobAppliesTracker: {
     libraries: ['FastAPI', 'Pydantic', 'SQLAlchemy', 'Alembic', 'Next.js', 'React', 'Tailwind', 'shadcn', 'TanStack', 'Recharts', 'schedule-x'],
     tools: ['Docker', 'Turborepo'],
-    labels: [{ type: 'new' }],
+    labels: [{ type: 'update' }],
   },
   ShScriptHub: {
     libraries: ['PySide6', 'Psutil'],
     tools: [],
-    labels: [{ type: 'update', changelogUrl: SHSCRIPTHUB_RELEASE_V3_2 }],
+    labels: [{ type: 'update', changelogUrl: SHSCRIPTHUB_RELEASE_V3_5 }],
   },
   'AutoPot-DR': {
     libraries: ['PyQt5', 'Pymem', 'Ctypes', 'Threading'],

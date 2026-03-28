@@ -102,29 +102,39 @@ export function ProjectLabels({ labels, lang }: ProjectLabelsProps) {
             </LabelBadge>
           );
         }
-        if (label.type === 'update' && label.changelogUrl) {
-          return (
-            <Anchor
-              key={`update-${index}`}
-              href={label.changelogUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              underline="never"
-              title={t(lang, 'projects.label_changelog_tooltip')}
-              aria-label={t(lang, 'projects.label_changelog_tooltip')}
-              onClick={() =>
-                trackEvent('project_label_changelog', { url: label.changelogUrl })
-              }
-              style={{ display: 'inline-flex' }}
+        if (label.type === 'update') {
+          const badge = (
+            <LabelBadge
+              bgColor={updateBg}
+              borderColor={updateBorder}
+              textColor={updateText}
             >
-              <LabelBadge
-                bgColor={updateBg}
-                borderColor={updateBorder}
-                textColor={updateText}
+              {t(lang, 'projects.label_update')}
+            </LabelBadge>
+          );
+          if (label.changelogUrl) {
+            return (
+              <Anchor
+                key={`update-${index}`}
+                href={label.changelogUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                underline="never"
+                title={t(lang, 'projects.label_changelog_tooltip')}
+                aria-label={t(lang, 'projects.label_changelog_tooltip')}
+                onClick={() =>
+                  trackEvent('project_label_changelog', { url: label.changelogUrl })
+                }
+                style={{ display: 'inline-flex' }}
               >
-                {t(lang, 'projects.label_update')}
-              </LabelBadge>
-            </Anchor>
+                {badge}
+              </Anchor>
+            );
+          }
+          return (
+            <Box key={`update-${index}`} component="span" style={{ display: 'inline-flex' }}>
+              {badge}
+            </Box>
           );
         }
         return null;

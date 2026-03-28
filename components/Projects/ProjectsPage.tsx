@@ -75,11 +75,11 @@ function SectionPills({ items }: { items: string[] }) {
   );
 }
 
-function LanguagePills({ items }: { items: { name: string; percent: number }[] }) {
+function LanguagePills({ items }: { items: { name: string }[] }) {
   if (items.length === 0) return null;
   return (
     <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-      {items.map(({ name, percent }) => (
+      {items.map(({ name }) => (
         <Box
           key={name}
           component="li"
@@ -96,7 +96,7 @@ function LanguagePills({ items }: { items: { name: string; percent: number }[] }
             border: '1px solid var(--mantine-color-dark-4)',
           }}
         >
-          {name} {percent}%
+          {name}
         </Box>
       ))}
     </Box>

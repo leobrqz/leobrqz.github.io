@@ -11,7 +11,6 @@ import {
 
 export interface LanguageBreakdownItem {
   name: string;
-  percent: number;
 }
 
 export interface EnrichedProject {
@@ -33,12 +32,16 @@ export type ProjectsState =
   | { status: 'error'; kind: 'rate_limit' | 'generic'; message: string }
   | { status: 'success'; projects: EnrichedProject[] };
 
+const LANGUAGE_SHARE_MIN_PERCENT = 0.3;
+
 function toLanguageBreakdown(langMap: GhLanguages): LanguageBreakdownItem[] {
   const total = Object.values(langMap).reduce((a, b) => a + b, 0);
   if (total === 0) return [];
   return Object.entries(langMap)
-    .map(([name, bytes]) => ({ name, percent: Math.round((bytes / total) * 100) }))
-    .sort((a, b) => b.percent - a.percent);
+    .map(([name, bytes]) => ({ name, bytes, sharePercent: (bytes / total) * 100 }))
+    .filter((item) => item.sharePercent >= LANGUAGE_SHARE_MIN_PERCENT)
+    .sort((a, b) => b.bytes - a.bytes)
+    .map(({ name }) => ({ name }));
 }
 
 function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
@@ -46,8 +49,8 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
   const libraries = meta?.libraries ?? [];
   const tools = meta?.tools ?? [];
   const labels = meta?.labels ?? [];
-  const languages = Object.keys(langMap);
   const languageBreakdown = toLanguageBreakdown(langMap);
+  const languages = languageBreakdown.map((item) => item.name);
   return {
     name: repo.name,
     html_url: repo.html_url,
