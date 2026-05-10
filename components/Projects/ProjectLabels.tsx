@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Anchor, Box, useMantineTheme } from '@mantine/core';
+import { Anchor, Box, useComputedColorScheme, useMantineTheme } from '@mantine/core';
 import { type ProjectLabel } from '@/data/projects_meta';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
@@ -67,17 +67,19 @@ function LabelBadge({
 
 export function ProjectLabels({ labels, lang }: ProjectLabelsProps) {
   const theme = useMantineTheme();
+  const colorScheme = useComputedColorScheme();
+  const isDark = colorScheme === 'dark';
 
   if (labels.length === 0) {
     return null;
   }
 
-  const newBg = 'rgba(48, 164, 108, 0.18)';
-  const newBorder = 'rgba(48, 164, 108, 0.45)';
-  const newText = theme.colors.green[2];
-  const updateBg = 'rgba(59, 130, 246, 0.16)';
-  const updateBorder = 'rgba(59, 130, 246, 0.4)';
-  const updateText = theme.colors.blue[1];
+  const newBg = isDark ? 'rgba(48, 164, 108, 0.18)' : 'rgba(30, 120, 70, 0.12)';
+  const newBorder = isDark ? 'rgba(48, 164, 108, 0.45)' : 'rgba(30, 120, 70, 0.6)';
+  const newText = isDark ? theme.colors.green[2] : 'rgb(20, 80, 40)';
+  const updateBg = isDark ? 'rgba(59, 130, 246, 0.16)' : 'rgba(30, 80, 180, 0.12)';
+  const updateBorder = isDark ? 'rgba(59, 130, 246, 0.4)' : 'rgba(30, 80, 180, 0.5)';
+  const updateText = isDark ? theme.colors.blue[1] : 'rgb(20, 50, 130)';
 
   return (
     <Box

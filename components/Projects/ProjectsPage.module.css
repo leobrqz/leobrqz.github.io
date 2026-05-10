@@ -53,3 +53,37 @@
 .readmeWrapper :global(.markdown-body) table tr:nth-child(2n) {
   background-color: transparent !important;
 }
+
+.readmeLight :global(.markdown-body) {
+  color: #1a1a1a !important;
+}
+
+.readmeLight :global(.markdown-body) h1,
+.readmeLight :global(.markdown-body) h2,
+.readmeLight :global(.markdown-body) h3,
+.readmeLight :global(.markdown-body) h4,
+.readmeLight :global(.markdown-body) h5,
+.readmeLight :global(.markdown-body) h6 {
+  color: #1a1a1a !important;
+  border-bottom-color: #dddddd !important;
+}
+
+.readmeLight :global(.markdown-body) p,
+.readmeLight :global(.markdown-body) li,
+.readmeLight :global(.markdown-body) td,
+.readmeLight :global(.markdown-body) th {
+  color: #333333 !important;
+}
+
+.readmeLight :global(.markdown-body) a {
+  color: #8B2500 !important;
+}
+
+.readmeLight :global(.markdown-body) blockquote {
+  color: #555555 !important;
+  border-left-color: #cccccc !important;
+}
+
+.readmeLight :global(.markdown-body) hr {
+  background-color: #dddddd !important;
+}

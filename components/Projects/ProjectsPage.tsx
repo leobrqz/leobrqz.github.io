@@ -1,8 +1,17 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Box, Button, Container, Loader, Stack, Text } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Container,
+  Group,
+  Loader,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
@@ -20,6 +29,45 @@ type ReadmeState =
   | { status: 'none' }
   | { status: 'error' };
 
+type FilterTag = 'ALL' | 'WEB' | 'AI' | 'DESKTOP' | 'AUTOMATION';
+
+const FILTERS: FilterTag[] = ['ALL', 'WEB', 'AI', 'DESKTOP', 'AUTOMATION'];
+
+const PROJECT_TAGS: Record<string, FilterTag[]> = {
+  'TrackLyrics-ytdlp': ['DESKTOP', 'AUTOMATION'],
+  'JobAppliesTracker': ['WEB'],
+  'ShScriptHub': ['DESKTOP', 'AUTOMATION'],
+  'AutoPot-DR': ['DESKTOP'],
+  'SmokeShopERP-DataAnalytics': ['DESKTOP'],
+  'MiniSchool': ['DESKTOP'],
+  'Cheatsheet-LabAI': ['AI', 'WEB'],
+  'myContracts-SpeedrunEthereum': ['WEB'],
+};
+
+function Pill({ label, active, onClick }: { label: string; active?: boolean; onClick?: () => void }) {
+  return (
+    <Box
+      component="button"
+      onClick={onClick}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '3px 10px',
+        fontSize: 'var(--mantine-font-size-xs)',
+        fontWeight: active ? 700 : 400,
+        letterSpacing: '0.04em',
+        border: '1px solid var(--mantine-color-dark-6)',
+        backgroundColor: active ? 'var(--mantine-color-dark-8)' : 'transparent',
+        color: active ? 'var(--mantine-primary-color-4)' : 'var(--mantine-color-dimmed)',
+        cursor: onClick ? 'pointer' : 'default',
+        fontFamily: 'inherit',
+      }}
+    >
+      {label}
+    </Box>
+  );
+}
+
 function formatDate(iso: string): string {
   try {
     const d = new Date(iso);
@@ -29,25 +77,7 @@ function formatDate(iso: string): string {
   }
 }
 
-function Pill({ label }: { label: string }) {
-  return (
-    <Box
-      component="span"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        padding: '3px 8px',
-        fontSize: 'var(--mantine-font-size-xs)',
-        fontWeight: 500,
-        border: '1px solid var(--mantine-color-dark-4)',
-      }}
-    >
-      {label}
-    </Box>
-  );
-}
-
-function ProjectCard({
+function ProjectDossier({
   project,
   lang,
   readmeState,
@@ -60,139 +90,95 @@ function ProjectCard({
 }) {
   const { theme } = useThemeContext();
   const isNerv = theme === 'nerv';
-  const primaryShade = isNerv ? 'evaGreen.4' : 'lclRust.5';
+  const primaryColor = isNerv ? '#87FF5F' : '#D4790A';
+  const readmeClass = `${styles.readmeWrapper} ${isNerv ? '' : styles.readmeLight} markdown-body`;
   const loading = readmeState.status === 'loading';
-  const showContent =
+  const expanded =
     readmeState.status === 'html' ||
     readmeState.status === 'none' ||
     readmeState.status === 'error';
 
   const handleToggle = useCallback(() => {
-    const expanding = !showContent;
+    const expanding = !expanded;
     if (expanding) trackEvent('readme_expand', { project: project.name });
     onToggleReadme(project.name, expanding);
-  }, [project.name, showContent, onToggleReadme]);
+  }, [project.name, expanded, onToggleReadme]);
 
-  const hasLanguages =
-    project.languageBreakdown.length > 0 || project.languages.length > 0 || project.language;
-  const languages =
-    project.languageBreakdown.length > 0
-      ? project.languageBreakdown.map((l) => l.name)
-      : project.languages.length > 0
-        ? project.languages
-        : project.language
-          ? [project.language]
-          : [];
+  const tags = PROJECT_TAGS[project.name] || [];
+  const tagLabel = tags[0] || 'OTHER';
 
   return (
-    <BruteCard>
-      <Stack gap="md">
-        <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-          <Text
-            component="a"
-            href={project.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            fw={700}
-            size="sm"
-            c={primaryShade}
-            style={{ textDecoration: 'none' }}
-            onClick={() => trackEvent('github_repo', { repo: project.name })}
-          >
-            {project.name}
+    <BruteCard style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Stack gap="xs" style={{ flex: 1 }}>
+        <Group justify="space-between" wrap="nowrap">
+          <Text size="xs" c="dimmed" style={{ letterSpacing: '0.05em' }}>
+            [{tagLabel}]
           </Text>
           <ProjectLabels labels={project.labels} lang={lang} />
-        </Box>
+        </Group>
+        <Text
+          component="a"
+          href={project.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          fw={700}
+          size="sm"
+          c={primaryColor}
+          style={{ textDecoration: 'none', letterSpacing: '0.03em' }}
+          onClick={() => trackEvent('github_repo', { repo: project.name })}
+        >
+          {project.name}
+        </Text>
         {project.description && (
           <Text size="xs" c="dimmed" lineClamp={2}>
             {project.description}
           </Text>
         )}
         <Text size="xs" c="dimmed">
-          {t(lang, 'projects.last_updated')}: {formatDate(project.updated_at)}
+          {formatDate(project.updated_at)}
         </Text>
-
-        {hasLanguages && (
-          <Stack gap={4}>
-            <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-              {t(lang, 'projects.languages').toUpperCase()}
-            </Text>
-            <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {languages.map((name) => (
-                <Pill key={name} label={name} />
-              ))}
-            </Box>
-          </Stack>
-        )}
-
-        {project.libraries.length > 0 && (
-          <Stack gap={4}>
-            <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-              {t(lang, 'projects.libraries').toUpperCase()}
-            </Text>
-            <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {project.libraries.map((lib) => (
-                <Pill key={lib} label={lib} />
-              ))}
-            </Box>
-          </Stack>
-        )}
-
-        {project.tools.length > 0 && (
-          <Stack gap={4}>
-            <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-              {t(lang, 'projects.tools').toUpperCase()}
-            </Text>
-            <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {project.tools.map((tool) => (
-                <Pill key={tool} label={tool} />
-              ))}
-            </Box>
-          </Stack>
-        )}
-
+        <Box style={{ flex: 1 }} />
         <Button
           variant="outline"
           size="xs"
           loading={loading}
           onClick={handleToggle}
           color="dimmed"
-          style={{ borderWidth: 1 }}
+          style={{ borderWidth: 1, alignSelf: 'flex-start' }}
         >
-          {showContent ? t(lang, 'projects.hide_readme') : t(lang, 'projects.show_readme')}
+          {expanded ? t(lang, 'projects.hide_readme') : 'VIEW BRIEF'}
         </Button>
-
-        {showContent && (
-          <Box
-            style={{
-              borderTop: '1px solid var(--mantine-color-dark-6)',
-              paddingTop: 'var(--mantine-spacing-md)',
-            }}
-          >
+      </Stack>
+      {expanded && (
+        <Box
+          mt="md"
+          pt="md"
+          style={{ borderTop: '1px solid var(--mantine-color-dark-6)' }}
+        >
             {readmeState.status === 'html' && (
               <Box
-                className={`${styles.readmeWrapper} markdown-body`}
-                dangerouslySetInnerHTML={{ __html: readmeState.html }}
-                style={{
-                  padding: 'var(--mantine-spacing-md)',
-                  fontSize: 'var(--mantine-font-size-sm)',
-                  overflow: 'auto',
-                }}
-              />
-            )}
-            {readmeState.status === 'none' && (
-              <Text size="sm" c="dimmed">
-                {t(lang, 'projects.no_readme')}
-              </Text>
-            )}
-            {readmeState.status === 'error' && (
-              <Text size="sm" c="red">
-                {t(lang, 'projects.unable_to_load')}
-              </Text>
-            )}
-          </Box>
-        )}
-      </Stack>
+                className={readmeClass}
+              dangerouslySetInnerHTML={{ __html: readmeState.html }}
+              style={{
+                padding: 'var(--mantine-spacing-sm)',
+                fontSize: 'var(--mantine-font-size-xs)',
+                maxHeight: 360,
+                overflow: 'auto',
+              }}
+            />
+          )}
+          {readmeState.status === 'none' && (
+            <Text size="xs" c="dimmed">
+              {t(lang, 'projects.no_readme')}
+            </Text>
+          )}
+          {readmeState.status === 'error' && (
+            <Text size="xs" c="red">
+              {t(lang, 'projects.unable_to_load')}
+            </Text>
+          )}
+        </Box>
+      )}
     </BruteCard>
   );
 }
@@ -200,6 +186,7 @@ function ProjectCard({
 export function ProjectsPage({ lang }: ProjectsPageProps) {
   const { state, refetch, fetchReadme } = useProjects();
   const [readmeOpen, setReadmeOpen] = useState<Record<string, ReadmeState>>({});
+  const [filter, setFilter] = useState<FilterTag>('ALL');
 
   const onToggleReadme = useCallback(
     (name: string, show: boolean) => {
@@ -226,14 +213,23 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
     [fetchReadme],
   );
 
+  const filteredProjects = useMemo(() => {
+    if (state.status !== 'success') return [];
+    if (filter === 'ALL') return state.projects;
+    return state.projects.filter((p) => {
+      const tags = PROJECT_TAGS[p.name] || [];
+      return tags.includes(filter);
+    });
+  }, [state, filter]);
+
   if (state.status === 'loading') {
     return (
       <Box component="main" py="xl">
         <Container size="md">
-          <Stack align="center" gap="md" py="xl">
-            <Loader size="md" />
-            <Text size="sm" c="dimmed">
-              fetching repos...
+          <Stack align="center" py="xl">
+            <Loader size="sm" />
+            <Text size="xs" c="dimmed" style={{ letterSpacing: '0.04em' }}>
+              ACCESSING MISSION ARCHIVE...
             </Text>
           </Stack>
         </Container>
@@ -242,16 +238,12 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   }
 
   if (state.status === 'empty') {
-    const message =
-      state.kind === 'no_config'
-        ? t(lang, 'projects.no_projects')
-        : t(lang, 'projects.no_repos');
     return (
       <Box component="main" py="xl">
         <Container size="md">
           <BruteCard>
-            <Text size="sm" c="dimmed">
-              {message}
+            <Text size="xs" c="dimmed" style={{ letterSpacing: '0.04em' }}>
+              NO MISSIONS ON FILE
             </Text>
           </BruteCard>
         </Container>
@@ -260,21 +252,17 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   }
 
   if (state.status === 'error') {
-    const errorMessage =
-      state.kind === 'rate_limit'
-        ? t(lang, 'projects.error_rate_limit')
-        : t(lang, 'projects.error_loading');
     return (
       <Box component="main" py="xl">
         <Container size="md">
           <Stack gap="md">
             <BruteCard>
-              <Text size="sm" c="red">
-                error: {errorMessage}
+              <Text size="xs" c="red" style={{ letterSpacing: '0.04em' }}>
+                ARCHIVE ACCESS DENIED
               </Text>
             </BruteCard>
             <Button variant="outline" size="xs" onClick={refetch} color="dimmed">
-              retry
+              RETRY
             </Button>
           </Stack>
         </Container>
@@ -285,44 +273,74 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   return (
     <Box component="main" py="xl">
       <Container size="md">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
-          }}
-        >
-          <Stack gap="md">
+        <Stack gap="lg">
+          {/* Archive header */}
+          <Box
+            style={{
+              borderBottom: '1px solid var(--mantine-color-dark-6)',
+              paddingBottom: 'var(--mantine-spacing-sm)',
+            }}
+          >
+            <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+              MISSION ARCHIVE {'//'} {state.projects.length} OPERATIONS LOGGED
+            </Text>
+          </Box>
+
+          {/* Filter bar */}
+          <Group gap={4} wrap="wrap">
+            {FILTERS.map((f) => (
+              <Pill
+                key={f}
+                label={f}
+                active={filter === f}
+                onClick={() => setFilter(f)}
+              />
+            ))}
+          </Group>
+
+          {/* Project grid */}
+          {filteredProjects.length === 0 ? (
+            <BruteCard>
+              <Text size="xs" c="dimmed" style={{ letterSpacing: '0.04em' }}>
+                NO MISSIONS MATCH FILTER [{filter}]
+              </Text>
+            </BruteCard>
+          ) : (
             <motion.div
+              key={filter}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
               variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.04 } },
               }}
             >
-              <Text size="sm" c="dimmed" fw={600} style={{ letterSpacing: '0.06em' }}>
-                {t(lang, 'pages.projects').toLowerCase()}
-              </Text>
+              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                {filteredProjects.map((project, i) => (
+                  <motion.div
+                    key={project.name}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { duration: 0.3, delay: i * 0.03 },
+                      },
+                    }}
+                  >
+                    <ProjectDossier
+                      project={project}
+                      lang={lang}
+                      readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
+                      onToggleReadme={onToggleReadme}
+                    />
+                  </motion.div>
+                ))}
+              </SimpleGrid>
             </motion.div>
-            {state.projects.map((project) => (
-              <motion.div
-                key={project.name}
-                variants={{
-                  hidden: { opacity: 0, x: 24 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-                }}
-              >
-                <ProjectCard
-                  project={project}
-                  lang={lang}
-                  readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
-                  onToggleReadme={onToggleReadme}
-                />
-              </motion.div>
-            ))}
-          </Stack>
-        </motion.div>
+          )}
+        </Stack>
       </Container>
     </Box>
   );

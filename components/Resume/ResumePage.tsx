@@ -5,10 +5,10 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { IconFileDownload } from '@tabler/icons-react';
 import {
   Anchor,
+  Avatar,
   Box,
   Button,
   Container,
-  Divider,
   Group,
   Loader,
   Stack,
@@ -41,25 +41,61 @@ const RESUME_SKILL_CATEGORIES = [
   'cloud_devops',
 ] as const;
 
+type TabKey = 'SUMMARY' | 'SKILLS' | 'PROJECTS' | 'CERTS' | 'EDU' | 'PDF';
+
+const TABS: { key: TabKey; labelKey: string }[] = [
+  { key: 'SUMMARY', labelKey: 'resume.summary' },
+  { key: 'SKILLS', labelKey: 'resume.skills' },
+  { key: 'PROJECTS', labelKey: 'resume.projects' },
+  { key: 'CERTS', labelKey: 'resume.certifications' },
+  { key: 'EDU', labelKey: 'resume.education' },
+  { key: 'PDF', labelKey: 'resume.download_pdf' },
+];
+
 export type ResumePageProps = { lang: Lang };
 
+function TabButton({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <Box
+      component="button"
+      onClick={onClick}
+      style={{
+        padding: '6px 14px',
+        fontSize: 'var(--mantine-font-size-xs)',
+        fontWeight: active ? 700 : 400,
+        letterSpacing: '0.05em',
+        border: '1px solid var(--mantine-color-dark-6)',
+        borderBottom: active ? '2px solid' : '1px solid var(--mantine-color-dark-6)',
+        borderColor: active ? 'var(--mantine-primary-color-4)' : undefined,
+        backgroundColor: active ? 'var(--mantine-color-dark-8)' : 'transparent',
+        color: active ? 'var(--mantine-primary-color-4)' : 'var(--mantine-color-dimmed)',
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+      }}
+    >
+      {label}
+    </Box>
+  );
+}
+
 export function ResumePage({ lang }: ResumePageProps) {
-  const [view, setView] = useState<'web' | 'pdf'>('web');
+  const [tab, setTab] = useState<TabKey>('SUMMARY');
   const [pdfWidth, setPdfWidth] = useState<number>(0);
-  const [pdfLoading, setPdfLoading] = useState(true);
   const pdfContainerRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useThemeContext();
   const isNerv = theme === 'nerv';
-  const primaryShade = isNerv ? 'evaGreen.4' : 'lclRust.5';
-
-  const pdfRenderWidth = pdfWidth > 0 ? pdfWidth : undefined;
+  const primaryColor = isNerv ? '#87FF5F' : '#D4790A';
 
   useEffect(() => {
-    if (view === 'pdf') setPdfLoading(true);
-  }, [view]);
-
-  useEffect(() => {
-    if (view !== 'pdf') return;
+    if (tab !== 'PDF') return;
     const el = pdfContainerRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
     const updateWidth = () => {
@@ -70,97 +106,29 @@ export function ResumePage({ lang }: ResumePageProps) {
     const observer = new ResizeObserver(() => updateWidth());
     observer.observe(el);
     return () => observer.disconnect();
-  }, [view]);
+  }, [tab]);
 
   return (
     <Box component="main" pt="md" pb="xl">
       <Container size="md">
         <Stack gap="lg">
-          <Group justify="center">
-            <Group gap={0}>
-              <Button
-                size="xs"
-                variant={view === 'web' ? 'filled' : 'outline'}
-                onClick={() => setView('web')}
-                radius={0}
-                color={view === 'web' ? primaryShade : 'dimmed'}
-                style={{ borderWidth: 1 }}
-              >
-                web
-              </Button>
-              <Button
-                size="xs"
-                variant={view === 'pdf' ? 'filled' : 'outline'}
-                onClick={() => setView('pdf')}
-                radius={0}
-                color={view === 'pdf' ? primaryShade : 'dimmed'}
-                style={{ borderWidth: 1 }}
-              >
-                pdf
-              </Button>
-            </Group>
-          </Group>
-
-          {view === 'pdf' ? (
-            <Box className={styles.pdfViewer} style={{ width: '100%' }}>
-              <Box
-                ref={pdfContainerRef}
-                style={{
-                  width: '100%',
-                  minHeight: 400,
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {pdfLoading && (
-                  <Box
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'var(--mantine-color-body)',
-                    }}
-                  >
-                    <Loader size="lg" />
-                  </Box>
-                )}
-                <Document
-                  file={CV_PDF_URL}
-                  onLoadSuccess={() => setPdfLoading(false)}
-                >
-                  <Page
-                    pageNumber={1}
-                    width={pdfRenderWidth}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                  />
-                </Document>
-              </Box>
-            </Box>
-          ) : (
-            <BruteCard>
-              <Stack gap="xl">
-                {/* Name and contact */}
-                <Stack gap="xs" align="center" style={{ textAlign: 'center' }}>
-                  <Text
-                    size="lg"
-                    fw={700}
-                    c={primaryShade}
-                    style={{ letterSpacing: '0.04em' }}
-                  >
+          {/* Personnel header */}
+          <BruteCard>
+            <Group wrap="wrap" justify="space-between">
+              <Group gap="md">
+                <Avatar src="/imgs/profile.jpg" size={56} radius={0} />
+                <Box>
+                  <Text size="sm" fw={700} c={primaryColor} style={{ letterSpacing: '0.04em' }}>
                     {contact.name}
                   </Text>
-                  <Text size="xs" c="dimmed">
-                    {contact.location}
+                  <Text size="xs" c="dimmed" style={{ letterSpacing: '0.03em' }}>
+                    {t(lang, 'sidebar.role')} {'//'} {contact.location}
                   </Text>
-                  <Group gap="sm" justify="center" wrap="wrap">
+                  <Group gap="sm" mt={4}>
                     <Anchor href={`mailto:${contact.email}`} size="xs" c="dimmed">
                       {contact.email}
                     </Anchor>
+                    <Text size="xs" c="dimmed">|</Text>
                     <Anchor
                       href={`https://github.com/${contact.github}`}
                       target="_blank"
@@ -171,6 +139,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                     >
                       github
                     </Anchor>
+                    <Text size="xs" c="dimmed">|</Text>
                     <Anchor
                       href={`https://linkedin.com/in/${contact.linkedin}`}
                       target="_blank"
@@ -182,176 +151,200 @@ export function ResumePage({ lang }: ResumePageProps) {
                       linkedin
                     </Anchor>
                   </Group>
-                </Stack>
-                <Divider color="dark.6" />
+                </Box>
+              </Group>
+            </Group>
+          </BruteCard>
 
-                {/* Summary */}
-                <Stack gap="xs">
-                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-                    {'>'} {t(lang, 'resume.summary').toUpperCase()}
-                  </Text>
-                  <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                    {about.content[lang]}
-                  </Text>
-                </Stack>
+          {/* Tab bar */}
+          <Group gap={0} wrap="wrap">
+            {TABS.map((tabItem) => (
+              <TabButton
+                key={tabItem.key}
+                active={tab === tabItem.key}
+                onClick={() => setTab(tabItem.key)}
+                label={t(lang, tabItem.labelKey).toUpperCase()}
+              />
+            ))}
+          </Group>
 
-                {/* Projects */}
-                <Stack gap="xs">
-                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-                    {'>'} {t(lang, 'resume.projects').toUpperCase()}
-                  </Text>
-                  {resume_projects.map((project, i) => (
-                    <Stack key={i} gap={4}>
-                      <Anchor
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        fw={600}
-                        size="sm"
-                        c={primaryShade}
-                        onClick={() =>
-                          trackEvent('github_repo', { repo: project.name[lang] })
-                        }
-                      >
-                        {project.name[lang]}
-                      </Anchor>
-                      <Text size="xs" c="dimmed">
-                        {project.technologies.join(' · ')}
-                      </Text>
-                      <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                        {project.description[lang]}
-                      </Text>
-                    </Stack>
+          {/* Tab content */}
+          <BruteCard style={{ minHeight: 300 }}>
+            {tab === 'SUMMARY' && (
+              <Stack gap="md">
+                <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                  {'>'} BRIEFING
+                </Text>
+                <Text size="sm" style={{ whiteSpace: 'pre-line', letterSpacing: '0.02em' }}>
+                  {about.content[lang]}
+                </Text>
+                <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                  {'>'} {t(lang, 'resume.languages_spoken').toUpperCase()}
+                </Text>
+                <Group gap="xl">
+                  {languages_spoken.map((entry, i) => (
+                    <Text key={i} size="sm" c="dimmed">
+                      {entry.name[lang]} ({entry.level[lang]})
+                    </Text>
                   ))}
-                </Stack>
-
-                {/* Skills */}
-                <Stack gap="xs">
-                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-                    {'>'} {t(lang, 'resume.skills').toUpperCase()}
-                  </Text>
-                  {RESUME_SKILL_CATEGORIES.map((category) => {
-                    const items = resume_skills[category];
-                    if (!items?.length) return null;
-                    return (
-                      <Text key={category} size="sm">
-                        <Text span fw={600} c="dimmed">
-                          {t(lang, `resume_labels.${category}`)}:
-                        </Text>{' '}
-                        {items.map((item) => item.name).join(', ')}
-                      </Text>
-                    );
-                  })}
-                </Stack>
-
-                {/* Languages */}
-                <Stack gap="xs">
-                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-                    {'>'} {t(lang, 'resume.languages_spoken').toUpperCase()}
-                  </Text>
-                  <Stack gap="xs" hiddenFrom="sm">
-                    {languages_spoken.map((entry, i) => (
-                      <Text key={i} size="sm">
-                        {entry.name[lang]} ({entry.level[lang]})
-                      </Text>
-                    ))}
-                  </Stack>
-                  <Box
-                    visibleFrom="sm"
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      gap: 'var(--mantine-spacing-md)',
-                    }}
-                  >
-                    {languages_spoken.map((entry, i) => (
-                      <Text
-                        key={i}
-                        size="sm"
-                        style={{
-                          flex: 1,
-                          textAlign: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
-                        }}
-                      >
-                        {entry.name[lang]} ({entry.level[lang]})
-                      </Text>
-                    ))}
-                  </Box>
-                </Stack>
-
-                {/* Certifications */}
-                <Stack gap="xs">
-                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-                    {'>'} {t(lang, 'resume.certifications').toUpperCase()}
-                  </Text>
-                  {certifications.map((cert, i) => (
-                    <Stack key={i} gap={4}>
-                      <Group justify="space-between" align="flex-start" wrap="wrap">
-                        {cert.url ? (
-                          <Anchor
-                            href={cert.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            fw={600}
-                            size="sm"
-                          >
-                            {cert.name[lang]}
-                          </Anchor>
-                        ) : (
-                          <Text fw={600} size="sm">
-                            {cert.name[lang]}
-                          </Text>
-                        )}
-                        <Text size="sm" c="dimmed">
-                          {cert.issuer} ({cert.date})
-                        </Text>
-                      </Group>
-                      <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                        {cert.description[lang]}
-                      </Text>
-                    </Stack>
-                  ))}
-                </Stack>
-
-                {/* Education */}
-                <Stack gap="xs">
-                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
-                    {'>'} {t(lang, 'resume.education').toUpperCase()}
-                  </Text>
-                  {education.map((entry, i) => (
-                    <Group key={i} justify="space-between" align="flex-start" wrap="wrap">
-                      <Stack gap={2}>
-                        <Text fw={600} size="sm">
-                          {entry.degree[lang]}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {entry.level[lang]}
-                        </Text>
-                      </Stack>
-                      <Stack gap={2} align="flex-end">
-                        <Text size="sm" c="dimmed">
-                          {entry.institution} ({entry.start_date} – {entry.end_date})
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {entry.location}
-                        </Text>
-                      </Stack>
-                    </Group>
-                  ))}
-                </Stack>
+                </Group>
               </Stack>
-            </BruteCard>
-          )}
+            )}
+
+            {tab === 'SKILLS' && (
+              <Stack gap="md">
+                <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                  {'>'} PROFICIENCY MATRIX
+                </Text>
+                {RESUME_SKILL_CATEGORIES.map((category) => {
+                  const items = resume_skills[category];
+                  if (!items?.length) return null;
+                  return (
+                    <Box key={category}>
+                      <Text size="xs" fw={700} c={primaryColor} mb={4} style={{ letterSpacing: '0.04em' }}>
+                        {t(lang, `resume_labels.${category}`).toUpperCase()}
+                      </Text>
+                      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                        {items.map((item) => (
+                          <Box
+                            key={item.name}
+                            style={{
+                              padding: '3px 8px',
+                              border: '1px solid var(--mantine-color-dark-6)',
+                              fontSize: 'var(--mantine-font-size-xs)',
+                              letterSpacing: '0.03em',
+                            }}
+                          >
+                            {item.name}
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </Stack>
+            )}
+
+            {tab === 'PROJECTS' && (
+              <Stack gap="md">
+                <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                  {'>'} OPERATIONS LOG
+                </Text>
+                {resume_projects.map((project, i) => (
+                  <Box key={i}>
+                    <Anchor
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      fw={600}
+                      size="sm"
+                      c={primaryColor}
+                      onClick={() =>
+                        trackEvent('github_repo', { repo: project.name[lang] })
+                      }
+                    >
+                      {project.name[lang]}
+                    </Anchor>
+                    <Text size="xs" c="dimmed" mb={4}>
+                      {project.technologies.join(' · ')}
+                    </Text>
+                    <Text size="sm" style={{ whiteSpace: 'pre-line', letterSpacing: '0.02em' }}>
+                      {project.description[lang]}
+                    </Text>
+                  </Box>
+                ))}
+              </Stack>
+            )}
+
+            {tab === 'CERTS' && (
+              <Stack gap="md">
+                <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                  {'>'} CLEARANCE CERTIFICATIONS
+                </Text>
+                {certifications.map((cert, i) => (
+                  <Box key={i}>
+                    <Group justify="space-between" wrap="wrap" mb={4}>
+                      {cert.url ? (
+                        <Anchor
+                          href={cert.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          fw={600}
+                          size="sm"
+                          c={primaryColor}
+                        >
+                          {cert.name[lang]}
+                        </Anchor>
+                      ) : (
+                        <Text fw={600} size="sm">
+                          {cert.name[lang]}
+                        </Text>
+                      )}
+                      <Text size="xs" c="dimmed">
+                        {cert.issuer} ({cert.date})
+                      </Text>
+                    </Group>
+                    <Text size="sm" style={{ whiteSpace: 'pre-line', letterSpacing: '0.02em' }}>
+                      {cert.description[lang]}
+                    </Text>
+                  </Box>
+                ))}
+              </Stack>
+            )}
+
+            {tab === 'EDU' && (
+              <Stack gap="md">
+                <Text size="xs" c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                  {'>'} ACADEMIC RECORD
+                </Text>
+                {education.map((entry, i) => (
+                  <Box key={i}>
+                    <Text fw={600} size="sm">
+                      {entry.degree[lang]}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {entry.institution} {'//'} {entry.location} {'//'} {entry.start_date} – {entry.end_date}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {entry.level[lang]}
+                    </Text>
+                  </Box>
+                ))}
+              </Stack>
+            )}
+
+            {tab === 'PDF' && (
+              <Box className={styles.pdfViewer} style={{ width: '100%' }}>
+                <Box
+                  ref={pdfContainerRef}
+                  style={{
+                    width: '100%',
+                    minHeight: 400,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Document file={CV_PDF_URL}>
+                    <Page
+                      pageNumber={1}
+                      width={pdfWidth > 0 ? pdfWidth : undefined}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                    />
+                  </Document>
+                </Box>
+              </Box>
+            )}
+          </BruteCard>
         </Stack>
       </Container>
 
       <Box
-        component="div"
         style={{
           position: 'fixed',
           bottom: 24,
-          right:
-            'max(var(--mantine-spacing-md), calc((100vw - min(48rem, 100vw - 2 * var(--mantine-spacing-md))) / 2 + var(--mantine-spacing-md) - 125px))',
+          right: 24,
           zIndex: 200,
         }}
       >
@@ -363,13 +356,13 @@ export function ResumePage({ lang }: ResumePageProps) {
           rel="noopener noreferrer"
           title={t(lang, 'resume.download_pdf')}
           variant="filled"
-          size="lg"
+          size="sm"
           radius={0}
-          style={{ width: 52, height: 52, padding: 0 }}
           onClick={() => trackEvent('resume_download')}
-          color={primaryShade}
+          color={isNerv ? 'evaGreen.4' : 'lclRust.5'}
+          leftSection={<IconFileDownload size={16} />}
         >
-          <IconFileDownload size={24} />
+          EXPORT.PDF
         </Button>
       </Box>
     </Box>
