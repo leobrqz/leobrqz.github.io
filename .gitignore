@@ -30,6 +30,7 @@ npm-debug.log*
 # Cursor / skills
 .cursor
 skills-lock.json
+opencode.json
 
 # Docs
 docs

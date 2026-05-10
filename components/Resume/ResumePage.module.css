@@ -1,11 +1,9 @@
 .pdfViewer {
-  border-radius: var(--mantine-radius-md);
-  box-shadow: var(--mantine-shadow-sm);
+  border: 1px solid var(--mantine-color-dark-6);
   background-color: var(--mantine-color-body);
   padding: var(--mantine-spacing-md);
 }
 
-/* Constrain wrappers so the high-res canvas is scaled down to container width */
 .pdfViewer > div {
   width: 100%;
   max-width: 100%;

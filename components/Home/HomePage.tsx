@@ -5,12 +5,11 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { IconCpu, IconDatabase } from '@tabler/icons-react';
 import {
+  Anchor,
   Box,
   Button,
   Container,
   Group,
-  Loader,
-  Paper,
   SimpleGrid,
   Stack,
   Text,
@@ -20,9 +19,12 @@ import { about } from '@/data/about';
 import { skills, type SkillItem } from '@/data/skills';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
-import { useProjects, type EnrichedProject } from '@/lib/use-projects';
+import { useProjects } from '@/lib/use-projects';
 import { ProjectLabels } from '@/components/Projects/ProjectLabels';
+import { BruteCard } from '@/components/BruteCard';
+import { TerminalText } from '@/components/TerminalText';
 import { LandingHero } from './LandingHero';
+import { useThemeContext } from '@/components/ThemeProvider';
 
 const SKILL_CATEGORIES = [
   'languages',
@@ -33,7 +35,7 @@ const SKILL_CATEGORIES = [
   'cloud_devops',
 ] as const;
 
-const ICON_SIZE = 24;
+const ICON_SIZE = 20;
 
 const TABLER_ICON_MAP: Record<string, ComponentType<{ size?: number }>> = {
   memory: IconCpu,
@@ -43,89 +45,44 @@ const TABLER_ICON_MAP: Record<string, ComponentType<{ size?: number }>> = {
 function SkillIcon({ item }: { item: SkillItem }) {
   if (item.icon_url) {
     return (
-      <img
-        src={item.icon_url}
-        alt=""
-        width={ICON_SIZE}
-        height={ICON_SIZE}
-        style={{ objectFit: 'contain', flexShrink: 0 }}
-      />
+      <img src={item.icon_url} alt="" width={ICON_SIZE} height={ICON_SIZE} />
     );
   }
   if (item.simple_icon) {
     return (
       <img
-        src={`https://cdn.simpleicons.org/${item.simple_icon}`}
+        src={`https://cdn.simpleicons.org/${item.simple_icon}/999999`}
         alt=""
         width={ICON_SIZE}
         height={ICON_SIZE}
-        style={{ objectFit: 'contain', flexShrink: 0 }}
       />
     );
   }
-  if (item.icon && TABLER_ICON_MAP[item.icon]) {
-    const IconComponent = TABLER_ICON_MAP[item.icon];
-    return <IconComponent size={ICON_SIZE} />;
+  const TablerIcon = item.icon ? TABLER_ICON_MAP[item.icon] : undefined;
+  if (TablerIcon) {
+    return <TablerIcon size={ICON_SIZE} />;
   }
   return null;
 }
 
-export type HomePageProps = {
-  lang: Lang;
-};
-
-function getProjectsHref(lang: Lang): string {
-  return lang === 'en' ? '/en/projects' : '/projects';
-}
-
-function HomeProjectCard({
-  project,
-  lang,
-}: {
-  project: EnrichedProject;
-  lang: Lang;
-}) {
-  return (
-    <Paper withBorder p="lg" radius="md" shadow="sm">
-      <Stack gap="xs">
-        <Group wrap="wrap" align="center" gap={6}>
-          <Title order={3} size="h4" style={{ minWidth: 0 }}>
-            <Text
-              component="a"
-              href={project.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              inherit
-              c="var(--mantine-color-anchor)"
-              style={{ textDecoration: 'underline' }}
-              onClick={() => trackEvent('github_repo', { repo: project.name })}
-            >
-              {project.name}
-            </Text>
-          </Title>
-          <ProjectLabels labels={project.labels} lang={lang} />
-        </Group>
-        {project.description && (
-          <Text size="sm" c="dimmed">
-            {project.description}
-          </Text>
-        )}
-      </Stack>
-    </Paper>
-  );
-}
+export type HomePageProps = { lang: Lang };
 
 export function HomePage({ lang }: HomePageProps) {
-  const projectsHref = getProjectsHref(lang);
   const { state } = useProjects();
-  const projects = state.status === 'success' ? state.projects.slice(0, 3) : [];
+  const { theme } = useThemeContext();
+  const isNerv = theme === 'nerv';
+
+  const primaryShade = isNerv ? 'evaGreen.4' : 'lclRust.5';
+  const projects = state.status === 'success' ? state.projects : [];
+  const recentProjects = projects.slice(0, 3);
 
   return (
-    <Box component="main" py="xl">
+    <Box component="main" pb="xl">
       <LandingHero lang={lang} />
+
       <Container size="md">
         <Stack gap="xl">
-          {/* About — title and each paragraph fade in one after the other */}
+          {/* About */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -135,14 +92,16 @@ export function HomePage({ lang }: HomePageProps) {
               visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
             }}
           >
-            <Stack gap="lg">
+            <Stack gap="md">
               <motion.div
                 variants={{
                   hidden: { opacity: 0 },
                   visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
                 }}
               >
-                <Title order={2}>{t(lang, 'sections.about_me')}</Title>
+                <Text size="sm" c="dimmed" fw={600} style={{ letterSpacing: '0.06em' }}>
+                  {'>'} {t(lang, 'sections.about_me').toLowerCase()}
+                </Text>
               </motion.div>
               {(about.home_content[lang].split(/\n\n+/) as string[])
                 .map((p) => p.trim())
@@ -155,13 +114,17 @@ export function HomePage({ lang }: HomePageProps) {
                       visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
                     }}
                   >
-                    <Text style={{ whiteSpace: 'pre-line' }}>{paragraph}</Text>
+                    <BruteCard style={{ backgroundColor: 'transparent' }}>
+                      <TerminalText size="sm" prompt>
+                        {paragraph}
+                      </TerminalText>
+                    </BruteCard>
                   </motion.div>
                 ))}
             </Stack>
           </motion.div>
 
-          {/* Skills — animate in view: title then each card right-to-left in order */}
+          {/* Skills */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -174,106 +137,124 @@ export function HomePage({ lang }: HomePageProps) {
             <Stack gap="md">
               <motion.div
                 variants={{
-                  hidden: { opacity: 0, x: 36 },
+                  hidden: { opacity: 0, x: 24 },
                   visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
                 }}
               >
-                <Title order={2}>{t(lang, 'sections.skills')}</Title>
+                <Text size="sm" c="dimmed" fw={600} style={{ letterSpacing: '0.06em' }}>
+                  {'>'} {t(lang, 'sections.skills').toLowerCase()}
+                </Text>
               </motion.div>
-              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg" style={{ alignItems: 'stretch' }}>
+              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
                 {SKILL_CATEGORIES.map((category) => (
                   <motion.div
                     key={category}
-                    style={{ height: '100%', minHeight: 0 }}
                     variants={{
-                      hidden: { opacity: 0, x: 36 },
+                      hidden: { opacity: 0, x: 24 },
                       visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
                     }}
                   >
-                    <Paper withBorder p="md" radius="sm" style={{ height: '100%' }}>
-                    <Stack gap="sm">
-                      <Text size="sm" fw={600} c="gray.5">
-                        {t(lang, `skills.${category}`)}
-                      </Text>
-                      <Group gap="xs" wrap="wrap">
-                        {(skills[category] as SkillItem[]).map((item) => (
-                          <Group key={item.name} gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
-                            <SkillIcon item={item} />
-                            <Text size="sm" lineClamp={1}>
-                              {item.name}
-                            </Text>
-                          </Group>
-                        ))}
-                      </Group>
-                    </Stack>
-                  </Paper>
-                </motion.div>
-              ))}
+                    <BruteCard style={{ height: '100%' }}>
+                      <Stack gap="xs">
+                        <Text
+                          size="xs"
+                          fw={700}
+                          c={primaryShade}
+                          style={{ letterSpacing: '0.05em' }}
+                        >
+                          {t(lang, `skills.${category}`).toUpperCase()}
+                        </Text>
+                        <Group gap="xs" wrap="wrap">
+                          {(skills[category] as SkillItem[]).map((item) => (
+                            <Group key={item.name} gap="xs" wrap="nowrap">
+                              <SkillIcon item={item} />
+                              <Text size="xs">{item.name}</Text>
+                            </Group>
+                          ))}
+                        </Group>
+                      </Stack>
+                    </BruteCard>
+                  </motion.div>
+                ))}
               </SimpleGrid>
             </Stack>
           </motion.div>
 
-          {/* Recent projects: top 3, title + description only — animate in view */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}
-          >
-            <Stack gap="md">
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0, x: 36 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-                }}
-              >
-                <Title order={2}>{t(lang, 'home.recent_projects')}</Title>
-              </motion.div>
-              {state.status === 'loading' && (
-                <Group justify="center" py="xl">
-                  <Loader size="sm" />
-                </Group>
-              )}
-              {state.status === 'success' && projects.length > 0 && (
-                <>
-                  <Stack gap="md">
-                    {projects.map((project) => (
-                      <motion.div
-                        key={project.name}
-                        variants={{
-                          hidden: { opacity: 0, y: 24 },
-                          visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-                        }}
-                      >
-                        <HomeProjectCard project={project} lang={lang} />
-                      </motion.div>
-                    ))}
-                  </Stack>
+          {/* Recent Projects */}
+          {recentProjects.length > 0 && (
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+              }}
+            >
+              <Stack gap="md">
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, x: 24 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+                  }}
+                >
+                  <Text size="sm" c="dimmed" fw={600} style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'home.recent_projects').toLowerCase()}
+                  </Text>
+                </motion.div>
+                {recentProjects.map((project) => (
                   <motion.div
-                    style={{ width: '100%' }}
+                    key={project.name}
                     variants={{
-                      hidden: { opacity: 0 },
-                      visible: { opacity: 1, transition: { duration: 0.35, ease: 'easeOut' } },
+                      hidden: { opacity: 0, x: 24 },
+                      visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
                     }}
                   >
-                    <Button component={Link} href={projectsHref} variant="light" size="sm" fullWidth>
-                      {t(lang, 'home.see_all_projects')}
-                    </Button>
+                    <BruteCard>
+                      <Stack gap="xs">
+                        <Group justify="space-between" align="center" wrap="wrap">
+                          <Anchor
+                            href={project.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            fw={700}
+                            size="sm"
+                            c={primaryShade}
+                            onClick={() => trackEvent('github_repo', { repo: project.name })}
+                          >
+                            {project.name}
+                          </Anchor>
+                          <ProjectLabels labels={project.labels} lang={lang} />
+                        </Group>
+                        {project.description && (
+                          <Text size="xs" c="dimmed" lineClamp={2}>
+                            {project.description}
+                          </Text>
+                        )}
+                      </Stack>
+                    </BruteCard>
                   </motion.div>
-                </>
-              )}
-            {state.status === 'success' && projects.length === 0 && (
-              <Text size="sm" c="dimmed">
-                {t(lang, 'projects.no_repos')}
-              </Text>
-            )}
-            {(state.status === 'error' || state.status === 'empty') && (
-              <Button component={Link} href={projectsHref} variant="light" size="sm">
-                {t(lang, 'home.see_all_projects')}
-              </Button>
-            )}
-            </Stack>
-          </motion.div>
+                ))}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+                  }}
+                >
+                  <Button
+                    component={Link}
+                    href={lang === 'en' ? '/en/projects' : '/projects'}
+                    variant="subtle"
+                    size="xs"
+                    c="dimmed"
+                    style={{ letterSpacing: '0.04em' }}
+                  >
+                    {'>'} {t(lang, 'home.see_all_projects').toLowerCase()}
+                  </Button>
+                </motion.div>
+              </Stack>
+            </motion.div>
+          )}
         </Stack>
       </Container>
     </Box>

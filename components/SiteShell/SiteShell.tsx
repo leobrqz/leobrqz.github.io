@@ -1,25 +1,27 @@
 'use client';
 
-import { AppShell, Box } from '@mantine/core';
-import { IdeBackground } from '@/components/IdeBackground';
-import { FloatingNav } from './FloatingNav';
+import React from 'react';
+import { Box } from '@mantine/core';
+import { FloatingNav, type FloatingNavProps } from './FloatingNav';
+import { ThreeBackground } from '@/components/ThreeBackground/ThreeBackground';
+import { Scanlines } from '@/components/Scanlines';
 
-export type SiteShellProps = {
-  children: React.ReactNode;
-  lang: 'pt' | 'en';
-};
-
-const CONTENT_TOP_PADDING = '4.5rem';
-
-export function SiteShell({ children, lang }: SiteShellProps) {
+export function SiteShell({ lang, children }: FloatingNavProps & { children: React.ReactNode }) {
   return (
-    <AppShell padding={0} header={{ height: 0 }}>
-      <AppShell.Main>
-        <IdeBackground>
-          <FloatingNav lang={lang} />
-          <Box pt={CONTENT_TOP_PADDING}>{children}</Box>
-        </IdeBackground>
-      </AppShell.Main>
-    </AppShell>
+    <>
+      <ThreeBackground />
+      <Scanlines />
+      <FloatingNav lang={lang} />
+      <Box
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          minHeight: '100vh',
+          paddingTop: 52,
+        }}
+      >
+        {children}
+      </Box>
+    </>
   );
 }

@@ -1,13 +1,11 @@
 type GtagEvent =
-  | 'game_start'
-  | 'game_over'
-  | 'game_restart'
   | 'readme_expand'
   | 'resume_download'
   | 'project_label_changelog'
   | 'github_repo'
   | 'github'
-  | 'linkedin';
+  | 'linkedin'
+  | 'email';
 
 export function trackEvent(event: GtagEvent, params?: Record<string, unknown>): void {
   if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import React, { useEffect, useRef, useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { IconFileDownload } from '@tabler/icons-react';
 import {
   Anchor,
@@ -11,12 +11,10 @@ import {
   Divider,
   Group,
   Loader,
-  Paper,
   Stack,
   Text,
-  Title,
 } from '@mantine/core';
-import { CV_PDF_FILENAME, CV_PDF_URL } from "@/config/site";
+import { CV_PDF_FILENAME, CV_PDF_URL } from '@/config/site';
 import {
   about,
   certifications,
@@ -26,9 +24,11 @@ import {
   resume_projects,
   resume_skills,
 } from '@/data';
-import { t, type Lang } from "@/lib/i18n";
-import { trackEvent } from "@/lib/analytics";
-import styles from "./ResumePage.module.css";
+import { t, type Lang } from '@/lib/i18n';
+import { trackEvent } from '@/lib/analytics';
+import { BruteCard } from '@/components/BruteCard';
+import { useThemeContext } from '@/components/ThemeProvider';
+import styles from './ResumePage.module.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -41,51 +41,35 @@ const RESUME_SKILL_CATEGORIES = [
   'cloud_devops',
 ] as const;
 
-export type ResumePageProps = {
-  lang: Lang;
-};
+export type ResumePageProps = { lang: Lang };
 
 export function ResumePage({ lang }: ResumePageProps) {
   const [view, setView] = useState<'web' | 'pdf'>('web');
   const [pdfWidth, setPdfWidth] = useState<number>(0);
   const [pdfLoading, setPdfLoading] = useState(true);
   const pdfContainerRef = useRef<HTMLDivElement | null>(null);
+  const { theme } = useThemeContext();
+  const isNerv = theme === 'nerv';
+  const primaryShade = isNerv ? 'evaGreen.4' : 'lclRust.5';
 
   const pdfRenderWidth = pdfWidth > 0 ? pdfWidth : undefined;
 
   useEffect(() => {
-    if (view === 'pdf') {
-      setPdfLoading(true);
-    }
+    if (view === 'pdf') setPdfLoading(true);
   }, [view]);
 
   useEffect(() => {
-    if (view !== 'pdf') {
-      return;
-    }
-
+    if (view !== 'pdf') return;
     const el = pdfContainerRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
+    if (!el || typeof ResizeObserver === 'undefined') return;
     const updateWidth = () => {
       const rect = el.getBoundingClientRect();
-      if (rect.width) {
-        setPdfWidth(rect.width);
-      }
+      if (rect.width) setPdfWidth(rect.width);
     };
-
     updateWidth();
-
-    const observer = new ResizeObserver(() => {
-      updateWidth();
-    });
+    const observer = new ResizeObserver(() => updateWidth());
     observer.observe(el);
-
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [view]);
 
   return (
@@ -93,20 +77,26 @@ export function ResumePage({ lang }: ResumePageProps) {
       <Container size="md">
         <Stack gap="lg">
           <Group justify="center">
-            <Group gap="xs">
+            <Group gap={0}>
               <Button
                 size="xs"
-                variant={view === 'web' ? 'filled' : 'subtle'}
+                variant={view === 'web' ? 'filled' : 'outline'}
                 onClick={() => setView('web')}
+                radius={0}
+                color={view === 'web' ? primaryShade : 'dimmed'}
+                style={{ borderWidth: 1 }}
               >
-                Web
+                web
               </Button>
               <Button
                 size="xs"
-                variant={view === 'pdf' ? 'filled' : 'subtle'}
+                variant={view === 'pdf' ? 'filled' : 'outline'}
                 onClick={() => setView('pdf')}
+                radius={0}
+                color={view === 'pdf' ? primaryShade : 'dimmed'}
+                style={{ borderWidth: 1 }}
               >
-                PDF
+                pdf
               </Button>
             </Group>
           </Group>
@@ -133,7 +123,6 @@ export function ResumePage({ lang }: ResumePageProps) {
                       alignItems: 'center',
                       justifyContent: 'center',
                       backgroundColor: 'var(--mantine-color-body)',
-                      borderRadius: 'var(--mantine-radius-sm)',
                     }}
                   >
                     <Loader size="lg" />
@@ -153,185 +142,205 @@ export function ResumePage({ lang }: ResumePageProps) {
               </Box>
             </Box>
           ) : (
-            <Paper withBorder p="lg" radius="md">
+            <BruteCard>
               <Stack gap="xl">
-              {/* Name and contact inside the box */}
-              <Stack gap="xs" align="center" style={{ textAlign: 'center' }}>
-                <Title order={1} size="1.75rem" fw={700}>
-                  {contact.name}
-                </Title>
-                <Text size="sm" c="dimmed">
-                  {contact.location}
-                </Text>
-                <Group gap="sm" justify="center" wrap="wrap">
-                  <Anchor href={`mailto:${contact.email}`} size="sm">
-                    {contact.email}
-                  </Anchor>
-                  <Anchor
-                    href={`https://github.com/${contact.github}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                    onClick={() => trackEvent('github')}
+                {/* Name and contact */}
+                <Stack gap="xs" align="center" style={{ textAlign: 'center' }}>
+                  <Text
+                    size="lg"
+                    fw={700}
+                    c={primaryShade}
+                    style={{ letterSpacing: '0.04em' }}
                   >
-                    GitHub
-                  </Anchor>
-                  <Anchor
-                    href={`https://linkedin.com/in/${contact.linkedin}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                    onClick={() => trackEvent('linkedin')}
-                  >
-                    LinkedIn
-                  </Anchor>
-                </Group>
-              </Stack>
-              <Divider />
-              {/* Summary */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.summary')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                <Text style={{ whiteSpace: 'pre-line' }}>{about.content[lang]}</Text>
-              </Stack>
-
-              {/* Resume projects */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.projects')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {resume_projects.map((project, i) => (
-                  <Stack key={i} gap={4}>
-                    <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600} onClick={() => trackEvent('github_repo', { repo: project.name[lang] })}>
-                      {project.name[lang]}
+                    {contact.name}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {contact.location}
+                  </Text>
+                  <Group gap="sm" justify="center" wrap="wrap">
+                    <Anchor href={`mailto:${contact.email}`} size="xs" c="dimmed">
+                      {contact.email}
                     </Anchor>
-                    <Text size="xs" c="dimmed">
-                      {project.technologies.join(' · ')}
-                    </Text>
-                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                      {project.description[lang]}
-                    </Text>
-                  </Stack>
-                ))}
-              </Stack>
+                    <Anchor
+                      href={`https://github.com/${contact.github}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      size="xs"
+                      c="dimmed"
+                      onClick={() => trackEvent('github')}
+                    >
+                      github
+                    </Anchor>
+                    <Anchor
+                      href={`https://linkedin.com/in/${contact.linkedin}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      size="xs"
+                      c="dimmed"
+                      onClick={() => trackEvent('linkedin')}
+                    >
+                      linkedin
+                    </Anchor>
+                  </Group>
+                </Stack>
+                <Divider color="dark.6" />
 
-              {/* Resume skills: one line per category */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.skills')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {RESUME_SKILL_CATEGORIES.map((category) => {
-                  const items = resume_skills[category];
-                  if (!items?.length) {
-                    return null;
-                  }
-                  return (
-                    <Text key={category} size="sm">
-                      <Text span fw={600} c="dimmed">
-                        {t(lang, `resume_labels.${category}`)}:
-                      </Text>{' '}
-                      {items.map((item) => item.name).join(', ')}
-                    </Text>
-                  );
-                })}
-              </Stack>
+                {/* Summary */}
+                <Stack gap="xs">
+                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'resume.summary').toUpperCase()}
+                  </Text>
+                  <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
+                    {about.content[lang]}
+                  </Text>
+                </Stack>
 
-              {/* Languages spoken */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.languages_spoken')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                <Stack gap="xs" hiddenFrom="sm">
-                  {languages_spoken.map((entry, i) => (
-                    <Text key={i} size="sm">
-                      {entry.name[lang]} ({entry.level[lang]})
-                    </Text>
+                {/* Projects */}
+                <Stack gap="xs">
+                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'resume.projects').toUpperCase()}
+                  </Text>
+                  {resume_projects.map((project, i) => (
+                    <Stack key={i} gap={4}>
+                      <Anchor
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        fw={600}
+                        size="sm"
+                        c={primaryShade}
+                        onClick={() =>
+                          trackEvent('github_repo', { repo: project.name[lang] })
+                        }
+                      >
+                        {project.name[lang]}
+                      </Anchor>
+                      <Text size="xs" c="dimmed">
+                        {project.technologies.join(' · ')}
+                      </Text>
+                      <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
+                        {project.description[lang]}
+                      </Text>
+                    </Stack>
                   ))}
                 </Stack>
-                <Box
-                  visibleFrom="sm"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 'var(--mantine-spacing-md)',
-                  }}
-                >
-                  {languages_spoken.map((entry, i) => (
-                    <Text
-                      key={i}
-                      size="sm"
-                      style={{
-                        flex: 1,
-                        textAlign: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
-                      }}
-                    >
-                      {entry.name[lang]} ({entry.level[lang]})
-                    </Text>
-                  ))}
-                </Box>
-              </Stack>
 
-              {/* Certifications */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.certifications')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {certifications.map((cert, i) => (
-                  <Stack key={i} gap={4}>
-                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
-                      {cert.url ? (
-                        <Anchor href={cert.url} target="_blank" rel="noopener noreferrer" fw={600}>
-                          {cert.name[lang]}
-                        </Anchor>
-                      ) : (
-                        <Text fw={600}>{cert.name[lang]}</Text>
-                      )}
-                      <Text size="md" fw={700} style={{ letterSpacing: '0.01em', textAlign: 'right' }}>
-                        {cert.issuer}
-                        <Text span size="sm" fw={400} c="dimmed"> ({cert.date})</Text>
+                {/* Skills */}
+                <Stack gap="xs">
+                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'resume.skills').toUpperCase()}
+                  </Text>
+                  {RESUME_SKILL_CATEGORIES.map((category) => {
+                    const items = resume_skills[category];
+                    if (!items?.length) return null;
+                    return (
+                      <Text key={category} size="sm">
+                        <Text span fw={600} c="dimmed">
+                          {t(lang, `resume_labels.${category}`)}:
+                        </Text>{' '}
+                        {items.map((item) => item.name).join(', ')}
                       </Text>
-                    </Group>
-                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                      {cert.description[lang]}
-                    </Text>
+                    );
+                  })}
+                </Stack>
+
+                {/* Languages */}
+                <Stack gap="xs">
+                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'resume.languages_spoken').toUpperCase()}
+                  </Text>
+                  <Stack gap="xs" hiddenFrom="sm">
+                    {languages_spoken.map((entry, i) => (
+                      <Text key={i} size="sm">
+                        {entry.name[lang]} ({entry.level[lang]})
+                      </Text>
+                    ))}
                   </Stack>
-                ))}
-              </Stack>
+                  <Box
+                    visibleFrom="sm"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: 'var(--mantine-spacing-md)',
+                    }}
+                  >
+                    {languages_spoken.map((entry, i) => (
+                      <Text
+                        key={i}
+                        size="sm"
+                        style={{
+                          flex: 1,
+                          textAlign: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
+                        }}
+                      >
+                        {entry.name[lang]} ({entry.level[lang]})
+                      </Text>
+                    ))}
+                  </Box>
+                </Stack>
 
-              {/* Education */}
-              <Stack gap="xs" style={{ listStyle: 'none', paddingLeft: 0 }}>
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.education')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {education.map((entry, i) => (
-                  <Group key={i} justify="space-between" align="flex-start" wrap="wrap" gap="md">
-                    <Stack gap={2}>
-                      <Text fw={600}>{entry.degree[lang]}</Text>
-                      <Text size="sm" c="dimmed">
-                        {entry.level[lang]}
+                {/* Certifications */}
+                <Stack gap="xs">
+                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'resume.certifications').toUpperCase()}
+                  </Text>
+                  {certifications.map((cert, i) => (
+                    <Stack key={i} gap={4}>
+                      <Group justify="space-between" align="flex-start" wrap="wrap">
+                        {cert.url ? (
+                          <Anchor
+                            href={cert.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            fw={600}
+                            size="sm"
+                          >
+                            {cert.name[lang]}
+                          </Anchor>
+                        ) : (
+                          <Text fw={600} size="sm">
+                            {cert.name[lang]}
+                          </Text>
+                        )}
+                        <Text size="sm" c="dimmed">
+                          {cert.issuer} ({cert.date})
+                        </Text>
+                      </Group>
+                      <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
+                        {cert.description[lang]}
                       </Text>
                     </Stack>
-                    <Stack gap={2} align="flex-end">
-                      <Text size="md" fw={700} style={{ letterSpacing: '0.01em', textAlign: 'right' }}>
-                        {entry.institution}
-                        <Text span size="sm" fw={400} c="dimmed"> ({entry.start_date} – {entry.end_date})</Text>
-                      </Text>
-                      <Text size="sm" c="dimmed">
-                        {entry.location}
-                      </Text>
-                    </Stack>
-                  </Group>
-                ))}
+                  ))}
+                </Stack>
+
+                {/* Education */}
+                <Stack gap="xs">
+                  <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em' }}>
+                    {'>'} {t(lang, 'resume.education').toUpperCase()}
+                  </Text>
+                  {education.map((entry, i) => (
+                    <Group key={i} justify="space-between" align="flex-start" wrap="wrap">
+                      <Stack gap={2}>
+                        <Text fw={600} size="sm">
+                          {entry.degree[lang]}
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          {entry.level[lang]}
+                        </Text>
+                      </Stack>
+                      <Stack gap={2} align="flex-end">
+                        <Text size="sm" c="dimmed">
+                          {entry.institution} ({entry.start_date} – {entry.end_date})
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          {entry.location}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  ))}
+                </Stack>
               </Stack>
-              </Stack>
-            </Paper>
+            </BruteCard>
           )}
         </Stack>
       </Container>
@@ -355,8 +364,10 @@ export function ResumePage({ lang }: ResumePageProps) {
           title={t(lang, 'resume.download_pdf')}
           variant="filled"
           size="lg"
-          style={{ width: 56, height: 56, padding: 0, borderRadius: '50%' }}
+          radius={0}
+          style={{ width: 52, height: 52, padding: 0 }}
           onClick={() => trackEvent('resume_download')}
+          color={primaryShade}
         >
           <IconFileDownload size={24} />
         </Button>

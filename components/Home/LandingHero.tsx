@@ -2,40 +2,33 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Anchor, Box, Group, Text, Tooltip, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Anchor, Box, Group, Text } from '@mantine/core';
 import { IconBrandGithub, IconBrandLinkedin } from '@tabler/icons-react';
 import { contact } from '@/data/contact';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
+import { useThemeContext } from '@/components/ThemeProvider';
 
-const TYPE_SPEED_MS = 80;
+const TYPE_SPEED_MS = 70;
 const CURSOR_BLINK_MS = 530;
 const DELAY_AFTER_NAME_MS = 400;
-const SUBTITLE_SPEED_MS = 22;
+const SUBTITLE_SPEED_MS = 20;
 
-export type LandingHeroProps = {
-  lang: Lang;
-};
+export type LandingHeroProps = { lang: Lang };
 
 function useTypewriter(fullText: string, speedMs: number, startDelayMs: number, run: boolean) {
   const [display, setDisplay] = useState('');
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
-    if (!run || fullText === '') {
-      return;
-    }
-    const startTimer = setTimeout(() => setStarted(true), startDelayMs);
-    return () => clearTimeout(startTimer);
+    if (!run || fullText === '') return;
+    const t = setTimeout(() => setStarted(true), startDelayMs);
+    return () => clearTimeout(t);
   }, [run, fullText, startDelayMs]);
 
   useEffect(() => {
-    if (!started || display.length >= fullText.length) {
-      return;
-    }
-    const t = setTimeout(() => {
-      setDisplay(fullText.slice(0, display.length + 1));
-    }, speedMs);
+    if (!started || display.length >= fullText.length) return;
+    const t = setTimeout(() => setDisplay(fullText.slice(0, display.length + 1)), speedMs);
     return () => clearTimeout(t);
   }, [started, display, fullText, speedMs]);
 
@@ -52,132 +45,113 @@ function useCursorBlink() {
 }
 
 export function LandingHero({ lang }: LandingHeroProps) {
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { theme } = useThemeContext();
+  const isNerv = theme === 'nerv';
 
   const nameDisplay = useTypewriter(contact.name, TYPE_SPEED_MS, 300, true);
   const nameDone = nameDisplay.length >= contact.name.length;
-  const subtitle = `${t(lang, 'sidebar.role')} · ${t(lang, 'sidebar.education')}`;
+  const subtitle = `${t(lang, 'sidebar.role')} &middot; ${t(lang, 'sidebar.education')}`;
   const subtitleDisplay = useTypewriter(
     subtitle,
     SUBTITLE_SPEED_MS,
     nameDone ? DELAY_AFTER_NAME_MS : 999999,
-    nameDone
+    nameDone,
   );
   const subtitleDone = subtitleDisplay.length >= subtitle.length;
   const cursorOn = useCursorBlink();
 
-  const gradientStyle = {
-    background: isDark
-      ? `linear-gradient(110deg, ${theme.colors.blue[3]}, ${theme.colors.cyan[4]})`
-      : `linear-gradient(110deg, ${theme.colors.blue[7]}, ${theme.colors.cyan[7]})`,
-    backgroundClip: 'text',
-    WebkitBackgroundClip: 'text',
-    color: 'transparent',
-  } as React.CSSProperties;
+  const primaryColor = isNerv ? '#87FF5F' : '#D4790A';
 
   return (
     <Box
       component="section"
       style={{
-        minHeight: 'min(70vh, 420px)',
+        minHeight: 'min(70vh, 520px)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 'var(--mantine-spacing-xl) 0',
+        textAlign: 'center',
       }}
     >
-      <Box style={{ textAlign: 'center' }}>
-        <Box
-          component="h1"
-          style={{
-            margin: 0,
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
-            fontWeight: 800,
-            letterSpacing: '0.02em',
-            lineHeight: 1.3,
-            fontFamily: theme.fontFamilyMonospace,
-          }}
-        >
-          <span style={gradientStyle}>{nameDisplay}</span>
-          {!nameDone && (
-            <span
-              style={{
-                ...gradientStyle,
-                opacity: cursorOn ? 1 : 0.35,
-                borderRight: `3px solid ${isDark ? theme.colors.cyan[4] : theme.colors.cyan[7]}`,
-                marginLeft: 2,
-              }}
-            >
-              {' '}
-            </span>
-          )}
-        </Box>
-        <Text
-          size="lg"
-          c="dimmed"
-          mt="md"
-          style={{
-            fontFamily: theme.fontFamilyMonospace,
-            minHeight: '1.5em',
-          }}
-        >
-          {subtitleDisplay}
-          {nameDone && (
-            <span
-              style={{
-                opacity: cursorOn ? 1 : 0.35,
-                borderRight: `2px solid var(--mantine-color-dimmed)`,
-                marginLeft: 2,
-              }}
-            >
-              {' '}
-            </span>
-          )}
-        </Text>
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{
-            opacity: subtitleDone ? 1 : 0,
-            y: subtitleDone ? 0 : 8,
-          }}
-          transition={{
-            delay: subtitleDone ? 0.25 : 0,
-            duration: 0.35,
-          }}
-        >
-          <Group justify="center" gap="md" mt="sm">
-            <Tooltip label="GitHub" withArrow>
-              <Anchor
-                href={`https://github.com/${contact.github}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                c="dimmed"
-                style={{ lineHeight: 0 }}
-                aria-label="GitHub"
-                onClick={() => trackEvent('github')}
-              >
-                <IconBrandGithub size={30} stroke={1.5} />
-              </Anchor>
-            </Tooltip>
-            <Tooltip label="LinkedIn" withArrow>
-              <Anchor
-                href={`https://linkedin.com/in/${contact.linkedin}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                c="dimmed"
-                style={{ lineHeight: 0 }}
-                aria-label="LinkedIn"
-                onClick={() => trackEvent('linkedin')}
-              >
-                <IconBrandLinkedin size={30} stroke={1.5} />
-              </Anchor>
-            </Tooltip>
-          </Group>
-        </motion.div>
+      <Box
+        component="h1"
+        style={{
+          margin: 0,
+          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+          fontWeight: 800,
+          letterSpacing: '0.04em',
+          lineHeight: 1.3,
+          color: primaryColor,
+        }}
+      >
+        {nameDisplay}
+        {!nameDone && (
+          <span
+            style={{
+              opacity: cursorOn ? 1 : 0.35,
+              borderRight: `3px solid ${primaryColor}`,
+              marginLeft: 2,
+            }}
+          >
+            {' '}
+          </span>
+        )}
       </Box>
+      <Text
+        size="lg"
+        c="dimmed"
+        mt="md"
+        style={{
+          minHeight: '1.5em',
+          letterSpacing: '0.02em',
+        }}
+      >
+        {subtitleDisplay}
+        {nameDone && (
+          <span
+            style={{
+              opacity: cursorOn ? 1 : 0.35,
+              borderRight: '2px solid var(--mantine-color-dimmed)',
+              marginLeft: 2,
+            }}
+          >
+            {' '}
+          </span>
+        )}
+      </Text>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{
+          opacity: subtitleDone ? 1 : 0,
+          y: subtitleDone ? 0 : 8,
+        }}
+        transition={{ delay: subtitleDone ? 0.25 : 0, duration: 0.35 }}
+      >
+        <Group justify="center" gap="md" mt="sm">
+          <Anchor
+            href={`https://github.com/${contact.github}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            c="dimmed"
+            aria-label="GitHub"
+            onClick={() => trackEvent('github')}
+          >
+            <IconBrandGithub size={30} stroke={1.5} />
+          </Anchor>
+          <Anchor
+            href={`https://linkedin.com/in/${contact.linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            c="dimmed"
+            aria-label="LinkedIn"
+            onClick={() => trackEvent('linkedin')}
+          >
+            <IconBrandLinkedin size={30} stroke={1.5} />
+          </Anchor>
+        </Group>
+      </motion.div>
     </Box>
   );
 }

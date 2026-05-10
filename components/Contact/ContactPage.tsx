@@ -1,118 +1,105 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from '@tabler/icons-react';
-import { Anchor, Box, Container, Group, Stack, Title } from '@mantine/core';
+import { Anchor, Box, Container, Group, Stack, Text } from '@mantine/core';
 import { contact } from '@/data';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
+import { BruteCard } from '@/components/BruteCard';
+import { useThemeContext } from '@/components/ThemeProvider';
 
-const MOBILE_BREAKPOINT = 768;
-
-function isMobile(): boolean {
-  if (typeof window === 'undefined') return true;
-  return (
-    window.innerWidth < MOBILE_BREAKPOINT ||
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-  );
-}
-
-const ContactMinigame = dynamic(
-  () => import('@/components/ContactMinigame').then((mod) => ({ default: mod.ContactMinigame })),
-  { ssr: false }
-);
-
-export type ContactPageProps = {
-  lang: Lang;
-};
+export type ContactPageProps = { lang: Lang };
 
 export function ContactPage({ lang }: ContactPageProps) {
-  const [showMinigame, setShowMinigame] = useState(false);
+  const { theme } = useThemeContext();
+  const isNerv = theme === 'nerv';
+  const primaryShade = isNerv ? 'evaGreen.4' : 'lclRust.5';
 
-  useEffect(() => {
-    setShowMinigame(!isMobile());
-  }, []);
+  const links = [
+    {
+      icon: IconBrandGithub,
+      label: 'GitHub',
+      href: `https://github.com/${contact.github}`,
+      event: 'github' as const,
+    },
+    {
+      icon: IconBrandLinkedin,
+      label: 'LinkedIn',
+      href: `https://linkedin.com/in/${contact.linkedin}`,
+      event: 'linkedin' as const,
+    },
+    {
+      icon: IconMail,
+      label: t(lang, 'contact.send_email'),
+      href: `mailto:${contact.email}`,
+      event: 'email' as const,
+    },
+  ];
 
   return (
     <Box component="main" py="xl">
-      <Container size="md" mx="auto" maw={640}>
+      <Container size="md" maw={480}>
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-40px' }}
           variants={{
             hidden: {},
-            visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+            visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
           }}
         >
-          <Stack gap="xl" align="center" ta="center">
+          <Stack gap="md" align="center">
             <motion.div
               variants={{
                 hidden: { opacity: 0 },
                 visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
               }}
             >
-              <Title order={1}>{t(lang, 'contact.get_in_touch')}</Title>
+              <Text size="sm" c="dimmed" fw={600} style={{ letterSpacing: '0.06em' }}>
+                {'>'} {t(lang, 'contact.connect_with_me').toLowerCase()}
+              </Text>
             </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-              }}
-            >
-              <Anchor
-              href={`https://github.com/${contact.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              size="md"
-              underline="hover"
-              onClick={() => trackEvent('github')}
-            >
-              <Group gap="xs">
-                <IconBrandGithub size={20} />
-                GitHub
-              </Group>
-            </Anchor>
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-              }}
-            >
-              <Anchor
-                href={`https://linkedin.com/in/${contact.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              size="md"
-              underline="hover"
-              onClick={() => trackEvent('linkedin')}
-            >
-              <Group gap="xs">
-                <IconBrandLinkedin size={20} />
-                LinkedIn
-              </Group>
-            </Anchor>
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-              }}
-            >
-              <Anchor href={`mailto:${contact.email}`} size="md" underline="hover">
-              <Group gap="xs">
-                <IconMail size={20} />
-                {t(lang, 'contact.send_email')}
-              </Group>
-            </Anchor>
-            </motion.div>
+            {links.map(({ icon: Icon, label, href, event }) => (
+              <motion.div
+                key={label}
+                style={{ width: '100%' }}
+                variants={{
+                  hidden: { opacity: 0, x: 24 },
+                  visible: {
+                    opacity: 1,
+                    x: 0,
+                    transition: { duration: 0.35, ease: 'easeOut' },
+                  },
+                }}
+              >
+                <Anchor
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  underline="never"
+                  onClick={() => trackEvent(event)}
+                  style={{ width: '100%' }}
+                >
+                  <BruteCard
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'border-color 150ms ease',
+                    }}
+                  >
+                    <Group gap="sm" justify="center">
+                      <Icon size={20} />
+                      <Text size="sm" c={primaryShade} fw={500}>
+                        {label}
+                      </Text>
+                    </Group>
+                  </BruteCard>
+                </Anchor>
+              </motion.div>
+            ))}
           </Stack>
         </motion.div>
       </Container>
-      {showMinigame && <ContactMinigame />}
     </Box>
   );
 }
