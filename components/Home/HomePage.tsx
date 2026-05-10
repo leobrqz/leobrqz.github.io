@@ -26,11 +26,11 @@ import { LandingHero } from './LandingHero';
 
 const SKILL_CATEGORIES = [
   'languages',
-  'frameworks',
+  'backend',
+  'frontend',
+  'ai_automations',
   'data',
-  'libraries',
-  'databases',
-  'tools',
+  'cloud_devops',
 ] as const;
 
 const ICON_SIZE = 24;

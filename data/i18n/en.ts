@@ -31,10 +31,11 @@ export const en = {
   },
   resume_labels: {
     languages: 'Languages',
-    frameworks: 'Frameworks',
-    libraries: 'Libraries',
-    databases: 'Databases',
-    tools: 'Tools',
+    backend: 'Backend',
+    frontend: 'Frontend',
+    ai_automations: 'AI & Automations',
+    data: 'Data',
+    cloud_devops: 'Cloud & DevOps',
     others: 'Others',
     technologies: 'Technologies',
   },
@@ -62,11 +63,11 @@ export const en = {
   },
   skills: {
     languages: 'Languages',
-    frameworks: 'Frameworks',
-    data: 'Data & AI',
-    libraries: 'Libraries',
-    databases: 'Databases',
-    tools: 'Infrastructure & Dev Tools',
+    backend: 'Backend',
+    frontend: 'Frontend',
+    ai_automations: 'AI & Automations',
+    data: 'Data',
+    cloud_devops: 'Cloud & DevOps',
     others: 'Others',
   },
   meta: {
@@ -78,7 +79,7 @@ export const en = {
     description_contact: 'Contact Leonardo Briquezi.',
   },
   sidebar: {
-    role: 'Developer',
+    role: 'Fullstack Developer',
     education: 'Computer Science',
   },
   home: {

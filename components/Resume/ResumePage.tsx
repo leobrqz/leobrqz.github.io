@@ -34,10 +34,11 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 
 const RESUME_SKILL_CATEGORIES = [
   'languages',
-  'frameworks',
-  'libraries',
-  'databases',
-  'tools',
+  'backend',
+  'frontend',
+  'ai_automations',
+  'data',
+  'cloud_devops',
 ] as const;
 
 export type ResumePageProps = {
