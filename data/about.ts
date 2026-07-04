@@ -1,18 +1,10 @@
 export const about = {
   home_content: {
-    en: `Fullstack developer and CS student. I build web apps end to end, working on both client and server with TypeScript, React, Next.js and Python. I also create AI chatbots and automations.
-
-Currently diving into machine learning and learning C.
-
-The site has hidden minigames scattered around. Try clicking things.`,
-    pt: `Desenvolvedor fullstack e estudante de Ciência da Computação. Construo aplicações web ponta a ponta, trabalhando com TypeScript, React, Next.js e Python em ambos os lados da stack. Também crio chatbots com IA e automações.
-
-Atualmente me aprofundando em machine learning, system design e aprendendo C.
-
-O site tem minigames escondidos. Tente achar clicando por aí.`,
+    en: `Fullstack developer and CS student. I build web apps end to end, working on both client and server with TypeScript, React, Next.js and Python. I also create AI chatbots and automations.`,
+    pt: `Desenvolvedor fullstack e estudante de Ciência da Computação. Construo aplicações web ponta a ponta, trabalhando com TypeScript, React, Next.js e Python em ambos os lados da stack. Também crio chatbots com IA e automações.`,
   },
   content: {
-    en: `Fullstack developer pursuing a degree in Computer Science. I build web applications end to end, working with TypeScript and Python on both client and server. My go-to stack includes React, Next.js and FastAPI. As an AI developer I have built chatbots and automated workflows using LangChain, RAG and LLM integrations. Experienced with PostgreSQL, Supabase, Docker and AWS. I value clear communication in collaborative environments. Continuously learning, currently focused on machine learning and systems programming.`,
-    pt: `Desenvolvedor fullstack cursando Ciência da Computação. Construo aplicações web ponta a ponta, trabalhando com TypeScript e Python no client e no server. Meu stack principal inclui React, Next.js e FastAPI. Como desenvolvedor de IA, construí chatbots e fluxos de automação usando LangChain, RAG e integrações com LLMs. Experiência com PostgreSQL, Supabase, Docker e AWS. Valorizo comunicação clara em ambientes colaborativos. Aprendizado contínuo, atualmente focado em machine learning e programação de sistemas.`,
+    en: `Fullstack developer with a focus on backend and a Computer Science student. Experienced with Python, FastAPI, PostgreSQL, React and Next.js, familiar with AWS, agile methodologies and AI integrations. I have worked on academic projects and hackathons in team settings, with clear division of responsibilities and efficient communication. I have a self-taught profile and I am curious, I enjoy discovering technologies and deepening my technical knowledge. Proficient in English with technical comprehension.`,
+    pt: `Desenvolvedor Fullstack com foco em backend e estudante de Ciência da Computação. Tenho experiência com Python, FastAPI, PostgreSQL, React e Next.js, familiaridade com AWS, metodologias ágeis e integrações com IA. Atuei em projetos acadêmicos e hackathons em equipe, com divisão de responsabilidades e comunicação clara e eficiente. Tenho perfil autodidata e sou curioso, gosto de descobrir tecnologias e aprofundar o conhecimento técnico. Possuo proficiência em inglês com compreensão técnica.`,
   },
 } as const;

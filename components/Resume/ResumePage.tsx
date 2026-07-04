@@ -10,6 +10,7 @@ import {
   Container,
   Divider,
   Group,
+  List,
   Loader,
   Paper,
   Stack,
@@ -22,6 +23,7 @@ import {
   certifications,
   contact,
   education,
+  experience,
   languages_spoken,
   resume_projects,
   resume_skills,
@@ -40,6 +42,39 @@ const RESUME_SKILL_CATEGORIES = [
   'data',
   'cloud_devops',
 ] as const;
+
+function BulletText({ children }: { children: string }) {
+  const lines = children.split('\n').filter((l) => l.trim() !== '');
+  const isBulleted = lines.length > 0 && lines.every((l) => l.trimStart().startsWith('- '));
+
+  if (!isBulleted) {
+    return <Text size="sm" style={{ whiteSpace: 'pre-line' }}>{children}</Text>;
+  }
+
+  return (
+    <List spacing={2} size="sm" withPadding>
+      {lines.map((line, i) => (
+        <List.Item key={i}>
+          {line
+            .trimStart()
+            .replace(/^- /, '')
+            .split(/(\*\*[^*]+\*\*)/g)
+            .map((part, j) =>
+              part.startsWith('**') && part.endsWith('**') ? (
+                <Text key={j} span fw={700}>
+                  {part.slice(2, -2)}
+                </Text>
+              ) : (
+                <Text key={j} span>
+                  {part}
+                </Text>
+              ),
+            )}
+        </List.Item>
+      ))}
+    </List>
+  );
+}
 
 export type ResumePageProps = {
   lang: Lang;
@@ -197,27 +232,6 @@ export function ResumePage({ lang }: ResumePageProps) {
                 <Text style={{ whiteSpace: 'pre-line' }}>{about.content[lang]}</Text>
               </Stack>
 
-              {/* Resume projects */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.projects')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {resume_projects.map((project, i) => (
-                  <Stack key={i} gap={4}>
-                    <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600} onClick={() => trackEvent('github_repo', { repo: project.name[lang] })}>
-                      {project.name[lang]}
-                    </Anchor>
-                    <Text size="xs" c="dimmed">
-                      {project.technologies.join(' · ')}
-                    </Text>
-                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                      {project.description[lang]}
-                    </Text>
-                  </Stack>
-                ))}
-              </Stack>
-
               {/* Resume skills: one line per category */}
               <Stack gap="xs">
                 <Title order={2} size="h3">
@@ -238,6 +252,56 @@ export function ResumePage({ lang }: ResumePageProps) {
                     </Text>
                   );
                 })}
+              </Stack>
+
+              {/* Experience */}
+              <Stack gap="xs">
+                <Title order={2} size="h3">
+                  {t(lang, 'resume.experience')}
+                </Title>
+                <Divider color="dark.4" size="xs" />
+                {experience.map((entry, i) => (
+                  <Stack key={i} gap={4}>
+                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
+                      <Stack gap={2}>
+                        {entry.url ? (
+                          <Anchor href={entry.url} target="_blank" rel="noopener noreferrer" fw={600}>
+                            {entry.title[lang]}
+                          </Anchor>
+                        ) : (
+                          <Text fw={600}>{entry.title[lang]}</Text>
+                        )}
+                        <Text size="sm" c="dimmed">
+                          {entry.company}
+                          {entry.location ? ` · ${entry.location}` : ''}
+                        </Text>
+                      </Stack>
+                      <Text size="sm" c="dimmed">
+                        {entry.period[lang]}
+                      </Text>
+                    </Group>
+                    <BulletText>{entry.description[lang]}</BulletText>
+                  </Stack>
+                ))}
+              </Stack>
+
+              {/* Resume projects */}
+              <Stack gap="xs">
+                <Title order={2} size="h3">
+                  {t(lang, 'resume.projects')}
+                </Title>
+                <Divider color="dark.4" size="xs" />
+                {resume_projects.map((project, i) => (
+                  <Stack key={i} gap={4}>
+                    <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600} onClick={() => trackEvent('github_repo', { repo: project.name[lang] })}>
+                      {project.name[lang]}
+                    </Anchor>
+                    <Text size="xs" c="dimmed">
+                      {project.technologies.join(' \u00b7 ')}
+                    </Text>
+                    <BulletText>{project.description[lang]}</BulletText>
+                  </Stack>
+                ))}
               </Stack>
 
               {/* Languages spoken */}
@@ -297,9 +361,7 @@ export function ResumePage({ lang }: ResumePageProps) {
                         <Text span size="sm" fw={400} c="dimmed"> ({cert.date})</Text>
                       </Text>
                     </Group>
-                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-                      {cert.description[lang]}
-                    </Text>
+                    <BulletText>{cert.description[lang]}</BulletText>
                   </Stack>
                 ))}
               </Stack>

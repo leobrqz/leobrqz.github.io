@@ -38,6 +38,7 @@ export const skills: SkillsData = {
     { name: 'PostgreSQL', simple_icon: 'postgresql' },
     { name: 'MySQL', simple_icon: 'mysql' },
     { name: 'Supabase', simple_icon: 'supabase' },
+    { name: 'Redis', simple_icon: 'redis' },
   ],
   frontend: [
     { name: 'React', simple_icon: 'react' },
@@ -57,6 +58,7 @@ export const skills: SkillsData = {
       icon_url: 'https://playwright.dev/img/playwright-logo.svg',
     },
     { name: 'BeautifulSoup' },
+    { name: 'Pinecone' },
   ],
   data: [
     { name: 'Scikit-learn', simple_icon: 'scikitlearn' },
@@ -69,6 +71,8 @@ export const skills: SkillsData = {
   ],
   cloud_devops: [
     { name: 'AWS', icon_url: '/assets/icons/aws.svg' },
+    { name: 'Cloudflare', simple_icon: 'cloudflare' },
+    { name: 'Vercel', simple_icon: 'vercel' },
     { name: 'Docker', simple_icon: 'docker' },
     { name: 'Git', simple_icon: 'git' },
     { name: 'Linux', simple_icon: 'linux' },

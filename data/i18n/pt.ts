@@ -35,7 +35,7 @@ export const pt = {
     frontend: 'Frontend',
     ai_automations: 'IA & Automações',
     data: 'Dados',
-    cloud_devops: 'Cloud & DevOps',
+    cloud_devops: 'DevOps, Cloud e Ferramentas',
     others: 'Outros',
     technologies: 'Tecnologias',
   },
@@ -67,7 +67,7 @@ export const pt = {
     frontend: 'Frontend',
     ai_automations: 'IA & Automações',
     data: 'Dados',
-    cloud_devops: 'Cloud & DevOps',
+    cloud_devops: 'DevOps, Cloud e Ferramentas',
     others: 'Outros',
   },
   meta: {

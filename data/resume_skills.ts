@@ -29,6 +29,7 @@ export const resume_skills: ResumeSkillsData = {
     { name: 'PostgreSQL', icon: 'database' },
     { name: 'MySQL', icon: 'database' },
     { name: 'Supabase', icon: 'database' },
+    { name: 'Redis', icon: 'database' },
   ],
   frontend: [
     { name: 'React', icon: 'react' },
@@ -43,6 +44,7 @@ export const resume_skills: ResumeSkillsData = {
     { name: 'HuggingFace', icon: 'link' },
     { name: 'Playwright', icon: 'code' },
     { name: 'BeautifulSoup' },
+    { name: 'Pinecone', icon: 'link' },
   ],
   data: [
     { name: 'Scikit-learn', icon: 'chart-line' },
@@ -52,8 +54,15 @@ export const resume_skills: ResumeSkillsData = {
   ],
   cloud_devops: [
     { name: 'AWS', icon: 'aws' },
+    { name: 'Cloudflare' },
+    { name: 'Vercel' },
     { name: 'Docker', icon: 'docker' },
     { name: 'Git', icon: 'git' },
+    { name: 'GitHub', icon: 'git' },
     { name: 'Linux', icon: 'linux' },
+    { name: 'Codex' },
+    { name: 'Claude Code' },
+    { name: 'OpenCode' },
+    { name: 'Cursor' },
   ],
 };
