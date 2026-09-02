@@ -1,61 +1,370 @@
-/* Scope: README content on Projects page only. Hide GitHub heading anchor (chain-link) icons. */
-.readmeWrapper a.anchor {
-  display: none;
+.projectsPage {
+  color: var(--site-ink);
 }
 
-/* GitHub markdown CSS uses its own dark background colors; override them to match Mantine dark-4. */
+.projectsContainer {
+  max-width: none;
+  padding: 0;
+}
+
+.eyebrow,
+.projectMeta,
+.detailLabel,
+.syncNotice,
+.backLink {
+  font-family: var(--site-font-mono);
+}
+
+.eyebrow {
+  display: block;
+  color: var(--site-signal);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pageIntro {
+  max-width: 760px;
+  padding: 70px 0 58px;
+}
+
+.pageIntro h1 {
+  margin: 18px 0 0;
+  color: var(--site-ink);
+  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-size: clamp(3.2rem, 8vw, 7rem);
+  letter-spacing: -0.075em;
+  line-height: 0.9;
+}
+
+.pageIntro p {
+  max-width: 550px;
+  margin: 22px 0 0;
+  color: var(--site-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.syncNotice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 22px;
+  padding: 11px 13px;
+  border: 1px solid var(--site-line);
+  color: var(--site-muted);
+  font-size: 10px;
+  letter-spacing: 0.01em;
+}
+
+.syncDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--site-signal);
+}
+
+.retryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  border: 0;
+  color: var(--site-accent);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+}
+
+.retryButton:hover,
+.retryButton:focus-visible {
+  color: var(--site-signal);
+}
+
+.projectList {
+  position: relative;
+  display: grid;
+  gap: 42px;
+  padding-left: 48px;
+}
+
+.projectList::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 13px;
+  width: 1px;
+  background: var(--site-accent);
+  content: '';
+  opacity: 0.48;
+}
+
+.projectCard {
+  position: relative;
+  overflow: visible;
+  border: 1px solid var(--site-line);
+  background: var(--site-surface);
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.projectCard:hover {
+  border-color: color-mix(in srgb, var(--site-accent) 52%, var(--site-line));
+  transform: translateY(-2px);
+}
+
+.projectCardHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+  gap: 34px;
+  padding: 28px 30px 25px;
+}
+
+.timelinePoint {
+  position: absolute;
+  top: 50%;
+  left: -42px;
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--site-paper);
+  border-radius: 50%;
+  background: var(--site-accent);
+  box-shadow: 0 0 0 1px var(--site-accent), 0 0 16px color-mix(in srgb, var(--site-accent) 30%, transparent);
+  transform: translateY(-50%);
+}
+
+.projectIdentity {
+  min-width: 0;
+}
+
+.projectTitleLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.projectTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--site-ink) !important;
+  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.projectTitle:hover,
+.projectTitle:focus-visible {
+  color: var(--site-accent) !important;
+}
+
+.projectDescription {
+  max-width: 620px;
+  margin: 17px 0 0;
+  color: var(--site-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.projectMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 22px;
+  color: var(--site-muted);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.projectDetails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+  gap: 18px;
+  padding-left: 24px;
+  border-left: 1px solid var(--site-line);
+}
+
+.detailGroup {
+  min-width: 0;
+}
+
+.detailLabel {
+  display: block;
+  margin-bottom: 11px;
+  color: var(--site-muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagList li {
+  padding: 5px 7px;
+  border: 1px solid var(--site-line);
+  color: var(--site-ink);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.readmeButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 30px;
+  border: 0;
+  border-top: 1px solid var(--site-line);
+  color: var(--site-accent);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--site-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.readmeButton:hover,
+.readmeButton:focus-visible {
+  color: var(--site-signal);
+  background: rgba(139, 192, 255, 0.06);
+}
+
+.readmeButton:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.rotateIcon {
+  transform: rotate(90deg);
+}
+
+.readmePanel {
+  padding: 23px 30px 30px;
+  border-top: 1px solid var(--site-line);
+}
+
 .readmeWrapper {
-  background-color: var(--mantine-color-dark-7) !important;
+  max-height: 650px;
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid var(--site-line);
+  background: var(--site-paper) !important;
+  color: var(--site-ink);
+  font-size: 14px;
 }
 
-/* The fetched GitHub README HTML contains an inner element with class="markdown-body".
-   Override nested markdown-body backgrounds so GitHub's #0d1117/#151b23 don't show through. */
 .readmeWrapper :global(.markdown-body) {
-  background-color: var(--mantine-color-dark-7) !important;
+  background: transparent !important;
+  color: var(--site-ink);
 }
 
-.readmeWrapper :global(.markdown-body) pre {
-  background-color: var(--mantine-color-dark-6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-}
-
+.readmeWrapper :global(.markdown-body) pre,
 .readmeWrapper :global(.markdown-body) .highlight pre {
-  background-color: var(--mantine-color-dark-6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: var(--site-surface-strong) !important;
+  border: 1px solid var(--site-line) !important;
 }
 
 .readmeWrapper :global(.markdown-body) code {
-  background-color: var(--mantine-color-dark-7) !important;
+  background: var(--site-surface-strong) !important;
 }
 
-/* Inline-code background override above also matches <pre><code> blocks.
-   GitHub's markdown CSS expects pre>code to be transparent; restore that. */
-.readmeWrapper :global(.markdown-body) pre code {
-  background-color: rgba(0, 0, 0, 0) !important;
-  border: 0 !important;
-  padding: 0 !important;
+.readmeEmpty,
+.readmeError {
+  color: var(--site-muted);
+  font-size: 14px;
 }
 
-.readmeWrapper table {
-  background-color: transparent !important;
+.readmeError {
+  color: #f29c88;
 }
 
-.readmeWrapper table tr {
-  background-color: transparent !important;
+.backLink {
+  display: inline-flex;
+  margin-top: 34px;
+  color: var(--site-accent) !important;
+  font-size: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
-.readmeWrapper table tr:nth-child(2n) {
-  background-color: transparent !important;
+.backLink:hover,
+.backLink:focus-visible {
+  color: var(--site-signal) !important;
 }
 
-.readmeWrapper :global(.markdown-body) table {
-  background-color: transparent !important;
+@media (max-width: 64em) {
+  .projectCardHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .projectDetails {
+    padding: 20px 0 0;
+    border-top: 1px solid var(--site-line);
+    border-left: 0;
+  }
 }
 
-.readmeWrapper :global(.markdown-body) table tr {
-  background-color: transparent !important;
-}
+@media (max-width: 48em) {
+  .pageIntro {
+    padding: 50px 0 42px;
+  }
 
-.readmeWrapper :global(.markdown-body) table tr:nth-child(2n) {
-  background-color: transparent !important;
+  .pageIntro h1 {
+    font-size: clamp(3.4rem, 17vw, 5.5rem);
+  }
+
+  .pageIntro p {
+    font-size: 15px;
+  }
+
+  .projectList {
+    gap: 30px;
+    padding-left: 29px;
+  }
+
+  .projectList::before {
+    left: 7px;
+  }
+
+  .timelinePoint {
+    left: -29px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .projectCardHeader {
+    padding: 22px 18px 20px;
+  }
+
+  .projectTitle {
+    font-size: 22px;
+  }
+
+  .projectDetails {
+    grid-template-columns: 1fr 1fr;
+    padding-left: 0;
+  }
+
+  .readmeButton {
+    padding: 12px 18px;
+  }
+
+  .readmePanel {
+    padding: 18px;
+  }
 }

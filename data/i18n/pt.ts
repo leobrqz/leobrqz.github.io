@@ -5,6 +5,7 @@ export const pt = {
     projects: 'Projetos',
     resume: 'Currículo',
     contact: 'Contato',
+    open_menu: 'Abrir menu',
   },
   pages: {
     home: 'Início',
@@ -85,5 +86,12 @@ export const pt = {
   home: {
     recent_projects: 'Projetos recentes',
     see_all_projects: 'Ver todos os projetos',
+    intro_kicker: 'Desenvolvimento fullstack / 2026',
+    view_projects: 'Ver projetos',
+    view_resume: 'Ler currículo',
+    about_kicker: 'Perfil',
+    stack_kicker: 'Stack de trabalho',
+    work_kicker: 'Trabalho selecionado',
+    selected_note: 'Projetos recentes, automações e sistemas que construí de ponta a ponta.',
   },
 } as const;

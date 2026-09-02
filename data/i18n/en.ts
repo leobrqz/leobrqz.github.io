@@ -5,6 +5,7 @@ export const en = {
     projects: 'Projects',
     resume: 'Resume',
     contact: 'Contact',
+    open_menu: 'Open menu',
   },
   pages: {
     home: 'Home',
@@ -85,5 +86,12 @@ export const en = {
   home: {
     recent_projects: 'Recent Projects',
     see_all_projects: 'See all projects',
+    intro_kicker: 'Fullstack development / 2026',
+    view_projects: 'View projects',
+    view_resume: 'Read resume',
+    about_kicker: 'Profile',
+    stack_kicker: 'Working stack',
+    work_kicker: 'Selected work',
+    selected_note: 'Recent projects, automations and systems I built end to end.',
   },
 } as const;

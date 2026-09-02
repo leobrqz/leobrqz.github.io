@@ -3,6 +3,10 @@ export const about = {
     en: `Fullstack developer and CS student. I build web apps end to end, working on both client and server with TypeScript, React, Next.js and Python. I also create AI chatbots and automations.`,
     pt: `Desenvolvedor fullstack e estudante de Ciência da Computação. Construo aplicações web ponta a ponta, trabalhando com TypeScript, React, Next.js e Python em ambos os lados da stack. Também crio chatbots com IA e automações.`,
   },
+  home_profile: {
+    en: `I build reliable products from the backend out. I like turning messy workflows into clear interfaces, useful automation and systems that hold up in production.`,
+    pt: `Construo produtos confiáveis do backend para fora. Gosto de transformar fluxos confusos em interfaces claras, automações úteis e sistemas que aguentam produção.`,
+  },
   content: {
     en: `Fullstack developer with a focus on backend and a Computer Science student. Experienced with Python, FastAPI, PostgreSQL, React and Next.js, familiar with AWS, agile methodologies and AI integrations. I have worked on academic projects and hackathons in team settings, with clear division of responsibilities and efficient communication. I have a self-taught profile and I am curious, I enjoy discovering technologies and deepening my technical knowledge. Proficient in English with technical comprehension.`,
     pt: `Desenvolvedor Fullstack com foco em backend e estudante de Ciência da Computação. Tenho experiência com Python, FastAPI, PostgreSQL, React e Next.js, familiaridade com AWS, metodologias ágeis e integrações com IA. Atuei em projetos acadêmicos e hackathons em equipe, com divisão de responsabilidades e comunicação clara e eficiente. Tenho perfil autodidata e sou curioso, gosto de descobrir tecnologias e aprofundar o conhecimento técnico. Possuo proficiência em inglês com compreensão técnica.`,

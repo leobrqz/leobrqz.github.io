@@ -1,11 +1,89 @@
-.pdfViewer {
-  border-radius: var(--mantine-radius-md);
-  box-shadow: var(--mantine-shadow-sm);
-  background-color: var(--mantine-color-body);
-  padding: var(--mantine-spacing-md);
+.resumeRoot {
+  color: var(--site-ink);
 }
 
-/* Constrain wrappers so the high-res canvas is scaled down to container width */
+.resumeContainer {
+  max-width: none;
+  padding: 0;
+}
+
+.viewToggle {
+  margin-bottom: 22px;
+}
+
+.viewToggleInner {
+  gap: 0;
+  border: 1px solid var(--site-line);
+  padding: 3px;
+}
+
+.viewToggleInner :global(.mantine-Button-root) {
+  min-width: 70px;
+  border-radius: 0;
+  font-family: var(--site-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.resumePaper,
+.pdfViewer {
+  border: 1px solid var(--site-line) !important;
+  border-radius: 0 !important;
+  background: var(--site-surface) !important;
+  box-shadow: none !important;
+}
+
+.resumePaper {
+  padding: clamp(24px, 5vw, 64px) clamp(24px, 7vw, 100px) !important;
+}
+
+.resumePaper :global(.mantine-Title-root) {
+  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  letter-spacing: -0.045em;
+}
+
+.resumePaper :global(.mantine-Title-root[data-order="1"]) {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+}
+
+.resumePaper :global(.mantine-Title-root[data-order="2"]) {
+  margin-top: 10px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--site-line);
+  color: var(--site-accent);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.resumePaper :global(.mantine-Divider-root) {
+  border-color: var(--site-line) !important;
+}
+
+.resumePaper :global(.mantine-Text-root),
+.resumePaper :global(.mantine-List-item) {
+  color: var(--site-ink);
+  line-height: 1.6;
+}
+
+.resumePaper :global(.mantine-Text-root[data-size="sm"]),
+.resumePaper :global(.mantine-Text-root[data-size="xs"]) {
+  color: var(--site-muted);
+}
+
+.resumePaper :global(.mantine-Anchor-root) {
+  color: var(--site-accent);
+}
+
+.resumePaper :global(.mantine-Anchor-root:hover),
+.resumePaper :global(.mantine-Anchor-root:focus-visible) {
+  color: var(--site-signal);
+}
+
+.pdfViewer {
+  border-radius: 0;
+  padding: clamp(14px, 3vw, 30px);
+}
+
 .pdfViewer > div {
   width: 100%;
   max-width: 100%;
@@ -22,4 +100,38 @@
   height: auto !important;
   display: block;
   max-width: 100%;
+}
+
+.downloadAction {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 200;
+}
+
+.downloadAction :global(.mantine-Button-root) {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid var(--site-accent);
+  color: var(--site-accent);
+  background: var(--site-surface-strong);
+}
+
+.downloadAction :global(.mantine-Button-root:hover),
+.downloadAction :global(.mantine-Button-root:focus-visible) {
+  color: var(--site-paper);
+  background: var(--site-accent);
+}
+
+@media (max-width: 48em) {
+  .resumePaper {
+    padding: 23px 18px !important;
+  }
+
+  .downloadAction {
+    right: 16px;
+    bottom: 16px;
+  }
 }

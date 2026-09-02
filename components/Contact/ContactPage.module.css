@@ -1,0 +1,151 @@
+.contactPage {
+  color: var(--site-ink);
+}
+
+.contactContainer {
+  max-width: none;
+  padding: 0;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(310px, 0.9fr);
+  gap: clamp(50px, 12vw, 180px);
+  align-items: end;
+  min-height: 620px;
+  padding: 76px 0 80px;
+}
+
+.eyebrow,
+.contactFooter {
+  font-family: var(--site-font-mono);
+}
+
+.eyebrow {
+  color: var(--site-signal);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.contactIntro h1 {
+  max-width: 650px;
+  margin: 24px 0 0;
+  color: var(--site-ink);
+  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-size: clamp(4rem, 9vw, 8rem);
+  letter-spacing: -0.08em;
+  line-height: 0.84;
+}
+
+.contactIntro p {
+  max-width: 470px;
+  margin: 28px 0 0;
+  color: var(--site-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.contactLinks {
+  border-top: 1px solid var(--site-line);
+}
+
+.contactLink {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 22px;
+  gap: 12px;
+  align-items: center;
+  padding: 21px 0;
+  border-bottom: 1px solid var(--site-line);
+  color: var(--site-ink) !important;
+  text-decoration: none;
+  transition: color 160ms ease, padding 160ms ease;
+}
+
+.contactLink:hover,
+.contactLink:focus-visible {
+  padding-right: 8px;
+  padding-left: 8px;
+  color: var(--site-accent) !important;
+  background: rgba(139, 192, 255, 0.05);
+}
+
+.linkIcon {
+  display: inline-flex;
+  color: var(--site-muted);
+}
+
+.linkCopy {
+  display: grid;
+  gap: 3px;
+}
+
+.linkCopy strong {
+  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-size: 21px;
+  letter-spacing: -0.03em;
+}
+
+.linkCopy small {
+  overflow: hidden;
+  color: var(--site-muted);
+  font-family: var(--site-font-mono);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linkArrow {
+  color: var(--site-muted);
+}
+
+.contactLink:hover .linkArrow,
+.contactLink:focus-visible .linkArrow {
+  color: var(--site-signal);
+}
+
+.contactFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--site-line);
+  color: var(--site-muted);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contactFooter a {
+  color: var(--site-accent) !important;
+  text-decoration: none;
+}
+
+.contactFooter a:hover,
+.contactFooter a:focus-visible {
+  color: var(--site-signal) !important;
+}
+
+@media (max-width: 48em) {
+  .contactGrid {
+    display: block;
+    min-height: auto;
+    padding: 54px 0 68px;
+  }
+
+  .contactIntro h1 {
+    font-size: clamp(3.8rem, 18vw, 6.2rem);
+  }
+
+  .contactIntro p {
+    font-size: 15px;
+  }
+
+  .contactLinks {
+    margin-top: 64px;
+  }
+
+  .contactFooter {
+    flex-direction: column;
+    gap: 13px;
+  }
+}

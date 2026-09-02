@@ -1,21 +1,10 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
-import { IconAlertCircle } from '@tabler/icons-react';
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Group,
-  Loader,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
+import { useCallback, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { IconAlertCircle, IconArrowUpRight, IconRefresh } from '@tabler/icons-react';
+import { Anchor, Box, Container, Text } from '@mantine/core';
+import { getFallbackProjects } from '@/data/project_fallback';
 import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
@@ -34,72 +23,36 @@ type ReadmeState =
   | { status: 'error' };
 
 function formatDate(iso: string): string {
-  try {
-    const d = new Date(iso);
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  } catch {
-    return iso;
+  if (!iso) {
+    return '';
   }
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
-const PILL_CLASS = 'project-pill';
-
-function SectionPills({ items }: { items: string[] }) {
-  if (items.length === 0) return null;
+function TagList({ items }: { items: string[] }) {
+  if (items.length === 0) {
+    return null;
+  }
   return (
-    <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-      {items.map((label) => (
-        <Box
-          key={label}
-          component="li"
-          className={PILL_CLASS}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '4px 10px',
-            borderRadius: 6,
-            fontSize: 'var(--mantine-font-size-xs)',
-            fontWeight: 500,
-            backgroundColor: 'var(--mantine-color-dark-6)',
-            color: 'var(--mantine-color-gray-3)',
-            border: '1px solid var(--mantine-color-dark-4)',
-          }}
-        >
-          {label}
-        </Box>
-      ))}
-    </Box>
+    <ul className={styles.tagList}>
+      {items.map((item) => <li key={item}>{item}</li>)}
+    </ul>
   );
 }
 
-function LanguagePills({ items }: { items: { name: string }[] }) {
-  if (items.length === 0) return null;
+function DetailGroup({ label, items }: { label: string; items: string[] }) {
+  if (items.length === 0) {
+    return null;
+  }
   return (
-    <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-      {items.map(({ name }) => (
-        <Box
-          key={name}
-          component="li"
-          className={PILL_CLASS}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '4px 10px',
-            borderRadius: 6,
-            fontSize: 'var(--mantine-font-size-xs)',
-            fontWeight: 500,
-            backgroundColor: 'var(--mantine-color-dark-6)',
-            color: 'var(--mantine-color-gray-3)',
-            border: '1px solid var(--mantine-color-dark-4)',
-          }}
-        >
-          {name}
-        </Box>
-      ))}
-    </Box>
+    <div className={styles.detailGroup}>
+      <span className={styles.detailLabel}>{label}</span>
+      <TagList items={items} />
+    </div>
   );
 }
 
@@ -114,274 +67,155 @@ function ProjectCard({
   readmeState: ReadmeState;
   onToggleReadme: (name: string, show: boolean) => void;
 }) {
-  const loading = readmeState.status === 'loading';
-  const showContent =
-    readmeState.status === 'html' ||
-    readmeState.status === 'none' ||
-    readmeState.status === 'error';
+  const showContent = readmeState.status !== 'idle' && readmeState.status !== 'loading';
+  const date = formatDate(project.updated_at);
+  const languageItems = project.languageBreakdown.length > 0
+    ? project.languageBreakdown.map(({ name }) => name)
+    : project.languages.length > 0
+      ? project.languages
+      : project.language
+        ? [project.language]
+        : [];
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = () => {
     const expanding = !showContent;
     if (expanding) {
       trackEvent('readme_expand', { project: project.name });
     }
     onToggleReadme(project.name, expanding);
-  }, [project.name, showContent, onToggleReadme]);
-
-  const hasLanguages =
-    project.languageBreakdown.length > 0 || project.languages.length > 0 || project.language;
-  const hasLibsOrTools = project.libraries.length > 0 || project.tools.length > 0;
-  const showRightColumn = hasLanguages || hasLibsOrTools;
+  };
 
   return (
-    <Paper withBorder p="lg" radius="md" shadow="sm">
-      <Stack gap="md">
-        <Grid gutter="lg">
-          <Grid.Col span={{ base: 12, sm: 5 }}>
-            <Stack gap="xs">
-              <Group wrap="wrap" align="center" gap={6}>
-                <Title order={3} size="h4" style={{ minWidth: 0 }}>
-                  <Text
-                    component="a"
-                    href={project.html_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    inherit
-                    c="var(--mantine-color-anchor)"
-                    style={{ textDecoration: 'underline' }}
-                    onClick={() => trackEvent('github_repo', { repo: project.name })}
-                  >
-                    {project.name}
-                  </Text>
-                </Title>
-                <ProjectLabels labels={project.labels} lang={lang} />
-              </Group>
-              {project.description && (
-                <Text size="sm" c="dimmed">
-                  {project.description}
-                </Text>
-              )}
-              <Text size="xs" c="dimmed">
-                {t(lang, 'projects.last_updated')}: {formatDate(project.updated_at)}
-              </Text>
-            </Stack>
-          </Grid.Col>
-          {showRightColumn && (
-            <Grid.Col span={{ base: 12, sm: 7 }}>
-              <Box
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${
-                    (hasLanguages ? 1 : 0) +
-                    (project.libraries.length > 0 ? 1 : 0) +
-                    (project.tools.length > 0 ? 1 : 0)
-                  }, 1fr)`,
-                  gap: 'var(--mantine-spacing-lg)',
-                  minHeight: 0,
-                  paddingLeft: 'var(--mantine-spacing-sm)',
-                  paddingRight: 'var(--mantine-spacing-md)',
-                }}
+    <article className={styles.projectCard}>
+      <span className={styles.timelinePoint} aria-hidden="true" />
+      <div className={styles.projectCardHeader}>
+        <div className={styles.projectIdentity}>
+          <div>
+            <div className={styles.projectTitleLine}>
+              <Anchor
+                href={project.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.projectTitle}
+                onClick={() => trackEvent('github_repo', { repo: project.name })}
               >
-                {hasLanguages && (
-                  <Stack gap="xs" style={{ minWidth: 0 }}>
-                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                      {t(lang, 'projects.languages')}
-                    </Text>
-                    {project.languageBreakdown.length > 0 ? (
-                      <LanguagePills items={project.languageBreakdown} />
-                    ) : (
-                      <SectionPills
-                        items={
-                          project.languages.length > 0
-                            ? project.languages
-                            : project.language
-                              ? [project.language]
-                              : []
-                        }
-                      />
-                    )}
-                  </Stack>
-                )}
-                {project.libraries.length > 0 && (
-                  <Stack gap="xs" style={{ minWidth: 0 }}>
-                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                      {t(lang, 'projects.libraries')}
-                    </Text>
-                    <SectionPills items={project.libraries} />
-                  </Stack>
-                )}
-                {project.tools.length > 0 && (
-                  <Stack gap="xs" style={{ minWidth: 0 }}>
-                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                      {t(lang, 'projects.tools')}
-                    </Text>
-                    <SectionPills items={project.tools} />
-                  </Stack>
-                )}
-              </Box>
-            </Grid.Col>
-          )}
-        </Grid>
+                {project.name} <IconArrowUpRight size={17} />
+              </Anchor>
+              <ProjectLabels labels={project.labels} lang={lang} />
+            </div>
+            {project.description && <p className={styles.projectDescription}>{project.description}</p>}
+            <div className={styles.projectMeta}>
+              {date && <span>{t(lang, 'projects.last_updated')}: {date}</span>}
+              <span>github.com / {project.name}</span>
+            </div>
+          </div>
+        </div>
 
-        <Button variant="light" size="xs" loading={loading} onClick={handleToggle}>
-          {showContent ? t(lang, 'projects.hide_readme') : t(lang, 'projects.show_readme')}
-        </Button>
-        {showContent && (
-          <Box
-            component="div"
-            style={{
-              borderTop: '1px solid var(--mantine-color-default-border)',
-              paddingTop: 'var(--mantine-spacing-md)',
-              marginTop: 2,
-            }}
-          >
-            {readmeState.status === 'html' && (
-              <Box
-                className={`${styles.readmeWrapper} markdown-body`}
-                dangerouslySetInnerHTML={{ __html: readmeState.html }}
-                style={{
-                  borderRadius: 'var(--mantine-radius-sm)',
-                  padding: 'var(--mantine-spacing-md)',
-                  fontSize: 'var(--mantine-font-size-sm)',
-                  overflow: 'auto',
-                }}
-              />
-            )}
-            {readmeState.status === 'none' && (
-              <Text size="sm" c="dimmed">
-                {t(lang, 'projects.no_readme')}
-              </Text>
-            )}
-            {readmeState.status === 'error' && (
-              <Text size="sm" c="red">
-                {t(lang, 'projects.unable_to_load')}
-              </Text>
-            )}
-          </Box>
-        )}
-      </Stack>
-    </Paper>
+        <div className={styles.projectDetails}>
+          <DetailGroup label={t(lang, 'projects.languages')} items={languageItems} />
+          <DetailGroup label={t(lang, 'projects.libraries')} items={project.libraries} />
+          <DetailGroup label={t(lang, 'projects.tools')} items={project.tools} />
+        </div>
+      </div>
+
+      <button type="button" className={styles.readmeButton} onClick={handleToggle} disabled={readmeState.status === 'loading'}>
+        <span>{readmeState.status === 'loading' ? 'Loading…' : showContent ? t(lang, 'projects.hide_readme') : t(lang, 'projects.show_readme')}</span>
+        <IconArrowUpRight size={16} className={showContent ? styles.rotateIcon : ''} />
+      </button>
+
+      {showContent && (
+        <div className={styles.readmePanel}>
+          {readmeState.status === 'html' && (
+            <Box
+              className={`${styles.readmeWrapper} markdown-body`}
+              dangerouslySetInnerHTML={{ __html: readmeState.html }}
+            />
+          )}
+          {readmeState.status === 'none' && <Text className={styles.readmeEmpty}>{t(lang, 'projects.no_readme')}</Text>}
+          {readmeState.status === 'error' && <Text className={styles.readmeError}>{t(lang, 'projects.unable_to_load')}</Text>}
+        </div>
+      )}
+    </article>
   );
 }
 
 export function ProjectsPage({ lang }: ProjectsPageProps) {
   const { state, refetch, fetchReadme } = useProjects();
   const [readmeOpen, setReadmeOpen] = useState<Record<string, ReadmeState>>({});
+  const fallbackProjects = useMemo(() => getFallbackProjects(lang), [lang]);
+  const projects = state.status === 'success' && state.projects.length > 0 ? state.projects : fallbackProjects;
 
   const onToggleReadme = useCallback(
     (name: string, show: boolean) => {
       if (!show) {
-        setReadmeOpen((prev) => {
-          const next = { ...prev };
+        setReadmeOpen((previous) => {
+          const next = { ...previous };
           delete next[name];
           return next;
         });
         return;
       }
-      setReadmeOpen((prev) => ({ ...prev, [name]: { status: 'loading' } }));
+      setReadmeOpen((previous) => ({ ...previous, [name]: { status: 'loading' } }));
       fetchReadme(name)
         .then((html) => {
-          setReadmeOpen((prev) => ({
-            ...prev,
+          setReadmeOpen((previous) => ({
+            ...previous,
             [name]: html ? { status: 'html', html } : { status: 'none' },
           }));
         })
         .catch(() => {
-          setReadmeOpen((prev) => ({ ...prev, [name]: { status: 'error' } }));
+          setReadmeOpen((previous) => ({ ...previous, [name]: { status: 'error' } }));
         });
     },
-    [fetchReadme]
+    [fetchReadme],
   );
 
-  if (state.status === 'loading') {
-    return (
-      <Box component="main" py="xl">
-        <Container size="md">
-          <Stack align="center" gap="md" py="xl">
-            <Loader size="md" />
-            <Text size="sm" c="dimmed">
-              {t(lang, 'projects.last_updated')}…
-            </Text>
-          </Stack>
-        </Container>
-      </Box>
-    );
-  }
-
-  if (state.status === 'empty') {
-    const message =
-      state.kind === 'no_config' ? t(lang, 'projects.no_projects') : t(lang, 'projects.no_repos');
-    return (
-      <Box component="main" py="xl">
-        <Container size="md">
-          <Alert
-            icon={<IconAlertCircle size={16} />}
-            title={t(lang, 'pages.projects')}
-            color="gray"
-          >
-            <Text size="sm">{message}</Text>
-          </Alert>
-        </Container>
-      </Box>
-    );
-  }
-
-  if (state.status === 'error') {
-    const errorMessage =
-      state.kind === 'rate_limit' ? t(lang, 'projects.error_rate_limit') : t(lang, 'projects.error_loading');
-    return (
-      <Box component="main" py="xl">
-        <Container size="md">
-          <Alert icon={<IconAlertCircle size={16} />} title={t(lang, 'pages.projects')} color="red">
-            {errorMessage}
-          </Alert>
-          <Button variant="light" mt="md" onClick={refetch}>
-            Retry
-          </Button>
-        </Container>
-      </Box>
-    );
-  }
-
   return (
-    <Box component="main" py="xl">
-      <Container size="md">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
-          }}
-        >
-          <Stack gap="md">
-            <motion.div
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
-              }}
-            >
-              <Title order={1}>{t(lang, 'pages.projects')}</Title>
-            </motion.div>
-            {state.projects.map((project) => (
-              <motion.div
-                key={project.name}
-                variants={{
-                  hidden: { opacity: 0, x: 36 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-                }}
-              >
-                <ProjectCard
-                  project={project}
-                  lang={lang}
-                  readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
-                  onToggleReadme={onToggleReadme}
-                />
-              </motion.div>
-            ))}
-          </Stack>
-        </motion.div>
+    <Box component="main" className={styles.projectsPage}>
+      <Container size="lg" className={styles.projectsContainer}>
+        <header className={styles.pageIntro}>
+          <span className={styles.eyebrow}>PROJECTS / TIMELINE</span>
+          <h1>{t(lang, 'pages.projects')}</h1>
+          <p>{lang === 'en' ? 'A closer look at the systems, tools and experiments I have been building.' : 'Uma visão mais próxima dos sistemas, ferramentas e experimentos que venho construindo.'}</p>
+        </header>
+
+        {state.status === 'loading' && (
+          <div className={styles.syncNotice}>
+            <span className={styles.syncDot} />
+            {lang === 'en' ? 'Showing selected projects while GitHub syncs.' : 'Exibindo projetos selecionados enquanto o GitHub sincroniza.'}
+          </div>
+        )}
+        {state.status === 'error' && (
+          <div className={styles.syncNotice} role="status">
+            <IconAlertCircle size={17} />
+            <span>{state.kind === 'rate_limit' ? t(lang, 'projects.error_rate_limit') : t(lang, 'projects.error_loading')}</span>
+            <button type="button" className={styles.retryButton} onClick={refetch}>
+              <IconRefresh size={15} /> Retry
+            </button>
+          </div>
+        )}
+        {state.status === 'empty' && (
+          <div className={styles.syncNotice} role="status">
+            <IconAlertCircle size={17} />
+            <span>{state.kind === 'no_config' ? t(lang, 'projects.no_projects') : t(lang, 'projects.no_repos')}</span>
+          </div>
+        )}
+
+        <div className={styles.projectList}>
+          {projects.map((project) => (
+            <ProjectCard
+              key={project.name}
+              project={project}
+              lang={lang}
+              readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
+              onToggleReadme={onToggleReadme}
+            />
+          ))}
+        </div>
+
+        <Anchor component={Link} href={lang === 'en' ? '/en' : '/'} className={styles.backLink} underline="never">
+          ← {lang === 'en' ? 'Back home' : 'Voltar ao início'}
+        </Anchor>
       </Container>
     </Box>
   );

@@ -1,0 +1,111 @@
+:global(html) {
+  background: #111414;
+}
+
+:global(body) {
+  margin: 0;
+  background: #111414;
+  color: #f1eee6;
+  font-family: Aptos, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+:global(::selection) {
+  background: #2b4d78;
+  color: #f8f5ee;
+}
+
+.shell {
+  --site-paper: #111414;
+  --site-surface: #181c1c;
+  --site-surface-strong: #202525;
+  --site-ink: #f1eee6;
+  --site-muted: #a4aaa3;
+  --site-line: rgba(241, 238, 230, 0.16);
+  --site-accent: #8bc0ff;
+  --site-accent-soft: #1b3049;
+  --site-signal: #e58b58;
+  --site-font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  min-height: 100vh;
+  background: var(--site-paper);
+  color: var(--site-ink);
+}
+
+.shell::before,
+.shell::after {
+  position: fixed;
+  z-index: 0;
+  width: clamp(24rem, 42vw, 42rem);
+  height: clamp(24rem, 42vw, 42rem);
+  border-radius: 50%;
+  pointer-events: none;
+  content: '';
+  filter: blur(62px);
+  opacity: 0.72;
+  will-change: transform;
+}
+
+.shell::before {
+  top: 2vh;
+  left: -19rem;
+  background: radial-gradient(circle, rgba(79, 142, 218, 0.22) 0%, rgba(79, 142, 218, 0.09) 32%, transparent 69%);
+  animation: ambientDriftA 22s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+}
+
+.shell::after {
+  top: 52vh;
+  right: -20rem;
+  background: radial-gradient(circle, rgba(229, 139, 88, 0.18) 0%, rgba(229, 139, 88, 0.06) 34%, transparent 70%);
+  animation: ambientDriftB 27s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+}
+
+@keyframes ambientDriftA {
+  from { transform: translate3d(0, 0, 0) scale(0.86); }
+  50% { transform: translate3d(14rem, 16vh, 0) scale(1.05); }
+  to { transform: translate3d(28rem, 4vh, 0) scale(0.92); }
+}
+
+@keyframes ambientDriftB {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-13rem, -13vh, 0) scale(0.84); }
+  to { transform: translate3d(-25rem, 6vh, 0) scale(1.08); }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 42px 0 112px;
+}
+
+:global(.mantine-Anchor-root) {
+  color: var(--site-accent);
+}
+
+:global(.mantine-Button-root) {
+  font-family: inherit;
+}
+
+:global(.mantine-Text-root),
+:global(.mantine-Title-root) {
+  color: inherit;
+}
+
+@media (max-width: 48em) {
+  .content {
+    width: min(100% - 32px, 720px);
+    padding-top: 28px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell::before,
+  .shell::after {
+    animation: none;
+  }
+}

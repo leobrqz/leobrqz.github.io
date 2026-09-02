@@ -124,11 +124,11 @@ export function ResumePage({ lang }: ResumePageProps) {
   }, [view]);
 
   return (
-    <Box component="main" pt="md" pb="xl">
-      <Container size="md">
+    <Box component="main" className={styles.resumeRoot}>
+      <Container size="lg" className={styles.resumeContainer}>
         <Stack gap="lg">
-          <Group justify="center">
-            <Group gap="xs">
+          <Group justify="center" className={styles.viewToggle}>
+            <Group gap="xs" className={styles.viewToggleInner}>
               <Button
                 size="xs"
                 variant={view === 'web' ? 'filled' : 'subtle'}
@@ -188,7 +188,7 @@ export function ResumePage({ lang }: ResumePageProps) {
               </Box>
             </Box>
           ) : (
-            <Paper withBorder p="lg" radius="md">
+            <Paper withBorder className={styles.resumePaper}>
               <Stack gap="xl">
               {/* Name and contact inside the box */}
               <Stack gap="xs" align="center" style={{ textAlign: 'center' }}>
@@ -398,16 +398,7 @@ export function ResumePage({ lang }: ResumePageProps) {
         </Stack>
       </Container>
 
-      <Box
-        component="div"
-        style={{
-          position: 'fixed',
-          bottom: 24,
-          right:
-            'max(var(--mantine-spacing-md), calc((100vw - min(48rem, 100vw - 2 * var(--mantine-spacing-md))) / 2 + var(--mantine-spacing-md) - 125px))',
-          zIndex: 200,
-        }}
-      >
+      <Box component="div" className={styles.downloadAction}>
         <Button
           component="a"
           href={CV_PDF_URL}
