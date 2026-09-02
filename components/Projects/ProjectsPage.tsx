@@ -177,6 +177,10 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
           <span className={styles.eyebrow}>PROJECTS / TIMELINE</span>
           <h1>{t(lang, 'pages.projects')}</h1>
           <p>{lang === 'en' ? 'A closer look at the systems, tools and experiments I have been building.' : 'Uma visão mais próxima dos sistemas, ferramentas e experimentos que venho construindo.'}</p>
+          <div className={styles.atlasLegend}>
+            <span className={styles.atlasLegendLine} aria-hidden="true" />
+            <span>{lang === 'en' ? 'One route: context, service, data, product.' : 'Um fluxo: contexto, serviço, dados, produto.'}</span>
+          </div>
         </header>
 
         {state.status === 'loading' && (

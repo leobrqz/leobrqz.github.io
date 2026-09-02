@@ -62,16 +62,31 @@ function SectionHeading({ kicker, title, note }: { kicker: string; title: string
   );
 }
 
-function ProjectPreview({ index }: { index: number }) {
+function ProjectTrace({ project, index, lang }: { project: EnrichedProject; index: number; lang: Lang }) {
+  const technology = project.language ?? project.languages[0] ?? (lang === 'en' ? 'system' : 'sistema');
+  const traceStages = lang === 'en'
+    ? ['context', technology.toLowerCase(), 'product']
+    : ['contexto', technology.toLowerCase(), 'produto'];
+
   return (
     <div className={`${styles.projectVisual} ${VISUAL_CLASSES[index % VISUAL_CLASSES.length]}`} aria-hidden="true">
-      <div className={styles.visualMeta}><span>INTERFACE STUDY</span><span>OPEN</span></div>
-      <div className={styles.mockWindow}>
-        <div className={styles.mockWindowBar}><i /><i /><i /><span /></div>
-        <div className={styles.mockRows}>
-          <span /><span /><span /><span /><span />
-        </div>
-        <div className={styles.mockFooter}><b /> <span /> <b /></div>
+      <div className={styles.visualMeta}>
+        <span>{lang === 'en' ? 'SYSTEM TRACE' : 'TRACE DE SISTEMA'}</span>
+        <span>{technology}</span>
+      </div>
+      <div className={styles.traceMap}>
+        <span className={styles.traceRoute} />
+        {traceStages.map((stage, stageIndex) => (
+          <span className={styles.traceNode} key={`${project.name}-${stage}`}>
+            <i />
+            <b>{stage}</b>
+            {stageIndex < traceStages.length - 1 && <em>→</em>}
+          </span>
+        ))}
+      </div>
+      <div className={styles.traceFooter}>
+        <span>{project.libraries[0] ?? (lang === 'en' ? 'Built to hold' : 'Feito para durar')}</span>
+        <span>{lang === 'en' ? 'follow the path' : 'siga o fluxo'}</span>
       </div>
     </div>
   );
@@ -82,7 +97,7 @@ function HomeProjectCard({ project, index, lang }: { project: EnrichedProject; i
 
   return (
     <article className={styles.projectCard}>
-      <ProjectPreview index={index} />
+      <ProjectTrace project={project} index={index} lang={lang} />
       <div className={styles.projectContent}>
         <div className={styles.projectKicker}>
           <span>{lang === 'en' ? 'Selected work' : 'Trabalho selecionado'}</span>
@@ -101,7 +116,7 @@ function HomeProjectCard({ project, index, lang }: { project: EnrichedProject; i
         <p className={styles.projectDescription}>{project.description}</p>
         <div className={styles.projectFooter}>
           <div className={styles.projectTags}>
-            {tags.map((tag) => <span key={tag}>{tag}</span>)}
+            {tags.map((tag, tagIndex) => <span key={tag}>{tag}{tagIndex < tags.length - 1 ? ' / ' : ''}</span>)}
           </div>
           <span className={styles.projectLink}>GitHub ↗</span>
         </div>

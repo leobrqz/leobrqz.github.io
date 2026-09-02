@@ -6,6 +6,7 @@ import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
 import { Anchor, Text } from '@mantine/core';
 import { about } from '@/data/about';
 import { contact } from '@/data/contact';
+import { SystemsAtlas } from '@/components/SystemsAtlas/SystemsAtlas';
 import { t, type Lang } from '@/lib/i18n';
 import styles from './HomePage.module.css';
 
@@ -76,26 +77,8 @@ export function LandingHero({ lang }: LandingHeroProps) {
         </div>
       </div>
 
-      <aside className={styles.heroAside} aria-label="Profile details">
-        <div className={styles.heroAsideTop}>
-          <span className={styles.asideCode}>LB / 2026</span>
-          <span className={styles.asideRule} />
-        </div>
-        <dl className={styles.heroFacts}>
-          <div>
-            <dt>{lang === 'en' ? 'Based in' : 'Baseado em'}</dt>
-            <dd>{contact.location}</dd>
-          </div>
-          <div>
-            <dt>{lang === 'en' ? 'Focus' : 'Foco'}</dt>
-            <dd>Backend · IA · Produto</dd>
-          </div>
-          <div>
-            <dt>{lang === 'en' ? 'Links' : 'Links'}</dt>
-            <dd>GitHub · LinkedIn</dd>
-          </div>
-        </dl>
-        <span className={styles.asideArrow} aria-hidden="true">↘</span>
+      <aside className={styles.heroAside} aria-label={lang === 'en' ? 'How I approach systems' : 'Como eu penso sistemas'}>
+        <SystemsAtlas variant="panel" lang={lang} location={contact.location} />
       </aside>
     </section>
   );

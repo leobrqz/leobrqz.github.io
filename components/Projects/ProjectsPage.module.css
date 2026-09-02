@@ -45,6 +45,39 @@
   line-height: 1.6;
 }
 
+.atlasLegend {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 26px;
+  color: var(--site-accent);
+  font-family: var(--site-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.atlasLegendLine {
+  position: relative;
+  display: block;
+  width: 54px;
+  height: 1px;
+  background: var(--site-accent);
+}
+
+.atlasLegendLine::after {
+  position: absolute;
+  top: -3px;
+  left: 16px;
+  width: 7px;
+  height: 7px;
+  border: 2px solid var(--site-paper);
+  border-radius: 50%;
+  background: var(--site-signal);
+  box-shadow: 0 0 0 1px var(--site-signal);
+  content: '';
+}
+
 .syncNotice {
   display: flex;
   align-items: center;
@@ -98,6 +131,20 @@
   background: var(--site-accent);
   content: '';
   opacity: 0.48;
+}
+
+.projectList::after {
+  position: absolute;
+  z-index: 1;
+  top: 4px;
+  left: 10px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--site-signal);
+  box-shadow: 0 0 0 4px rgba(229, 139, 88, 0.1), 0 0 14px rgba(229, 139, 88, 0.8);
+  content: '';
+  animation: timelineSignal 11s ease-in-out infinite;
 }
 
 .projectCard {
@@ -307,6 +354,15 @@
   color: var(--site-signal) !important;
 }
 
+@keyframes timelineSignal {
+  0%,
+  8% { top: 4px; opacity: 0; }
+  15%,
+  85% { opacity: 1; }
+  92%,
+  100% { top: calc(100% - 11px); opacity: 0; }
+}
+
 @media (max-width: 64em) {
   .projectCardHeader {
     grid-template-columns: 1fr;
@@ -332,6 +388,11 @@
     font-size: 15px;
   }
 
+  .atlasLegend {
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+
   .projectList {
     gap: 30px;
     padding-left: 29px;
@@ -345,6 +406,10 @@
     left: -29px;
     width: 12px;
     height: 12px;
+  }
+
+  .projectList::after {
+    left: 4px;
   }
 
   .projectCardHeader {
@@ -366,5 +431,12 @@
 
   .readmePanel {
     padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projectList::after {
+    animation: none;
+    display: none;
   }
 }
