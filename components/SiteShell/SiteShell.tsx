@@ -2,7 +2,6 @@
 
 import { AppShell, Box } from '@mantine/core';
 import { FloatingNav } from './FloatingNav';
-import { SystemsAtlas } from '@/components/SystemsAtlas/SystemsAtlas';
 import styles from './SiteShell.module.css';
 
 export type SiteShellProps = {
@@ -14,7 +13,6 @@ export function SiteShell({ children, lang }: SiteShellProps) {
   return (
     <AppShell padding={0} header={{ height: 0 }}>
       <AppShell.Main className={styles.shell}>
-        <SystemsAtlas />
         <FloatingNav lang={lang} />
         <Box className={styles.content}>{children}</Box>
       </AppShell.Main>

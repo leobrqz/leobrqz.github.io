@@ -1,15 +1,15 @@
 .labels {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   vertical-align: middle;
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 0 2px 8px;
-  border-left: 1px solid currentColor;
+  padding: 3px 6px;
+  border: 1px solid currentColor;
   font-family: var(--site-font-mono);
   font-size: 8px;
   font-weight: 600;
@@ -21,8 +21,10 @@
 
 .new {
   color: #8ed0a2 !important;
+  background: rgba(75, 161, 102, 0.12);
 }
 
 .update {
   color: var(--site-accent) !important;
+  background: rgba(139, 192, 255, 0.1);
 }
