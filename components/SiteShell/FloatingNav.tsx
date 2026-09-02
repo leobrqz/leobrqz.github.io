@@ -3,19 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IconArrowUpRight, IconBrandGithub, IconBrandLinkedin, IconX } from '@tabler/icons-react';
-import {
-  Anchor,
-  Box,
-  Burger,
-  Drawer,
-  Stack,
-  Text,
-  UnstyledButton,
-} from '@mantine/core';
+import { Anchor, Box, Burger, Drawer, Stack, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { contact } from '@/data/contact';
-import { t } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
+import { t } from '@/lib/i18n';
 import styles from './FloatingNav.module.css';
 
 const NAV_ITEMS: { href: string; labelKey: string }[] = [
@@ -112,14 +104,30 @@ export function FloatingNav({ lang }: FloatingNavProps) {
     <>
       <Box component="header" className={styles.header}>
         <div className={styles.headerInner}>
-          <Anchor component={Link} href={basePath || '/'} className={styles.brand} underline="never">
+          <Anchor
+            component={Link}
+            href={basePath || '/'}
+            className={styles.brand}
+            underline="never"
+          >
             <span className={styles.brandMark}>LB</span>
             <span className={styles.brandName}>Leonardo Briquezi</span>
+            <span className={styles.brandRule} aria-hidden="true" />
           </Anchor>
 
           <Box visibleFrom="sm">{navigation}</Box>
 
           <div className={styles.headerMeta}>
+            <Box visibleFrom="sm">
+              <Anchor
+                href={`mailto:${contact.email}`}
+                className={styles.headerContact}
+                underline="never"
+                onClick={() => trackEvent('email')}
+              >
+                Email <IconArrowUpRight size={14} />
+              </Anchor>
+            </Box>
             <Box visibleFrom="sm">{languageSwitcher}</Box>
           </div>
 
@@ -149,7 +157,11 @@ export function FloatingNav({ lang }: FloatingNavProps) {
             <span className={styles.drawerEyebrow}>LB / MENU</span>
             <Text className={styles.drawerTitle}>{contact.name}</Text>
           </div>
-          <UnstyledButton className={styles.drawerClose} onClick={closeDrawer} aria-label="Close menu">
+          <UnstyledButton
+            className={styles.drawerClose}
+            onClick={closeDrawer}
+            aria-label="Close menu"
+          >
             <IconX size={20} />
           </UnstyledButton>
         </div>
@@ -177,10 +189,20 @@ export function FloatingNav({ lang }: FloatingNavProps) {
 
         <div className={styles.drawerBottom}>
           <div className={styles.drawerSocials}>
-            <Anchor href={`https://github.com/${contact.github}`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('github')}>
+            <Anchor
+              href={`https://github.com/${contact.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('github')}
+            >
               <IconBrandGithub size={18} /> GitHub
             </Anchor>
-            <Anchor href={`https://linkedin.com/in/${contact.linkedin}`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('linkedin')}>
+            <Anchor
+              href={`https://linkedin.com/in/${contact.linkedin}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('linkedin')}
+            >
               <IconBrandLinkedin size={18} /> LinkedIn
             </Anchor>
           </div>

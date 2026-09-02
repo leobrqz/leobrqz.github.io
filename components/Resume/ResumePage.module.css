@@ -39,7 +39,7 @@
 }
 
 .resumePaper :global(.mantine-Title-root) {
-  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-family: var(--site-font-display);
   letter-spacing: -0.045em;
 }
 
@@ -51,7 +51,7 @@
   margin-top: 10px;
   padding-bottom: 9px;
   border-bottom: 1px solid var(--site-line);
-  color: var(--site-accent);
+  color: var(--site-ink);
   font-size: clamp(1.45rem, 3vw, 2rem);
 }
 

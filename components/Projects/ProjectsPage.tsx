@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { IconAlertCircle, IconArrowUpRight, IconRefresh } from '@tabler/icons-react';
 import { Anchor, Box, Container, Text } from '@mantine/core';
 import { getFallbackProjects } from '@/data/project_fallback';
-import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
+import { t, type Lang } from '@/lib/i18n';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
 import { ProjectLabels } from './ProjectLabels';
 import styles from './ProjectsPage.module.css';
@@ -39,7 +39,9 @@ function TagList({ items }: { items: string[] }) {
   }
   return (
     <ul className={styles.tagList}>
-      {items.map((item) => <li key={item}>{item}</li>)}
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
     </ul>
   );
 }
@@ -69,13 +71,14 @@ function ProjectCard({
 }) {
   const showContent = readmeState.status !== 'idle' && readmeState.status !== 'loading';
   const date = formatDate(project.updated_at);
-  const languageItems = project.languageBreakdown.length > 0
-    ? project.languageBreakdown.map(({ name }) => name)
-    : project.languages.length > 0
-      ? project.languages
-      : project.language
-        ? [project.language]
-        : [];
+  const languageItems =
+    project.languageBreakdown.length > 0
+      ? project.languageBreakdown.map(({ name }) => name)
+      : project.languages.length > 0
+        ? project.languages
+        : project.language
+          ? [project.language]
+          : [];
 
   const handleToggle = () => {
     const expanding = !showContent;
@@ -103,9 +106,15 @@ function ProjectCard({
               </Anchor>
               <ProjectLabels labels={project.labels} lang={lang} />
             </div>
-            {project.description && <p className={styles.projectDescription}>{project.description}</p>}
+            {project.description && (
+              <p className={styles.projectDescription}>{project.description}</p>
+            )}
             <div className={styles.projectMeta}>
-              {date && <span>{t(lang, 'projects.last_updated')}: {date}</span>}
+              {date && (
+                <span>
+                  {t(lang, 'projects.last_updated')}: {date}
+                </span>
+              )}
               <span>github.com / {project.name}</span>
             </div>
           </div>
@@ -118,8 +127,19 @@ function ProjectCard({
         </div>
       </div>
 
-      <button type="button" className={styles.readmeButton} onClick={handleToggle} disabled={readmeState.status === 'loading'}>
-        <span>{readmeState.status === 'loading' ? 'Loading…' : showContent ? t(lang, 'projects.hide_readme') : t(lang, 'projects.show_readme')}</span>
+      <button
+        type="button"
+        className={styles.readmeButton}
+        onClick={handleToggle}
+        disabled={readmeState.status === 'loading'}
+      >
+        <span>
+          {readmeState.status === 'loading'
+            ? 'Loading…'
+            : showContent
+              ? t(lang, 'projects.hide_readme')
+              : t(lang, 'projects.show_readme')}
+        </span>
         <IconArrowUpRight size={16} className={showContent ? styles.rotateIcon : ''} />
       </button>
 
@@ -131,8 +151,12 @@ function ProjectCard({
               dangerouslySetInnerHTML={{ __html: readmeState.html }}
             />
           )}
-          {readmeState.status === 'none' && <Text className={styles.readmeEmpty}>{t(lang, 'projects.no_readme')}</Text>}
-          {readmeState.status === 'error' && <Text className={styles.readmeError}>{t(lang, 'projects.unable_to_load')}</Text>}
+          {readmeState.status === 'none' && (
+            <Text className={styles.readmeEmpty}>{t(lang, 'projects.no_readme')}</Text>
+          )}
+          {readmeState.status === 'error' && (
+            <Text className={styles.readmeError}>{t(lang, 'projects.unable_to_load')}</Text>
+          )}
         </div>
       )}
     </article>
@@ -143,7 +167,8 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
   const { state, refetch, fetchReadme } = useProjects();
   const [readmeOpen, setReadmeOpen] = useState<Record<string, ReadmeState>>({});
   const fallbackProjects = useMemo(() => getFallbackProjects(lang), [lang]);
-  const projects = state.status === 'success' && state.projects.length > 0 ? state.projects : fallbackProjects;
+  const projects =
+    state.status === 'success' && state.projects.length > 0 ? state.projects : fallbackProjects;
 
   const onToggleReadme = useCallback(
     (name: string, show: boolean) => {
@@ -167,28 +192,38 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
           setReadmeOpen((previous) => ({ ...previous, [name]: { status: 'error' } }));
         });
     },
-    [fetchReadme],
+    [fetchReadme]
   );
 
   return (
     <Box component="main" className={styles.projectsPage}>
       <Container size="lg" className={styles.projectsContainer}>
         <header className={styles.pageIntro}>
-          <span className={styles.eyebrow}>PROJECTS / TIMELINE</span>
+          <span className={styles.eyebrow}>PROJECTS / GITHUB</span>
           <h1>{t(lang, 'pages.projects')}</h1>
-          <p>{lang === 'en' ? 'A closer look at the systems, tools and experiments I have been building.' : 'Uma visão mais próxima dos sistemas, ferramentas e experimentos que venho construindo.'}</p>
+          <p>
+            {lang === 'en'
+              ? 'Published and ongoing work — with the code, context and stack in view.'
+              : 'Projetos publicados e em andamento — com código, contexto e stack à vista.'}
+          </p>
         </header>
 
         {state.status === 'loading' && (
           <div className={styles.syncNotice}>
             <span className={styles.syncDot} />
-            {lang === 'en' ? 'Showing selected projects while GitHub syncs.' : 'Exibindo projetos selecionados enquanto o GitHub sincroniza.'}
+            {lang === 'en'
+              ? 'Showing selected projects while GitHub syncs.'
+              : 'Exibindo projetos selecionados enquanto o GitHub sincroniza.'}
           </div>
         )}
         {state.status === 'error' && (
           <div className={styles.syncNotice} role="status">
             <IconAlertCircle size={17} />
-            <span>{state.kind === 'rate_limit' ? t(lang, 'projects.error_rate_limit') : t(lang, 'projects.error_loading')}</span>
+            <span>
+              {state.kind === 'rate_limit'
+                ? t(lang, 'projects.error_rate_limit')
+                : t(lang, 'projects.error_loading')}
+            </span>
             <button type="button" className={styles.retryButton} onClick={refetch}>
               <IconRefresh size={15} /> Retry
             </button>
@@ -197,7 +232,11 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
         {state.status === 'empty' && (
           <div className={styles.syncNotice} role="status">
             <IconAlertCircle size={17} />
-            <span>{state.kind === 'no_config' ? t(lang, 'projects.no_projects') : t(lang, 'projects.no_repos')}</span>
+            <span>
+              {state.kind === 'no_config'
+                ? t(lang, 'projects.no_projects')
+                : t(lang, 'projects.no_repos')}
+            </span>
           </div>
         )}
 
@@ -213,7 +252,12 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
           ))}
         </div>
 
-        <Anchor component={Link} href={lang === 'en' ? '/en' : '/'} className={styles.backLink} underline="never">
+        <Anchor
+          component={Link}
+          href={lang === 'en' ? '/en' : '/'}
+          className={styles.backLink}
+          underline="never"
+        >
           ← {lang === 'en' ? 'Back home' : 'Voltar ao início'}
         </Anchor>
       </Container>

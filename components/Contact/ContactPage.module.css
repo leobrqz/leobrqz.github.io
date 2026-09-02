@@ -31,10 +31,11 @@
   max-width: 650px;
   margin: 24px 0 0;
   color: var(--site-ink);
-  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-family: var(--site-font-display);
   font-size: clamp(4rem, 9vw, 8rem);
   letter-spacing: -0.08em;
   line-height: 0.84;
+  text-shadow: 2px 0 0 rgb(229 139 88 / 58%), -2px 0 0 rgb(139 192 255 / 52%);
 }
 
 .contactIntro p {
@@ -66,7 +67,7 @@
   padding-right: 8px;
   padding-left: 8px;
   color: var(--site-accent) !important;
-  background: rgba(139, 192, 255, 0.05);
+  background: rgb(139, 192, 255, 0.05);
 }
 
 .linkIcon {
@@ -80,7 +81,7 @@
 }
 
 .linkCopy strong {
-  font-family: Bahnschrift, "Arial Narrow", Aptos, sans-serif;
+  font-family: var(--site-font-display);
   font-size: 21px;
   letter-spacing: -0.03em;
 }

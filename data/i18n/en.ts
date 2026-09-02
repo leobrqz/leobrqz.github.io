@@ -57,10 +57,12 @@ export const en = {
     hide_readme: 'Hide README',
     no_readme: 'No README available',
     unable_to_load: 'Unable to load README. Please try again later.',
-    no_projects: 'No projects configured. Add repository names to the REPOSITORIES array in config/site.ts.',
+    no_projects:
+      'No projects configured. Add repository names to the REPOSITORIES array in config/site.ts.',
     error_loading: 'Error loading projects. Please check the console for details.',
     error_rate_limit: 'GitHub rate limit reached. Please try again in a few minutes.',
-    no_repos: 'No repositories found. Please check the repository names in the REPOSITORIES array in config/site.ts.',
+    no_repos:
+      'No repositories found. Please check the repository names in the REPOSITORIES array in config/site.ts.',
   },
   skills: {
     languages: 'Languages',
@@ -92,6 +94,6 @@ export const en = {
     about_kicker: 'Profile',
     stack_kicker: 'Working stack',
     work_kicker: 'Selected work',
-    selected_note: 'Recent projects, automations and systems I built end to end.',
+    selected_note: 'Published projects and tools I use day to day.',
   },
 } as const;

@@ -2,10 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
+import {
+  IconArrowDownRight,
+  IconArrowUpRight,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconMail,
+  IconMapPin,
+} from '@tabler/icons-react';
 import { Anchor, Text } from '@mantine/core';
 import { about } from '@/data/about';
 import { contact } from '@/data/contact';
+import { trackEvent } from '@/lib/analytics';
 import { t, type Lang } from '@/lib/i18n';
 import styles from './HomePage.module.css';
 
@@ -43,9 +51,8 @@ export function LandingHero({ lang }: LandingHeroProps) {
   }, []);
 
   const firstName = FIRST_NAME.slice(0, Math.min(typedLength, FIRST_NAME.length));
-  const lastName = typedLength > FIRST_NAME.length
-    ? LAST_NAME.slice(0, typedLength - FIRST_NAME.length)
-    : '';
+  const lastName =
+    typedLength > FIRST_NAME.length ? LAST_NAME.slice(0, typedLength - FIRST_NAME.length) : '';
   const typingLastName = typedLength > FIRST_NAME.length;
 
   return (
@@ -67,35 +74,70 @@ export function LandingHero({ lang }: LandingHeroProps) {
         </p>
         <p className={styles.heroSummary}>{about.home_content[lang]}</p>
         <div className={styles.heroActions}>
-          <Anchor component={Link} href={projectsHref} className={styles.primaryAction} underline="never">
+          <Anchor
+            component={Link}
+            href={projectsHref}
+            className={styles.primaryAction}
+            underline="never"
+          >
             {t(lang, 'home.view_projects')} <IconArrowUpRight size={17} />
           </Anchor>
-          <Anchor component={Link} href={resumeHref} className={styles.secondaryAction} underline="never">
+          <Anchor
+            component={Link}
+            href={resumeHref}
+            className={styles.secondaryAction}
+            underline="never"
+          >
             {t(lang, 'home.view_resume')} <IconArrowDownRight size={16} />
           </Anchor>
         </div>
       </div>
 
-      <aside className={styles.heroAside} aria-label="Profile details">
+      <aside
+        className={styles.heroAside}
+        aria-label={lang === 'en' ? 'Contact details' : 'Dados de contato'}
+      >
         <div className={styles.heroAsideTop}>
-          <span className={styles.asideCode}>LB / 2026</span>
+          <span className={styles.asideCode}>{lang === 'en' ? 'CONTACT' : 'CONTATO'}</span>
           <span className={styles.asideRule} />
         </div>
-        <dl className={styles.heroFacts}>
-          <div>
-            <dt>{lang === 'en' ? 'Based in' : 'Baseado em'}</dt>
-            <dd>{contact.location}</dd>
-          </div>
-          <div>
-            <dt>{lang === 'en' ? 'Focus' : 'Foco'}</dt>
-            <dd>Backend · IA · Produto</dd>
-          </div>
-          <div>
-            <dt>{lang === 'en' ? 'Links' : 'Links'}</dt>
-            <dd>GitHub · LinkedIn</dd>
-          </div>
-        </dl>
-        <span className={styles.asideArrow} aria-hidden="true">↘</span>
+        <div className={styles.heroContactList}>
+          <span className={styles.heroContactItem}>
+            <IconMapPin size={16} />
+            <span>{contact.location}</span>
+          </span>
+          <Anchor
+            href={`mailto:${contact.email}`}
+            className={styles.heroContactItem}
+            underline="never"
+            onClick={() => trackEvent('email')}
+          >
+            <IconMail size={16} />
+            <span>{contact.email}</span>
+          </Anchor>
+          <Anchor
+            href={`https://github.com/${contact.github}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.heroContactItem}
+            underline="never"
+            onClick={() => trackEvent('github')}
+          >
+            <IconBrandGithub size={16} />
+            <span>github.com/{contact.github}</span>
+          </Anchor>
+          <Anchor
+            href={`https://linkedin.com/in/${contact.linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.heroContactItem}
+            underline="never"
+            onClick={() => trackEvent('linkedin')}
+          >
+            <IconBrandLinkedin size={16} />
+            <span>linkedin.com/in/{contact.linkedin}</span>
+          </Anchor>
+        </div>
       </aside>
     </section>
   );

@@ -6,7 +6,7 @@
   margin: 0;
   background: #111414;
   color: #f1eee6;
-  font-family: Aptos, "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", Aptos, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -21,11 +21,12 @@
   --site-surface-strong: #202525;
   --site-ink: #f1eee6;
   --site-muted: #a4aaa3;
-  --site-line: rgba(241, 238, 230, 0.16);
+  --site-line: rgb(241, 238, 230, 0.16);
   --site-accent: #8bc0ff;
   --site-accent-soft: #1b3049;
   --site-signal: #e58b58;
-  --site-font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  --site-font-display: "Space Grotesk", Aptos, "Segoe UI", sans-serif;
+  --site-font-mono: "IBM Plex Mono", "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
   position: relative;
   isolation: isolate;
   overflow: clip;
@@ -34,44 +35,59 @@
   color: var(--site-ink);
 }
 
-.shell::before,
-.shell::after {
+.backgroundTexture {
   position: fixed;
   z-index: 0;
-  width: clamp(24rem, 42vw, 42rem);
-  height: clamp(24rem, 42vw, 42rem);
-  border-radius: 50%;
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  content: '';
-  filter: blur(62px);
-  opacity: 0.72;
-  will-change: transform;
 }
 
-.shell::before {
-  top: 2vh;
-  left: -19rem;
-  background: radial-gradient(circle, rgba(79, 142, 218, 0.22) 0%, rgba(79, 142, 218, 0.09) 32%, transparent 69%);
-  animation: ambientDriftA 22s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+.textureGrain,
+.printPlateBlue,
+.printPlateOrange {
+  position: absolute;
+  display: block;
 }
 
-.shell::after {
-  top: 52vh;
-  right: -20rem;
-  background: radial-gradient(circle, rgba(229, 139, 88, 0.18) 0%, rgba(229, 139, 88, 0.06) 34%, transparent 70%);
-  animation: ambientDriftB 27s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+.textureGrain {
+  inset: -30%;
+  background-image:
+    repeating-linear-gradient(116deg, rgb(241, 238, 230, 0.065) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(116deg, transparent 0 17px, rgb(241, 238, 230, 0.035) 18px 19px, transparent 20px 31px);
+  mix-blend-mode: screen;
+  opacity: 0.32;
+  transform: rotate(-3deg);
+  animation: graphite-drift 26s linear infinite;
 }
 
-@keyframes ambientDriftA {
-  from { transform: translate3d(0, 0, 0) scale(0.86); }
-  50% { transform: translate3d(14rem, 16vh, 0) scale(1.05); }
-  to { transform: translate3d(28rem, 4vh, 0) scale(0.92); }
+.printPlateBlue,
+.printPlateOrange {
+  width: clamp(90px, 9vw, 150px);
+  height: 62vh;
+  background-image:
+    repeating-linear-gradient(90deg, rgb(255, 255, 255, 0.15) 0 1px, transparent 1px 5px),
+    radial-gradient(circle, currentColor 0 1px, transparent 1.2px);
+  background-size: 100% 100%, 10px 10px;
+  mix-blend-mode: screen;
+  opacity: 0.16;
 }
 
-@keyframes ambientDriftB {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-13rem, -13vh, 0) scale(0.84); }
-  to { transform: translate3d(-25rem, 6vh, 0) scale(1.08); }
+.printPlateBlue {
+  top: 14%;
+  left: -54px;
+  color: var(--site-accent);
+  transform: rotate(-3deg);
+  animation: plate-blue-drift 21s ease-in-out infinite alternate;
+}
+
+.printPlateOrange {
+  top: 2%;
+  right: -54px;
+  height: 73vh;
+  color: var(--site-signal);
+  transform: rotate(3deg);
+  animation: plate-orange-drift 24s ease-in-out infinite alternate;
 }
 
 .content {
@@ -95,17 +111,39 @@
   color: inherit;
 }
 
+@keyframes graphite-drift {
+  from { transform: translate3d(-2%, -1%, 0) rotate(-3deg); }
+  to { transform: translate3d(2%, 1%, 0) rotate(-3deg); }
+}
+
+@keyframes plate-blue-drift {
+  from { transform: translate3d(0, -2%, 0) rotate(-3deg); }
+  to { transform: translate3d(32px, 8%, 0) rotate(-1deg); }
+}
+
+@keyframes plate-orange-drift {
+  from { transform: translate3d(0, 0, 0) rotate(3deg); }
+  to { transform: translate3d(-28px, 10%, 0) rotate(1deg); }
+}
+
 @media (max-width: 48em) {
   .content {
     width: min(100% - 32px, 720px);
     padding-top: 28px;
     padding-bottom: 80px;
   }
+
+  .printPlateBlue,
+  .printPlateOrange {
+    width: 82px;
+    opacity: 0.12;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shell::before,
-  .shell::after {
+  .textureGrain,
+  .printPlateBlue,
+  .printPlateOrange {
     animation: none;
   }
 }

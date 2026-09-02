@@ -1,16 +1,18 @@
 'use client';
 
 import type { ComponentType } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { IconArrowUpRight, IconCpu, IconDatabase } from '@tabler/icons-react';
 import { Anchor, Box, Container } from '@mantine/core';
+import { ProjectLabels } from '@/components/Projects/ProjectLabels';
 import { about } from '@/data/about';
+import { contact } from '@/data/contact';
 import { getFallbackProjects } from '@/data/project_fallback';
 import { skills, type SkillItem } from '@/data/skills';
-import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
+import { t, type Lang } from '@/lib/i18n';
 import { useProjects, type EnrichedProject } from '@/lib/use-projects';
-import { ProjectLabels } from '@/components/Projects/ProjectLabels';
 import { LandingHero } from './LandingHero';
 import styles from './HomePage.module.css';
 
@@ -24,20 +26,39 @@ const SKILL_CATEGORIES = [
 ] as const;
 
 const ICON_SIZE = 22;
+const PROJECT_MARK_CLASSES = [
+  styles.projectMarkBlue,
+  styles.projectMarkOrange,
+  styles.projectMarkGreen,
+];
 
 const TABLER_ICON_MAP: Record<string, ComponentType<{ size?: number }>> = {
   memory: IconCpu,
   database: IconDatabase,
 };
 
-const VISUAL_CLASSES = [styles.visualBlue, styles.visualOrange, styles.visualGreen];
-
 function SkillIcon({ item }: { item: SkillItem }) {
   if (item.icon_url) {
-    return <img src={item.icon_url} alt="" width={ICON_SIZE} height={ICON_SIZE} className={styles.skillIcon} />;
+    return (
+      <img
+        src={item.icon_url}
+        alt=""
+        width={ICON_SIZE}
+        height={ICON_SIZE}
+        className={styles.skillIcon}
+      />
+    );
   }
   if (item.simple_icon) {
-    return <img src={`https://cdn.simpleicons.org/${item.simple_icon}`} alt="" width={ICON_SIZE} height={ICON_SIZE} className={styles.skillIcon} />;
+    return (
+      <img
+        src={`https://cdn.simpleicons.org/${item.simple_icon}`}
+        alt=""
+        width={ICON_SIZE}
+        height={ICON_SIZE}
+        className={styles.skillIcon}
+      />
+    );
   }
   if (item.icon && TABLER_ICON_MAP[item.icon]) {
     const IconComponent = TABLER_ICON_MAP[item.icon];
@@ -62,50 +83,57 @@ function SectionHeading({ kicker, title, note }: { kicker: string; title: string
   );
 }
 
-function ProjectPreview({ index }: { index: number }) {
-  return (
-    <div className={`${styles.projectVisual} ${VISUAL_CLASSES[index % VISUAL_CLASSES.length]}`} aria-hidden="true">
-      <div className={styles.visualMeta}><span>INTERFACE STUDY</span><span>OPEN</span></div>
-      <div className={styles.mockWindow}>
-        <div className={styles.mockWindowBar}><i /><i /><i /><span /></div>
-        <div className={styles.mockRows}>
-          <span /><span /><span /><span /><span />
-        </div>
-        <div className={styles.mockFooter}><b /> <span /> <b /></div>
-      </div>
-    </div>
-  );
+function projectMark(name: string): string {
+  return name
+    .split(/[-\s]/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
 }
 
-function HomeProjectCard({ project, index, lang }: { project: EnrichedProject; index: number; lang: Lang }) {
+function HomeProjectCard({
+  project,
+  index,
+  lang,
+}: {
+  project: EnrichedProject;
+  index: number;
+  lang: Lang;
+}) {
   const tags = Array.from(new Set([...project.languages, ...project.libraries])).slice(0, 5);
 
   return (
     <article className={styles.projectCard}>
-      <ProjectPreview index={index} />
+      <span
+        className={`${styles.projectMark} ${PROJECT_MARK_CLASSES[index % PROJECT_MARK_CLASSES.length]}`}
+        aria-hidden="true"
+      >
+        {projectMark(project.name)}
+      </span>
       <div className={styles.projectContent}>
         <div className={styles.projectKicker}>
-          <span>{lang === 'en' ? 'Selected work' : 'Trabalho selecionado'}</span>
+          <span>{project.language ?? (lang === 'en' ? 'Project' : 'Projeto')}</span>
           <ProjectLabels labels={project.labels} lang={lang} />
         </div>
-        <h3>
-          <Anchor
-            href={project.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackEvent('github_repo', { repo: project.name })}
-          >
-            {project.name} <IconArrowUpRight size={18} stroke={1.8} />
-          </Anchor>
-        </h3>
+        <h3>{project.name}</h3>
         <p className={styles.projectDescription}>{project.description}</p>
-        <div className={styles.projectFooter}>
-          <div className={styles.projectTags}>
-            {tags.map((tag) => <span key={tag}>{tag}</span>)}
-          </div>
-          <span className={styles.projectLink}>GitHub ↗</span>
-        </div>
       </div>
+      <div className={styles.projectStack}>
+        <span className={styles.projectStackLabel}>{lang === 'en' ? 'Stack' : 'Stack'}</span>
+        <span>{tags.join(' · ')}</span>
+      </div>
+      <Anchor
+        href={project.html_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.projectLink}
+        underline="never"
+        onClick={() => trackEvent('github_repo', { repo: project.name })}
+      >
+        {lang === 'en' ? 'View project' : 'Ver projeto'} <IconArrowUpRight size={16} />
+      </Anchor>
     </article>
   );
 }
@@ -113,9 +141,10 @@ function HomeProjectCard({ project, index, lang }: { project: EnrichedProject; i
 export function HomePage({ lang }: HomePageProps) {
   const { state } = useProjects();
   const fallbackProjects = getFallbackProjects(lang);
-  const projects = state.status === 'success' && state.projects.length > 0
-    ? state.projects.slice(0, 3)
-    : fallbackProjects.slice(0, 3);
+  const projects =
+    state.status === 'success' && state.projects.length > 0
+      ? state.projects.slice(0, 3)
+      : fallbackProjects.slice(0, 3);
   const projectsHref = lang === 'en' ? '/en/projects' : '/projects';
 
   return (
@@ -124,28 +153,48 @@ export function HomePage({ lang }: HomePageProps) {
 
       <Container size="lg" className={styles.homeContainer}>
         <section className={styles.section}>
-          <SectionHeading kicker={t(lang, 'home.about_kicker')} title={t(lang, 'sections.about_me')} />
+          <SectionHeading
+            kicker={t(lang, 'home.about_kicker')}
+            title={t(lang, 'sections.about_me')}
+          />
           <div className={styles.profileGrid}>
-            <p className={styles.profileCopy}>{about.home_profile[lang]}</p>
-            <div className={styles.profileNotes}>
-              <div>
-                <span className={styles.profileMark} aria-hidden="true" />
-                <div><strong>{lang === 'en' ? 'I build the whole system' : 'Construo o sistema inteiro'}</strong><p>{lang === 'en' ? 'From backend decisions to the interface people actually use.' : 'Das decisões de backend à interface que as pessoas realmente usam.'}</p></div>
-              </div>
-              <div>
-                <span className={styles.profileMark} aria-hidden="true" />
-                <div><strong>{lang === 'en' ? 'Clarity before complexity' : 'Clareza antes da complexidade'}</strong><p>{lang === 'en' ? 'Good software makes the next decision easier.' : 'Software bom torna a próxima decisão mais fácil.'}</p></div>
-              </div>
-              <div>
-                <span className={styles.profileMark} aria-hidden="true" />
-                <div><strong>{lang === 'en' ? 'Curiosity with momentum' : 'Curiosidade em movimento'}</strong><p>{lang === 'en' ? 'I learn by building, testing and shipping.' : 'Aprendo construindo, testando e entregando.'}</p></div>
-              </div>
+            <div className={styles.profilePhotoBlock}>
+              <Image
+                src="/imgs/profile.jpg"
+                alt={contact.name}
+                width={220}
+                height={220}
+                unoptimized
+                className={styles.profilePhoto}
+              />
+              <span>
+                {contact.name} / {contact.location}
+              </span>
+            </div>
+            <div className={styles.profileCopy}>
+              <p>{about.home_profile[lang]}</p>
+              <p>
+                {lang === 'en'
+                  ? 'Most days, that means moving between APIs, databases, automations and the interface that makes the result useful.'
+                  : 'Na prática, isso significa alternar entre APIs, bancos, automações e a interface que torna o resultado útil.'}
+              </p>
+              <Anchor
+                component={Link}
+                href={lang === 'en' ? '/en/resume' : '/resume'}
+                className={styles.profileLink}
+                underline="never"
+              >
+                {lang === 'en' ? 'More about me' : 'Mais sobre mim'} <IconArrowUpRight size={16} />
+              </Anchor>
             </div>
           </div>
         </section>
 
         <section className={styles.section}>
-          <SectionHeading kicker={t(lang, 'home.stack_kicker')} title={t(lang, 'sections.skills')} />
+          <SectionHeading
+            kicker={t(lang, 'home.stack_kicker')}
+            title={t(lang, 'sections.skills')}
+          />
           <div className={styles.skillsGrid}>
             {SKILL_CATEGORIES.map((category) => (
               <div className={styles.skillGroup} key={category}>
@@ -169,17 +218,26 @@ export function HomePage({ lang }: HomePageProps) {
             title={t(lang, 'home.recent_projects')}
             note={t(lang, 'home.selected_note')}
           />
-          <div className={styles.projectGrid}>
-            {projects.map((project, index) => <HomeProjectCard key={project.name} project={project} index={index} lang={lang} />)}
+          <div className={styles.projectList}>
+            {projects.map((project, index) => (
+              <HomeProjectCard key={project.name} project={project} index={index} lang={lang} />
+            ))}
           </div>
-          <Anchor component={Link} href={projectsHref} className={styles.allProjectsLink} underline="never">
+          <Anchor
+            component={Link}
+            href={projectsHref}
+            className={styles.allProjectsLink}
+            underline="never"
+          >
             {t(lang, 'home.see_all_projects')} <IconArrowUpRight size={17} />
           </Anchor>
         </section>
 
         <footer className={styles.homeFooter}>
           <span>LEONARDO BRIQUEZI / 2026</span>
-          <span>{t(lang, 'sidebar.role')} · Florianópolis</span>
+          <span>
+            {t(lang, 'sidebar.role')} · {contact.location}
+          </span>
         </footer>
       </Container>
     </Box>
