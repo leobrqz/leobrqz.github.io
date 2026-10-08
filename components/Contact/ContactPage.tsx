@@ -8,83 +8,102 @@ import {
   IconMail,
 } from '@tabler/icons-react';
 import { Anchor, Box, Container } from '@mantine/core';
+import { Reveal } from '@/components/Design/Reveal';
 import { contact } from '@/data';
 import { trackEvent } from '@/lib/analytics';
 import { t, type Lang } from '@/lib/i18n';
+import { ContactGame } from './ContactGame';
 import styles from './ContactPage.module.css';
 
-export type ContactPageProps = {
-  lang: Lang;
-};
+export type ContactPageProps = { lang: Lang };
 
 const LINKS = [
-  { key: 'github', label: 'GitHub', icon: IconBrandGithub },
-  { key: 'linkedin', label: 'LinkedIn', icon: IconBrandLinkedin },
-  { key: 'email', label: 'Email', icon: IconMail },
+  {
+    key: 'email',
+    label: 'Email',
+    value: contact.email,
+    href: `mailto:${contact.email}`,
+    icon: IconMail,
+  },
+  {
+    key: 'github',
+    label: 'GitHub',
+    value: `github.com/${contact.github}`,
+    href: `https://github.com/${contact.github}`,
+    icon: IconBrandGithub,
+  },
+  {
+    key: 'linkedin',
+    label: 'LinkedIn',
+    value: `linkedin.com/in/${contact.linkedin}`,
+    href: `https://linkedin.com/in/${contact.linkedin}`,
+    icon: IconBrandLinkedin,
+  },
 ] as const;
 
 export function ContactPage({ lang }: ContactPageProps) {
   const homeHref = lang === 'en' ? '/en' : '/';
+  const location = 'Florian\u00f3polis, Santa Catarina';
 
   return (
     <Box component="main" className={styles.contactPage}>
-      <Container size="lg" className={styles.contactContainer}>
-        <div className={styles.contactGrid}>
-          <div className={styles.contactIntro}>
-            <span className={styles.eyebrow}>{lang === 'en' ? 'CONTACT' : 'CONTATO'}</span>
-            <h1>{t(lang, 'contact.get_in_touch')}</h1>
+      <Container className={styles.contactContainer}>
+        <Reveal>
+          <header className={styles.contactIntro}>
+            <span className={styles.eyebrow}>03 / {lang === 'en' ? 'CONTACT' : 'CONTATO'}</span>
+            <h1>{lang === 'en' ? 'Contact' : 'Contato'}</h1>
             <p>
               {lang === 'en'
-                ? 'For a project, an opportunity or a good conversation about code, find me here.'
-                : 'Para falar sobre um projeto, uma oportunidade ou código, me encontre por aqui.'}
+                ? "Have a project, opportunity or idea to discuss? I'd be glad to hear from you."
+                : 'Para falar sobre um projeto, uma oportunidade ou c\u00f3digo, me encontre por aqui.'}
             </p>
-          </div>
-
-          <nav className={styles.contactLinks} aria-label={t(lang, 'contact.connect_with_me')}>
-            {LINKS.map(({ key, label, icon: Icon }) => {
-              const href =
-                key === 'github'
-                  ? `https://github.com/${contact.github}`
-                  : key === 'linkedin'
-                    ? `https://linkedin.com/in/${contact.linkedin}`
-                    : `mailto:${contact.email}`;
-              const text = key === 'email' ? t(lang, 'contact.send_email') : label;
-
-              return (
-                <Anchor
-                  key={key}
-                  href={href}
-                  target={key === 'email' ? undefined : '_blank'}
-                  rel={key === 'email' ? undefined : 'noopener noreferrer'}
-                  className={styles.contactLink}
-                  onClick={() =>
-                    key !== 'email' && trackEvent(key === 'github' ? 'github' : 'linkedin')
-                  }
-                >
-                  <span className={styles.linkIcon}>
-                    <Icon size={20} stroke={1.6} />
-                  </span>
-                  <span className={styles.linkCopy}>
-                    <strong>{text}</strong>
-                    <small>
-                      {key === 'email'
-                        ? contact.email
-                        : `/${key === 'github' ? contact.github : contact.linkedin}`}
-                    </small>
-                  </span>
-                  <IconArrowUpRight className={styles.linkArrow} size={19} />
-                </Anchor>
-              );
-            })}
-          </nav>
+            <Anchor
+              className={styles.emailFeature}
+              href={`mailto:${contact.email}`}
+              onClick={() => trackEvent('email')}
+            >
+              {contact.email}
+              <IconArrowUpRight size={21} />
+            </Anchor>
+          </header>
+        </Reveal>
+        <div className={styles.contactRule}>
+          <span>{lang === 'en' ? 'ELSEWHERE ON THE WEB' : 'TAMB\u00c9M NA WEB'}</span>
+          <span>{location}</span>
         </div>
-
-        <footer className={styles.contactFooter}>
-          <span>{contact.location}</span>
+        <nav className={styles.contactLinks} aria-label={t(lang, 'contact.connect_with_me')}>
+          {LINKS.map(({ key, label, value, href, icon: Icon }, index) => (
+            <Anchor
+              key={key}
+              href={href}
+              target={key === 'email' ? undefined : '_blank'}
+              rel={key === 'email' ? undefined : 'noopener noreferrer'}
+              className={styles.contactLink}
+              onClick={() =>
+                key === 'github'
+                  ? trackEvent('github')
+                  : key === 'linkedin'
+                    ? trackEvent('linkedin')
+                    : trackEvent('email')
+              }
+            >
+              <span className={styles.linkIndex}>{String(index + 1).padStart(2, '0')}</span>
+              <Icon className={styles.linkIcon} size={20} stroke={1.5} />
+              <span className={styles.linkCopy}>
+                <strong>{key === 'email' ? t(lang, 'contact.send_email') : label}</strong>
+                <small>{value}</small>
+              </span>
+              <IconArrowUpRight className={styles.linkArrow} size={19} />
+            </Anchor>
+          ))}
+        </nav>
+        <ContactGame lang={lang} />
+        <div className={styles.contactFooter}>
+          <span>{location}</span>
           <Anchor component={Link} href={homeHref} underline="never">
-            ← {lang === 'en' ? 'Back home' : 'Voltar ao início'}
+            {lang === 'en' ? 'Back home' : 'Voltar ao in\u00edcio'}
           </Anchor>
-        </footer>
+        </div>
       </Container>
     </Box>
   );

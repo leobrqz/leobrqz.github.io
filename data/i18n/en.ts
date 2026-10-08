@@ -88,7 +88,7 @@ export const en = {
   home: {
     recent_projects: 'Recent Projects',
     see_all_projects: 'See all projects',
-    intro_kicker: 'Fullstack development / 2026',
+    intro_kicker: 'Fullstack development',
     view_projects: 'View projects',
     view_resume: 'Read resume',
     about_kicker: 'Profile',

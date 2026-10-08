@@ -7,7 +7,9 @@ import '@fontsource/ibm-plex-mono/600.css';
 import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { AnalyticsTracker } from '@/components/AnalyticsTracker';
-import { ClientOnlyChildren } from '@/components/ClientOnlyChildren';
+
+import '@/components/Design/global.css';
+
 import { JsonLd } from '@/components/JsonLd';
 import { GOOGLE_ANALYTICS_ID, SITE_TITLE, SITE_URL } from '@/config/site';
 import { theme } from '@/theme';
@@ -33,11 +35,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // html lang kept stable for static export; PT/EN content is identified by route and page metadata
+  // SiteShell synchronizes lang from the static locale route after mount.
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="pt" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript defaultColorScheme="dark" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.documentElement.lang = location.pathname.startsWith('/en') ? 'en' : 'pt';",
+          }}
+        />
         <link rel="icon" type="image/x-icon" href="/assets/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png" />
@@ -59,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="dark">
-          <ClientOnlyChildren>{children}</ClientOnlyChildren>
+          {children}
         </MantineProvider>
         <JsonLd />
         <AnalyticsTracker />

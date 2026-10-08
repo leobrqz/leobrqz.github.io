@@ -89,7 +89,7 @@ export const pt = {
   home: {
     recent_projects: 'Projetos recentes',
     see_all_projects: 'Ver todos os projetos',
-    intro_kicker: 'Desenvolvimento fullstack / 2026',
+    intro_kicker: 'Desenvolvimento fullstack',
     view_projects: 'Ver projetos',
     view_resume: 'Ler currículo',
     about_kicker: 'Perfil',

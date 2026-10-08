@@ -1,30 +1,38 @@
 .labels {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 10px;
   vertical-align: middle;
 }
 
 .badge {
   display: inline-flex;
+  min-height: 24px;
   align-items: center;
-  padding: 3px 6px;
-  border: 1px solid currentColor;
-  font-family: var(--site-font-mono);
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  line-height: 1;
+  padding: 0 0 0 8px;
+  border-left: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
   text-decoration: none;
   text-transform: uppercase;
 }
 
 .new {
-  color: #8ed0a2 !important;
-  background: rgba(75, 161, 102, 0.12);
+  color: var(--orange) !important;
 }
 
 .update {
-  color: var(--site-accent) !important;
-  background: rgba(139, 192, 255, 0.1);
+  color: var(--blue) !important;
+}
+
+.badge:hover,
+.badge:focus-visible {
+  color: var(--paper) !important;
+}
+
+.badge:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
 }

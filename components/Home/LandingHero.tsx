@@ -1,95 +1,72 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   IconArrowDownRight,
-  IconArrowUpRight,
+  IconArrowRight,
   IconBrandGithub,
   IconBrandLinkedin,
   IconMail,
   IconMapPin,
 } from '@tabler/icons-react';
-import { Anchor, Text } from '@mantine/core';
 import { about } from '@/data/about';
 import { contact } from '@/data/contact';
 import { trackEvent } from '@/lib/analytics';
 import { t, type Lang } from '@/lib/i18n';
 import styles from './HomePage.module.css';
 
-export type LandingHeroProps = {
-  lang: Lang;
-};
-
-const FIRST_NAME = 'Leonardo';
-const LAST_NAME = 'Briquezi';
-const NAME_LENGTH = FIRST_NAME.length + LAST_NAME.length;
-
-export function LandingHero({ lang }: LandingHeroProps) {
-  const [typedLength, setTypedLength] = useState(0);
-  const projectsHref = lang === 'en' ? '/en/projects' : '/projects';
+export function LandingHero({ lang }: { lang: Lang }) {
   const resumeHref = lang === 'en' ? '/en/resume' : '/resume';
-
-  useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) {
-      setTypedLength(NAME_LENGTH);
-      return undefined;
-    }
-
-    const interval = window.setInterval(() => {
-      setTypedLength((current) => {
-        if (current >= NAME_LENGTH) {
-          window.clearInterval(interval);
-          return current;
-        }
-        return current + 1;
-      });
-    }, 74);
-
-    return () => window.clearInterval(interval);
-  }, []);
-
-  const firstName = FIRST_NAME.slice(0, Math.min(typedLength, FIRST_NAME.length));
-  const lastName =
-    typedLength > FIRST_NAME.length ? LAST_NAME.slice(0, typedLength - FIRST_NAME.length) : '';
-  const typingLastName = typedLength > FIRST_NAME.length;
+  const resumePdfHref = `${resumeHref}?view=pdf`;
+  const projectsHref = lang === 'en' ? '/en/projects' : '/projects';
+  const contacts = [
+    {
+      label: contact.location,
+      href: undefined,
+      icon: IconMapPin,
+      onClick: undefined,
+    },
+    {
+      label: contact.email,
+      href: `mailto:${contact.email}`,
+      icon: IconMail,
+      onClick: () => trackEvent('email'),
+    },
+    {
+      label: `github.com/${contact.github}`,
+      href: `https://github.com/${contact.github}`,
+      icon: IconBrandGithub,
+      onClick: () => trackEvent('github'),
+    },
+    {
+      label: `linkedin.com/in/${contact.linkedin}`,
+      href: `https://linkedin.com/in/${contact.linkedin}`,
+      icon: IconBrandLinkedin,
+      onClick: () => trackEvent('linkedin'),
+    },
+  ];
 
   return (
-    <section className={styles.hero} aria-labelledby="hero-title">
+    <section className={styles.hero} id="home" aria-labelledby="hero-title">
       <div className={styles.heroMain}>
-        <Text className={styles.eyebrow}>{t(lang, 'home.intro_kicker')}</Text>
+        <p className={styles.eyebrow}>{t(lang, 'home.intro_kicker')}</p>
         <h1 id="hero-title" className={styles.heroTitle} aria-label="Leonardo Briquezi">
-          <span className={styles.heroNameLine}>
-            {firstName}
-            {!typingLastName && <span className={styles.typingCursor} aria-hidden="true" />}
-          </span>
-          <span className={styles.heroNameAccent}>
-            {lastName}
-            {typingLastName && <span className={styles.typingCursor} aria-hidden="true" />}
-          </span>
+          <span className={styles.heroNameLine}>Leonardo</span>
+          <span>Briquezi</span>
         </h1>
-        <p className={styles.heroRole}>
-          {t(lang, 'sidebar.role')} <span aria-hidden="true">·</span> {t(lang, 'sidebar.education')}
-        </p>
         <p className={styles.heroSummary}>{about.home_content[lang]}</p>
         <div className={styles.heroActions}>
-          <Anchor
-            component={Link}
-            href={projectsHref}
-            className={styles.primaryAction}
-            underline="never"
-          >
-            {t(lang, 'home.view_projects')} <IconArrowUpRight size={17} />
-          </Anchor>
-          <Anchor
-            component={Link}
-            href={resumeHref}
-            className={styles.secondaryAction}
-            underline="never"
-          >
-            {t(lang, 'home.view_resume')} <IconArrowDownRight size={16} />
-          </Anchor>
+          <Link className={`${styles.action} ${styles.primaryAction}`} href={projectsHref}>
+            {t(lang, 'home.view_projects')} <IconArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link className={`${styles.action} ${styles.secondaryAction}`} href={resumeHref}>
+            {lang === 'en' ? 'Resume' : 'Currículo'}
+            <IconArrowDownRight size={16} aria-hidden="true" />
+          </Link>
+          <Link className={styles.pdfLink} href={resumePdfHref}>
+            {lang === 'en' ? 'View PDF' : 'Ver PDF'}
+            <IconArrowDownRight size={14} aria-hidden="true" />
+          </Link>
         </div>
       </div>
 
@@ -98,45 +75,35 @@ export function LandingHero({ lang }: LandingHeroProps) {
         aria-label={lang === 'en' ? 'Contact details' : 'Dados de contato'}
       >
         <div className={styles.heroAsideTop}>
-          <span className={styles.asideCode}>{lang === 'en' ? 'CONTACT' : 'CONTATO'}</span>
+          <span className={styles.sectionIndex}>{lang === 'en' ? 'Contact' : 'Contato'}</span>
           <span className={styles.asideRule} />
         </div>
-        <div className={styles.heroContactList}>
-          <span className={styles.heroContactItem}>
-            <IconMapPin size={16} />
-            <span>{contact.location}</span>
-          </span>
-          <Anchor
-            href={`mailto:${contact.email}`}
-            className={styles.heroContactItem}
-            underline="never"
-            onClick={() => trackEvent('email')}
-          >
-            <IconMail size={16} />
-            <span>{contact.email}</span>
-          </Anchor>
-          <Anchor
-            href={`https://github.com/${contact.github}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.heroContactItem}
-            underline="never"
-            onClick={() => trackEvent('github')}
-          >
-            <IconBrandGithub size={16} />
-            <span>github.com/{contact.github}</span>
-          </Anchor>
-          <Anchor
-            href={`https://linkedin.com/in/${contact.linkedin}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.heroContactItem}
-            underline="never"
-            onClick={() => trackEvent('linkedin')}
-          >
-            <IconBrandLinkedin size={16} />
-            <span>linkedin.com/in/{contact.linkedin}</span>
-          </Anchor>
+        <div className={styles.contactList}>
+          {contacts.map(({ label, href, icon: Icon, onClick }) => {
+            const content = (
+              <>
+                <Icon className={styles.contactIcon} size={18} stroke={1.6} aria-hidden="true" />
+                <span>{label}</span>
+              </>
+            );
+
+            return href ? (
+              <a
+                className={styles.contactLink}
+                href={href}
+                key={label}
+                onClick={onClick}
+                target={href.startsWith('https:') ? '_blank' : undefined}
+                rel={href.startsWith('https:') ? 'noopener noreferrer' : undefined}
+              >
+                {content}
+              </a>
+            ) : (
+              <span className={styles.contactLink} key={label}>
+                {content}
+              </span>
+            );
+          })}
         </div>
       </aside>
     </section>

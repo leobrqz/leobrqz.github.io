@@ -1,419 +1,95 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import { useCallback, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { IconFileDownload } from '@tabler/icons-react';
-import {
-  Anchor,
-  Box,
-  Button,
-  Container,
-  Divider,
-  Group,
-  List,
-  Loader,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
-import { CV_PDF_FILENAME, CV_PDF_URL } from "@/config/site";
-import {
-  about,
-  certifications,
-  contact,
-  education,
-  experience,
-  languages_spoken,
-  resume_projects,
-  resume_skills,
-} from '@/data';
-import { t, type Lang } from "@/lib/i18n";
-import { trackEvent } from "@/lib/analytics";
-import styles from "./ResumePage.module.css";
+import { Anchor, Box, Button, Container } from '@mantine/core';
+import { Reveal } from '@/components/Design/Reveal';
+import { CV_PDF_FILENAME, CV_PDF_URL } from '@/config/site';
+import { contact } from '@/data';
+import { trackEvent } from '@/lib/analytics';
+import { type Lang } from '@/lib/i18n';
+import { ResumeSections } from './ResumeSections';
+import styles from './ResumePage.module.css';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+const PdfResumeViewer = dynamic(
+  () => import('./PdfResumeViewer').then((module) => module.PdfResumeViewer),
+  { ssr: false }
+);
 
-const RESUME_SKILL_CATEGORIES = [
-  'languages',
-  'backend',
-  'frontend',
-  'ai_automations',
-  'data',
-  'cloud_devops',
-] as const;
-
-function BulletText({ children }: { children: string }) {
-  const lines = children.split('\n').filter((l) => l.trim() !== '');
-  const isBulleted = lines.length > 0 && lines.every((l) => l.trimStart().startsWith('- '));
-
-  if (!isBulleted) {
-    return <Text size="sm" style={{ whiteSpace: 'pre-line' }}>{children}</Text>;
-  }
-
-  return (
-    <List spacing={2} size="sm" withPadding>
-      {lines.map((line, i) => (
-        <List.Item key={i}>
-          {line
-            .trimStart()
-            .replace(/^- /, '')
-            .split(/(\*\*[^*]+\*\*)/g)
-            .map((part, j) =>
-              part.startsWith('**') && part.endsWith('**') ? (
-                <Text key={j} span fw={700}>
-                  {part.slice(2, -2)}
-                </Text>
-              ) : (
-                <Text key={j} span>
-                  {part}
-                </Text>
-              ),
-            )}
-        </List.Item>
-      ))}
-    </List>
-  );
-}
-
-export type ResumePageProps = {
-  lang: Lang;
-};
+export type ResumePageProps = { lang: Lang };
 
 export function ResumePage({ lang }: ResumePageProps) {
   const [view, setView] = useState<'web' | 'pdf'>('web');
-  const [pdfWidth, setPdfWidth] = useState<number>(0);
-  const [pdfLoading, setPdfLoading] = useState(true);
-  const pdfContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const pdfRenderWidth = pdfWidth > 0 ? pdfWidth : undefined;
-
-  useEffect(() => {
-    if (view === 'pdf') {
-      setPdfLoading(true);
-    }
-  }, [view]);
+  const readViewFromUrl = useCallback(() => {
+    setView(new URLSearchParams(window.location.search).get('view') === 'pdf' ? 'pdf' : 'web');
+  }, []);
 
   useEffect(() => {
-    if (view !== 'pdf') {
-      return;
+    readViewFromUrl();
+    window.addEventListener('popstate', readViewFromUrl);
+    return () => window.removeEventListener('popstate', readViewFromUrl);
+  }, [readViewFromUrl]);
+
+  const changeView = (nextView: 'web' | 'pdf') => {
+    setView(nextView);
+    const url = new URL(window.location.href);
+    if (nextView === 'pdf') {
+      url.searchParams.set('view', 'pdf');
+    } else {
+      url.searchParams.delete('view');
     }
-
-    const el = pdfContainerRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    const updateWidth = () => {
-      const rect = el.getBoundingClientRect();
-      if (rect.width) {
-        setPdfWidth(rect.width);
-      }
-    };
-
-    updateWidth();
-
-    const observer = new ResizeObserver(() => {
-      updateWidth();
-    });
-    observer.observe(el);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [view]);
+    window.history.pushState({}, '', url);
+  };
 
   return (
     <Box component="main" className={styles.resumeRoot}>
-      <Container size="lg" className={styles.resumeContainer}>
-        <Stack gap="lg">
-          <Group justify="center" className={styles.viewToggle}>
-            <Group gap="xs" className={styles.viewToggleInner}>
-              <Button
-                size="xs"
-                variant={view === 'web' ? 'filled' : 'subtle'}
-                onClick={() => setView('web')}
-              >
-                Web
-              </Button>
-              <Button
-                size="xs"
-                variant={view === 'pdf' ? 'filled' : 'subtle'}
-                onClick={() => setView('pdf')}
-              >
-                PDF
-              </Button>
-            </Group>
-          </Group>
-
-          {view === 'pdf' ? (
-            <Box className={styles.pdfViewer} style={{ width: '100%' }}>
-              <Box
-                ref={pdfContainerRef}
-                style={{
-                  width: '100%',
-                  minHeight: 400,
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {pdfLoading && (
-                  <Box
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'var(--mantine-color-body)',
-                      borderRadius: 'var(--mantine-radius-sm)',
-                    }}
-                  >
-                    <Loader size="lg" />
-                  </Box>
-                )}
-                <Document
-                  file={CV_PDF_URL}
-                  onLoadSuccess={() => setPdfLoading(false)}
-                >
-                  <Page
-                    pageNumber={1}
-                    width={pdfRenderWidth}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                  />
-                </Document>
-              </Box>
-            </Box>
-          ) : (
-            <Paper withBorder className={styles.resumePaper}>
-              <Stack gap="xl">
-              {/* Name and contact inside the box */}
-              <Stack gap="xs" align="center" style={{ textAlign: 'center' }}>
-                <Title order={1} size="1.75rem" fw={700}>
-                  {contact.name}
-                </Title>
-                <Text size="sm" c="dimmed">
-                  {contact.location}
-                </Text>
-                <Group gap="sm" justify="center" wrap="wrap">
-                  <Anchor href={`mailto:${contact.email}`} size="sm">
-                    {contact.email}
-                  </Anchor>
-                  <Anchor
-                    href={`https://github.com/${contact.github}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                    onClick={() => trackEvent('github')}
-                  >
-                    GitHub
-                  </Anchor>
-                  <Anchor
-                    href={`https://linkedin.com/in/${contact.linkedin}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                    onClick={() => trackEvent('linkedin')}
-                  >
-                    LinkedIn
-                  </Anchor>
-                </Group>
-              </Stack>
-              <Divider />
-              {/* Summary */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.summary')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                <Text style={{ whiteSpace: 'pre-line' }}>{about.content[lang]}</Text>
-              </Stack>
-
-              {/* Resume skills: one line per category */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.skills')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {RESUME_SKILL_CATEGORIES.map((category) => {
-                  const items = resume_skills[category];
-                  if (!items?.length) {
-                    return null;
-                  }
-                  return (
-                    <Text key={category} size="sm">
-                      <Text span fw={600} c="dimmed">
-                        {t(lang, `resume_labels.${category}`)}:
-                      </Text>{' '}
-                      {items.map((item) => item.name).join(', ')}
-                    </Text>
-                  );
-                })}
-              </Stack>
-
-              {/* Experience */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.experience')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {experience.map((entry, i) => (
-                  <Stack key={i} gap={4}>
-                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
-                      <Stack gap={2}>
-                        {entry.url ? (
-                          <Anchor href={entry.url} target="_blank" rel="noopener noreferrer" fw={600}>
-                            {entry.title[lang]}
-                          </Anchor>
-                        ) : (
-                          <Text fw={600}>{entry.title[lang]}</Text>
-                        )}
-                        <Text size="sm" c="dimmed">
-                          {entry.company}
-                          {entry.location ? ` · ${entry.location}` : ''}
-                        </Text>
-                      </Stack>
-                      <Text size="sm" c="dimmed">
-                        {entry.period[lang]}
-                      </Text>
-                    </Group>
-                    <BulletText>{entry.description[lang]}</BulletText>
-                  </Stack>
-                ))}
-              </Stack>
-
-              {/* Resume projects */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.projects')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {resume_projects.map((project, i) => (
-                  <Stack key={i} gap={4}>
-                    <Anchor href={project.url} target="_blank" rel="noopener noreferrer" fw={600} onClick={() => trackEvent('github_repo', { repo: project.name[lang] })}>
-                      {project.name[lang]}
-                    </Anchor>
-                    <Text size="xs" c="dimmed">
-                      {project.technologies.join(' \u00b7 ')}
-                    </Text>
-                    <BulletText>{project.description[lang]}</BulletText>
-                  </Stack>
-                ))}
-              </Stack>
-
-              {/* Languages spoken */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.languages_spoken')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                <Stack gap="xs" hiddenFrom="sm">
-                  {languages_spoken.map((entry, i) => (
-                    <Text key={i} size="sm">
-                      {entry.name[lang]} ({entry.level[lang]})
-                    </Text>
-                  ))}
-                </Stack>
-                <Box
-                  visibleFrom="sm"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 'var(--mantine-spacing-md)',
-                  }}
-                >
-                  {languages_spoken.map((entry, i) => (
-                    <Text
-                      key={i}
-                      size="sm"
-                      style={{
-                        flex: 1,
-                        textAlign: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
-                      }}
-                    >
-                      {entry.name[lang]} ({entry.level[lang]})
-                    </Text>
-                  ))}
-                </Box>
-              </Stack>
-
-              {/* Certifications */}
-              <Stack gap="xs">
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.certifications')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {certifications.map((cert, i) => (
-                  <Stack key={i} gap={4}>
-                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
-                      {cert.url ? (
-                        <Anchor href={cert.url} target="_blank" rel="noopener noreferrer" fw={600}>
-                          {cert.name[lang]}
-                        </Anchor>
-                      ) : (
-                        <Text fw={600}>{cert.name[lang]}</Text>
-                      )}
-                      <Text size="md" fw={700} style={{ letterSpacing: '0.01em', textAlign: 'right' }}>
-                        {cert.issuer}
-                        <Text span size="sm" fw={400} c="dimmed"> ({cert.date})</Text>
-                      </Text>
-                    </Group>
-                    <BulletText>{cert.description[lang]}</BulletText>
-                  </Stack>
-                ))}
-              </Stack>
-
-              {/* Education */}
-              <Stack gap="xs" style={{ listStyle: 'none', paddingLeft: 0 }}>
-                <Title order={2} size="h3">
-                  {t(lang, 'resume.education')}
-                </Title>
-                <Divider color="dark.4" size="xs" />
-                {education.map((entry, i) => (
-                  <Group key={i} justify="space-between" align="flex-start" wrap="wrap" gap="md">
-                    <Stack gap={2}>
-                      <Text fw={600}>{entry.degree[lang]}</Text>
-                      <Text size="sm" c="dimmed">
-                        {entry.level[lang]}
-                      </Text>
-                    </Stack>
-                    <Stack gap={2} align="flex-end">
-                      <Text size="md" fw={700} style={{ letterSpacing: '0.01em', textAlign: 'right' }}>
-                        {entry.institution}
-                        <Text span size="sm" fw={400} c="dimmed"> ({entry.start_date} – {entry.end_date})</Text>
-                      </Text>
-                      <Text size="sm" c="dimmed">
-                        {entry.location}
-                      </Text>
-                    </Stack>
-                  </Group>
-                ))}
-              </Stack>
-              </Stack>
-            </Paper>
-          )}
-        </Stack>
+      <Container className={styles.resumeContainer}>
+        <Reveal>
+          <header className={styles.pageIntro}>
+            <span className={styles.eyebrow}>
+              02 / {lang === 'en' ? 'RESUME' : 'CURR\u00cdCULO'}
+            </span>
+            <h1>{lang === 'en' ? 'Resume' : 'Curr\u00edculo'}</h1>
+            <div className={styles.introMeta}>
+              <p>
+                {contact.name}
+                <br />
+                {'Florian\u00f3polis, Santa Catarina'}
+              </p>
+              <Anchor href={`mailto:${contact.email}`} onClick={() => trackEvent('email')}>
+                {contact.email}
+              </Anchor>
+            </div>
+          </header>
+        </Reveal>
+        <div className={styles.toolbar}>
+          <div
+            className={styles.viewToggle}
+            role="group"
+            aria-label={lang === 'en' ? 'Resume format' : 'Formato do curr\u00edculo'}
+          >
+            <button type="button" aria-pressed={view === 'web'} onClick={() => changeView('web')}>
+              {lang === 'en' ? 'WEB VIEW' : 'VERS\u00c3O WEB'}
+            </button>
+            <button type="button" aria-pressed={view === 'pdf'} onClick={() => changeView('pdf')}>
+              {lang === 'en' ? 'PDF VIEW' : 'VER PDF'}
+            </button>
+          </div>
+          <Button
+            component="a"
+            href={CV_PDF_URL}
+            download={CV_PDF_FILENAME}
+            className={styles.downloadButton}
+            leftSection={<IconFileDownload size={17} />}
+            onClick={() => trackEvent('resume_download')}
+          >
+            {lang === 'en' ? 'Download PDF' : 'Baixar PDF'}
+          </Button>
+        </div>
+        {view === 'web' ? <ResumeSections lang={lang} /> : <PdfResumeViewer lang={lang} />}
       </Container>
-
-      <Box component="div" className={styles.downloadAction}>
-        <Button
-          component="a"
-          href={CV_PDF_URL}
-          download={CV_PDF_FILENAME}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={t(lang, 'resume.download_pdf')}
-          variant="filled"
-          size="lg"
-          style={{ width: 56, height: 56, padding: 0, borderRadius: '50%' }}
-          onClick={() => trackEvent('resume_download')}
-        >
-          <IconFileDownload size={24} />
-        </Button>
-      </Box>
     </Box>
   );
 }

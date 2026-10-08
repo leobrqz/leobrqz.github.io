@@ -1,137 +1,436 @@
 .resumeRoot {
-  color: var(--site-ink);
+  color: var(--paper);
 }
 
 .resumeContainer {
-  max-width: none;
+  max-width: var(--content-width, 1180px);
   padding: 0;
 }
 
-.viewToggle {
-  margin-bottom: 22px;
+.eyebrow,
+.introMeta,
+.toolbar,
+.resumeSection > h2,
+.skillRow h3,
+.entryHeading time,
+.techLine,
+.languageGrid span {
+  font-family: var(--font-mono);
 }
 
-.viewToggleInner {
-  gap: 0;
-  border: 1px solid var(--site-line);
-  padding: 3px;
+.pageIntro {
+  padding: clamp(54px, 8vw, 100px) 0 34px;
 }
 
-.viewToggleInner :global(.mantine-Button-root) {
-  min-width: 70px;
-  border-radius: 0;
-  font-family: var(--site-font-mono);
+.eyebrow {
+  color: var(--orange);
   font-size: 10px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.resumePaper,
-.pdfViewer {
-  border: 1px solid var(--site-line) !important;
-  border-radius: 0 !important;
-  background: var(--site-surface) !important;
-  box-shadow: none !important;
-}
-
-.resumePaper {
-  padding: clamp(24px, 5vw, 64px) clamp(24px, 7vw, 100px) !important;
-}
-
-.resumePaper :global(.mantine-Title-root) {
-  font-family: var(--site-font-display);
+.pageIntro h1 {
+  margin: 18px 0 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(60px, 9vw, 104px);
+  font-weight: 600;
   letter-spacing: -0.045em;
+  line-height: 0.88;
 }
 
-.resumePaper :global(.mantine-Title-root[data-order="1"]) {
-  font-size: clamp(2rem, 5vw, 3.8rem);
+.pageIntro h1 span {
+  color: var(--blue);
 }
 
-.resumePaper :global(.mantine-Title-root[data-order="2"]) {
-  margin-top: 10px;
-  padding-bottom: 9px;
-  border-bottom: 1px solid var(--site-line);
-  color: var(--site-ink);
-  font-size: clamp(1.45rem, 3vw, 2rem);
+.introMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 28px;
+  max-width: 750px;
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
 }
 
-.resumePaper :global(.mantine-Divider-root) {
-  border-color: var(--site-line) !important;
+.introMeta p {
+  margin: 0;
 }
 
-.resumePaper :global(.mantine-Text-root),
-.resumePaper :global(.mantine-List-item) {
-  color: var(--site-ink);
+.introMeta a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--blue);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.introMeta a:hover,
+.introMeta a:focus-visible {
+  color: var(--orange);
+  outline: 1px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-block: 1px solid var(--line);
+}
+
+.viewToggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+}
+
+.viewToggle button,
+.downloadButton {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font: 14px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+
+.viewToggle button[aria-pressed='true'] {
+  color: var(--paper);
+  background: #20262a;
+}
+
+.viewToggle button:hover,
+.viewToggle button:focus-visible,
+.downloadButton:hover,
+.downloadButton:focus-visible {
+  color: var(--orange);
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.downloadButton {
+  border: 1px solid var(--blue);
+  color: var(--blue);
+}
+
+.resumeDocument {
+  padding-bottom: 65px;
+}
+
+.documentIdentity {
+  padding: 32px 0 27px;
+  border-bottom: 1px solid var(--line);
+}
+
+.documentIdentity h2 {
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 500;
+}
+
+.documentIdentity > p {
+  max-width: 800px;
+  margin: 10px 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.documentIdentity > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.documentIdentity a {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--blue);
+  font: 12px var(--font-mono);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.documentIdentity a:hover,
+.documentIdentity a:focus-visible {
+  color: var(--orange);
+}
+
+.resumeSection {
+  display: grid;
+  grid-template-columns: minmax(170px, 25%) minmax(0, 1fr);
+  gap: clamp(22px, 5vw, 60px);
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 90px;
+}
+
+.resumeSection > h2 {
+  margin: 2px 0 0;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.bodyCopy,
+.bulletText {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.bulletText {
+  display: grid;
+  gap: 10px;
+  padding-left: 18px;
+}
+
+.bulletText li::marker {
+  color: var(--orange);
+}
+
+.bulletText strong {
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.skillGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.skillRow {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(0, 2fr);
+  gap: 16px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--line);
+}
+
+.skillRow:last-child {
+  padding-bottom: 0;
+  border: 0;
+}
+
+.skillRow h3 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.skillRow p {
+  margin: 0;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.timeline {
+  display: grid;
+}
+
+.entry {
+  padding: 0 0 22px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.entry:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border: 0;
+}
+
+.entryHeading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 18px;
+  align-items: baseline;
+}
+
+.entryHeading h3 {
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.entryHeading h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.entryHeading h3 a:hover,
+.entryHeading h3 a:focus-visible {
+  color: var(--blue);
+}
+
+.entryHeading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.entryHeading time {
+  color: var(--orange);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.entry .bulletText,
+.entry .bodyCopy {
+  margin-top: 12px;
+}
+
+.techLine {
+  margin: 7px 0 0;
+  color: var(--blue);
+  font-size: 13px;
   line-height: 1.6;
 }
 
-.resumePaper :global(.mantine-Text-root[data-size="sm"]),
-.resumePaper :global(.mantine-Text-root[data-size="xs"]) {
-  color: var(--site-muted);
+.languageGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
 }
 
-.resumePaper :global(.mantine-Anchor-root) {
-  color: var(--site-accent);
+.languageGrid p {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
 }
 
-.resumePaper :global(.mantine-Anchor-root:hover),
-.resumePaper :global(.mantine-Anchor-root:focus-visible) {
-  color: var(--site-signal);
+.languageGrid strong {
+  color: var(--paper);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.languageGrid span {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .pdfViewer {
-  border-radius: 0;
-  padding: clamp(14px, 3vw, 30px);
+  padding: 20px 0 65px;
 }
 
-.pdfViewer > div {
-  width: 100%;
+.pdfHost {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  min-height: 360px;
+}
+
+.pdfHost :global(.react-pdf__Page) {
   max-width: 100%;
-  box-sizing: border-box;
+  border: 1px solid var(--line);
 }
 
-.pdfViewer div {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.pdfViewer canvas {
-  width: 100% !important;
-  height: auto !important;
+.pdfHost :global(canvas) {
   display: block;
   max-width: 100%;
+  height: auto !important;
 }
 
-.downloadAction {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 200;
+.pdfStatus {
+  display: flex;
+  min-height: 160px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--muted);
+  font: 12px var(--font-mono);
+  text-align: center;
 }
 
-.downloadAction :global(.mantine-Button-root) {
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  border-radius: 0;
-  border: 1px solid var(--site-accent);
-  color: var(--site-accent);
-  background: var(--site-surface-strong);
+.pdfStatus button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  padding: 0 13px;
+  color: var(--blue);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
 }
 
-.downloadAction :global(.mantine-Button-root:hover),
-.downloadAction :global(.mantine-Button-root:focus-visible) {
-  color: var(--site-paper);
-  background: var(--site-accent);
+.pdfStatus button:hover,
+.pdfStatus button:focus-visible {
+  border-color: var(--orange);
+  color: var(--orange);
+  outline: 0;
 }
 
-@media (max-width: 48em) {
-  .resumePaper {
-    padding: 23px 18px !important;
+@media (max-width: 650px) {
+  .resumeContainer {
+    padding: 0;
   }
 
-  .downloadAction {
-    right: 16px;
-    bottom: 16px;
+  .resumeSection {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .skillRow {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .languageGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .languageGrid p {
+    grid-template-columns: 1fr 1fr;
+    align-items: baseline;
+  }
+
+  .toolbar {
+    gap: 10px;
+  }
+
+  .viewToggle,
+  .downloadButton {
+    width: 100%;
+  }
+
+  .viewToggle button {
+    flex: 1;
   }
 }

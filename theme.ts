@@ -6,10 +6,10 @@ import { createTheme } from '@mantine/core';
 export const theme = createTheme({
   primaryColor: 'blue',
   defaultRadius: 'sm',
-  fontFamily: 'Aptos, "Segoe UI", sans-serif',
-  fontFamilyMonospace: '"Cascadia Mono", "SFMono-Regular", Consolas, monospace',
+  fontFamily: '"Space Grotesk", Aptos, "Segoe UI", sans-serif',
+  fontFamilyMonospace: '"IBM Plex Mono", "Cascadia Mono", "SFMono-Regular", Consolas, monospace',
   headings: {
-    fontFamily: 'Bahnschrift, "Arial Narrow", Aptos, sans-serif',
+    fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
     fontWeight: '700',
   },
 });

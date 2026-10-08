@@ -1,21 +1,18 @@
 'use client';
 
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { IconArrowUpRight, IconBrandGithub, IconBrandLinkedin, IconX } from '@tabler/icons-react';
-import { Anchor, Box, Burger, Drawer, Stack, Text, UnstyledButton } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { usePathname, useRouter } from 'next/navigation';
+import { IconArrowRight, IconMenu2, IconX } from '@tabler/icons-react';
 import { contact } from '@/data/contact';
-import { trackEvent } from '@/lib/analytics';
-import { t } from '@/lib/i18n';
 import styles from './FloatingNav.module.css';
 
-const NAV_ITEMS: { href: string; labelKey: string }[] = [
-  { href: '/', labelKey: 'nav.home' },
-  { href: '/projects', labelKey: 'nav.projects' },
-  { href: '/resume', labelKey: 'nav.resume' },
-  { href: '/contact', labelKey: 'nav.contact' },
-];
+const NAV_ITEMS = [
+  { id: 'home', path: '', label: { pt: 'Início', en: 'Home' } },
+  { id: 'projects', path: '/projects', label: { pt: 'Projetos', en: 'Projects' } },
+  { id: 'resume', path: '/resume', label: { pt: 'Currículo', en: 'Resume' } },
+  { id: 'contact', path: '/contact', label: { pt: 'Contato', en: 'Contact' } },
+] as const;
 
 const LANG_OPTIONS: { lang: 'pt' | 'en'; label: string }[] = [
   { lang: 'pt', label: 'PT' },
@@ -23,27 +20,8 @@ const LANG_OPTIONS: { lang: 'pt' | 'en'; label: string }[] = [
 ];
 
 function getLangHref(pathname: string, targetLang: 'pt' | 'en'): string {
-  if (targetLang === 'pt') {
-    if (pathname.startsWith('/en')) {
-      return pathname.slice(3) || '/';
-    }
-    return pathname;
-  }
-  if (pathname.startsWith('/en')) {
-    return pathname;
-  }
-  return pathname === '/' ? '/en' : `/en${pathname}`;
-}
-
-function navHref(basePath: string, path: string) {
-  if (path === '/') {
-    return basePath === '' ? '/' : basePath;
-  }
-  return basePath + path;
-}
-
-function normalizePath(path: string) {
-  return (path || '/').replace(/\/$/, '') || '/';
+  const withoutLang = pathname.startsWith('/en') ? pathname.slice(3) || '/' : pathname;
+  return targetLang === 'en' ? (withoutLang === '/' ? '/en' : `/en${withoutLang}`) : withoutLang;
 }
 
 export type FloatingNavProps = {
@@ -51,164 +29,141 @@ export type FloatingNavProps = {
 };
 
 export function FloatingNav({ lang }: FloatingNavProps) {
-  const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
   const pathname = usePathname() || '/';
-  const basePath = lang === 'en' ? '/en' : '';
+  const router = useRouter();
+  const localePrefix = lang === 'en' ? '/en' : '';
+  const homePath = localePrefix || '/';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
 
-  const isNavActive = (href: string) => {
-    return normalizePath(pathname) === normalizePath(basePath + href);
+  const switchLanguage = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    setMenuOpen(false);
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    router.push(`${href}${window.location.search}${window.location.hash}`);
   };
 
-  const languageSwitcher = (
-    <div className={styles.languageSwitcher} aria-label="Language">
-      {LANG_OPTIONS.map(({ lang: optionLang, label }) => {
-        const active = optionLang === lang;
-        return (
-          <UnstyledButton
-            key={optionLang}
-            component={Link}
-            href={getLangHref(pathname, optionLang)}
-            className={`${styles.languageButton} ${active ? styles.languageActive : ''}`}
-            aria-current={active ? 'page' : undefined}
-            title={label}
-            onClick={closeDrawer}
-          >
-            {label}
-          </UnstyledButton>
-        );
-      })}
-    </div>
-  );
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
-  const navigation = (
-    <div className={styles.links}>
-      {NAV_ITEMS.map(({ href, labelKey }) => {
-        const active = isNavActive(href);
+  useEffect(() => {
+    if (!menuOpen) {
+      return;
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        menuToggleRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [menuOpen]);
+
+  const navItems = (
+    <>
+      {NAV_ITEMS.map((item) => {
+        const href = `${localePrefix}${item.path}` || '/';
+        const active = pathname.replace(/\/$/, '') === href.replace(/\/$/, '');
         return (
-          <Anchor
-            key={href}
-            component={Link}
-            href={navHref(basePath, href)}
+          <Link
+            key={item.id}
+            href={href}
             className={`${styles.link} ${active ? styles.linkActive : ''}`}
             aria-current={active ? 'page' : undefined}
-            onClick={closeDrawer}
+            onClick={() => setMenuOpen(false)}
           >
-            {t(lang, labelKey)}
-          </Anchor>
+            {item.label[lang]}
+          </Link>
         );
       })}
-    </div>
+    </>
   );
 
   return (
-    <>
-      <Box component="header" className={styles.header}>
-        <div className={styles.headerInner}>
-          <Anchor
-            component={Link}
-            href={basePath || '/'}
-            className={styles.brand}
-            underline="never"
-          >
-            <span className={styles.brandMark}>LB</span>
-            <span className={styles.brandName}>Leonardo Briquezi</span>
-            <span className={styles.brandRule} aria-hidden="true" />
-          </Anchor>
+    <header className={styles.header} id="top">
+      <div className={styles.headerInner}>
+        <Link href={homePath} className={styles.brand} aria-label="Leonardo Briquezi — home">
+          <span className={styles.brandMark}>LB</span>
+          <span className={styles.brandRule} aria-hidden="true" />
+        </Link>
 
-          <Box visibleFrom="sm">{navigation}</Box>
-
-          <div className={styles.headerMeta}>
-            <Box visibleFrom="sm">
-              <Anchor
-                href={`mailto:${contact.email}`}
-                className={styles.headerContact}
-                underline="never"
-                onClick={() => trackEvent('email')}
-              >
-                Email <IconArrowUpRight size={14} />
-              </Anchor>
-            </Box>
-            <Box visibleFrom="sm">{languageSwitcher}</Box>
-          </div>
-
-          <Box hiddenFrom="sm" className={styles.mobileMenuButton}>
-            <Burger
-              opened={drawerOpened}
-              onClick={openDrawer}
-              size="sm"
-              color="var(--site-ink)"
-              aria-label={t(lang, 'nav.open_menu')}
-            />
-          </Box>
-        </div>
-      </Box>
-
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        position="right"
-        size="min(88vw, 360px)"
-        withCloseButton={false}
-        classNames={{ content: styles.drawerContent, body: styles.drawerBody }}
-        overlayProps={{ backgroundOpacity: 0.42, blur: 2 }}
-      >
-        <div className={styles.drawerTop}>
-          <div>
-            <span className={styles.drawerEyebrow}>LB / MENU</span>
-            <Text className={styles.drawerTitle}>{contact.name}</Text>
-          </div>
-          <UnstyledButton
-            className={styles.drawerClose}
-            onClick={closeDrawer}
-            aria-label="Close menu"
-          >
-            <IconX size={20} />
-          </UnstyledButton>
-        </div>
-
-        <nav className={styles.drawerNav} aria-label="Mobile navigation">
-          <Stack gap={0}>
-            {NAV_ITEMS.map(({ href, labelKey }) => {
-              const active = isNavActive(href);
-              return (
-                <Anchor
-                  key={href}
-                  component={Link}
-                  href={navHref(basePath, href)}
-                  className={`${styles.drawerLink} ${active ? styles.drawerLinkActive : ''}`}
-                  aria-current={active ? 'page' : undefined}
-                  onClick={closeDrawer}
-                >
-                  {t(lang, labelKey)}
-                  <IconArrowUpRight size={17} />
-                </Anchor>
-              );
-            })}
-          </Stack>
+        <nav
+          className={styles.desktopNav}
+          aria-label={lang === 'en' ? 'Main navigation' : 'Navegação principal'}
+        >
+          {navItems}
         </nav>
 
-        <div className={styles.drawerBottom}>
-          <div className={styles.drawerSocials}>
-            <Anchor
-              href={`https://github.com/${contact.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('github')}
-            >
-              <IconBrandGithub size={18} /> GitHub
-            </Anchor>
-            <Anchor
-              href={`https://linkedin.com/in/${contact.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('linkedin')}
-            >
-              <IconBrandLinkedin size={18} /> LinkedIn
-            </Anchor>
+        <div className={styles.headerActions}>
+          <div
+            className={styles.languageSwitcher}
+            role="group"
+            aria-label={lang === 'en' ? 'Language' : 'Idioma'}
+          >
+            {LANG_OPTIONS.map(({ lang: optionLang, label }) => (
+              <Link
+                key={optionLang}
+                href={getLangHref(pathname, optionLang)}
+                className={`${styles.languageButton} ${lang === optionLang ? styles.languageActive : ''}`}
+                aria-current={lang === optionLang ? 'page' : undefined}
+                lang={optionLang}
+                onClick={(event) => switchLanguage(event, getLangHref(pathname, optionLang))}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
-          {languageSwitcher}
+          <Link
+            href={`${localePrefix}/contact`}
+            className={styles.contactCta}
+            onClick={() => setMenuOpen(false)}
+          >
+            <span>{lang === 'en' ? "LET'S BUILD SOMETHING" : 'VAMOS CONSTRUIR ALGO'}</span>
+            <IconArrowRight size={19} stroke={1.5} aria-hidden="true" />
+          </Link>
+          <button
+            ref={menuToggleRef}
+            type="button"
+            className={styles.menuToggle}
+            aria-label={
+              menuOpen
+                ? lang === 'en'
+                  ? 'Close menu'
+                  : 'Fechar menu'
+                : lang === 'en'
+                  ? 'Open menu'
+                  : 'Abrir menu'
+            }
+            aria-controls="mobile-navigation"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? <IconX size={22} /> : <IconMenu2 size={22} />}
+          </button>
         </div>
-      </Drawer>
-    </>
+      </div>
+      <div className={styles.mobileMenu} id="mobile-navigation" hidden={!menuOpen}>
+        <nav aria-label={lang === 'en' ? 'Mobile navigation' : 'Navegação móvel'}>{navItems}</nav>
+        <a
+          className={styles.mobileContact}
+          href={`mailto:${contact.email}`}
+          onClick={() => setMenuOpen(false)}
+        >
+          {contact.email} <IconArrowRight size={17} />
+        </a>
+      </div>
+    </header>
   );
 }
