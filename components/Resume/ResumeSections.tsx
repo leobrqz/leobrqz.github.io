@@ -148,7 +148,7 @@ export function ResumeSections({ lang }: { lang: Lang }) {
                     {entry.location ? ` · ${entry.location}` : ''}
                   </p>
                 </div>
-                <time>{entry.period[lang]}</time>
+                {entry.period && <time>{entry.period[lang]}</time>}
               </div>
               <BulletText>{entry.description[lang]}</BulletText>
             </article>

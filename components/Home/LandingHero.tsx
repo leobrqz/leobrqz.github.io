@@ -7,7 +7,6 @@ import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconMail,
-  IconMapPin,
 } from '@tabler/icons-react';
 import { about } from '@/data/about';
 import { contact } from '@/data/contact';
@@ -20,12 +19,6 @@ export function LandingHero({ lang }: { lang: Lang }) {
   const resumePdfHref = `${resumeHref}?view=pdf`;
   const projectsHref = lang === 'en' ? '/en/projects' : '/projects';
   const contacts = [
-    {
-      label: contact.location,
-      href: undefined,
-      icon: IconMapPin,
-      onClick: undefined,
-    },
     {
       label: contact.email,
       href: `mailto:${contact.email}`,

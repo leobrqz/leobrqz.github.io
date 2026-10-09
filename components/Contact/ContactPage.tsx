@@ -43,7 +43,6 @@ const LINKS = [
 
 export function ContactPage({ lang }: ContactPageProps) {
   const homeHref = lang === 'en' ? '/en' : '/';
-  const location = 'Florian\u00f3polis, Santa Catarina';
 
   return (
     <Box component="main" className={styles.contactPage}>
@@ -69,7 +68,6 @@ export function ContactPage({ lang }: ContactPageProps) {
         </Reveal>
         <div className={styles.contactRule}>
           <span>{lang === 'en' ? 'ELSEWHERE ON THE WEB' : 'TAMB\u00c9M NA WEB'}</span>
-          <span>{location}</span>
         </div>
         <nav className={styles.contactLinks} aria-label={t(lang, 'contact.connect_with_me')}>
           {LINKS.map(({ key, label, value, href, icon: Icon }, index) => (
@@ -99,7 +97,6 @@ export function ContactPage({ lang }: ContactPageProps) {
         </nav>
         <ContactGame lang={lang} />
         <div className={styles.contactFooter}>
-          <span>{location}</span>
           <Anchor component={Link} href={homeHref} underline="never">
             {lang === 'en' ? 'Back home' : 'Voltar ao in\u00edcio'}
           </Anchor>

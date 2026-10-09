@@ -27,7 +27,7 @@
   background-image:
     linear-gradient(rgb(12 15 17 / 56%), rgb(12 15 17 / 56%)),
     linear-gradient(90deg, rgb(7 9 10 / 14%), transparent 57%, rgb(7 9 10 / 8%)),
-    url('/textures/graphite-stone.webp');
+    url('/textures/void-stone-smooth.webp');
   background-position: center;
   background-size: cover;
 }
@@ -93,7 +93,7 @@
     background-image:
       linear-gradient(rgb(12 15 17 / 60%), rgb(12 15 17 / 60%)),
       linear-gradient(90deg, rgb(7 9 10 / 14%), transparent 57%, rgb(7 9 10 / 8%)),
-      url('/textures/graphite-stone.webp');
+      url('/textures/void-stone-smooth.webp');
   }
 
   .content {

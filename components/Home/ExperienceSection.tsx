@@ -12,7 +12,7 @@ export function ExperienceSection({ lang }: { lang: Lang }) {
       </div>
       <div className={styles.experienceList}>
         {experience.map((item) => (
-          <article className={styles.experienceItem} key={`${item.company}-${item.period.en}`}>
+          <article className={styles.experienceItem} key={`${item.company}-${item.title.en}`}>
             <h3 className={styles.experienceRole}>{item.title[lang]}</h3>
             <span className={styles.experienceCompany}>
               {item.url ? (
@@ -23,7 +23,7 @@ export function ExperienceSection({ lang }: { lang: Lang }) {
                 item.company
               )}
             </span>
-            <span className={styles.experiencePeriod}>{item.period[lang]}</span>
+            {item.period && <span className={styles.experiencePeriod}>{item.period[lang]}</span>}
             <span className={styles.experienceLocation}>{item.location}</span>
           </article>
         ))}

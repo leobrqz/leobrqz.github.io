@@ -15,9 +15,10 @@ export function SkillIcon({ skill }: { skill: SkillItem }) {
   const iconName = skill.simple_icon ?? LOCAL_ICONS[skill.name];
 
   if (iconName) {
+    const extension = iconName === 'sql' || iconName === 'numpy' ? 'png' : 'svg';
     return (
       <img
-        src={`/assets/skill-icons/${iconName}.${iconName === 'sql' ? 'png' : 'svg'}`}
+        src={`/assets/skill-icons/${iconName}.${extension}`}
         width="20"
         height="20"
         alt=""

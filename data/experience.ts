@@ -4,17 +4,16 @@ export interface ExperienceEntry {
   title: { en: string; pt: string };
   company: string;
   location: string;
-  period: { en: string; pt: string };
+  period?: { en: string; pt: string };
   description: { en: string; pt: string };
   url?: string;
 }
 
 export const experience: ExperienceEntry[] = [
   {
-    title: { en: 'Junior Full Stack & AI Developer', pt: 'Junior Full Stack & AI Developer' },
+    title: { en: 'Full Stack & AI Developer', pt: 'Full Stack & AI Developer' },
     company: 'InfityWorks',
     location: 'Remote',
-    period: { en: 'March 2026 – Present', pt: 'Março 2026 – Presente' },
     description: {
       en: `- Developed an AI-powered workflow automation platform inspired by n8n, integrating WhatsApp (Meta Graph API), Google Calendar, Google Meet, Jitsi Meet, Zoho, Zoom, Microsoft 365, Redis and Pinecone. The solution automated business processes, including WhatsApp prospecting, with **over 6,000 conversations automatically initiated and over 4,000 responses from potential clients**.
 - Designed and developed microservices for AI processing and enterprise integrations, including a self-hosted infrastructure based on WhisperX for audio transcription and processing, along with independent services for system communication and workflow automation.
