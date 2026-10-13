@@ -249,6 +249,51 @@
   color: var(--blue);
 }
 
+.readmeWrapper :global(article.markdown-body) {
+  max-width: none;
+  margin: 0;
+  border: 0;
+  color: var(--paper);
+  background: transparent !important;
+}
+
+.readmeWrapper :global(picture),
+.readmeWrapper :global(img) {
+  background: transparent !important;
+}
+
+.readmeWrapper :global(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+.readmeWrapper :global(.markdown-body h1),
+.readmeWrapper :global(.markdown-body h2) {
+  border-bottom-color: var(--line);
+}
+
+.readmeWrapper :global(.markdown-body hr),
+.readmeWrapper :global(.markdown-body th),
+.readmeWrapper :global(.markdown-body td) {
+  border-color: var(--line);
+}
+
+.readmeWrapper :global(.markdown-body blockquote) {
+  color: var(--muted);
+  border-left-color: var(--blue);
+}
+
+.readmeWrapper :global(.markdown-body table),
+.readmeWrapper :global(.markdown-body tr),
+.readmeWrapper :global(.markdown-body td),
+.readmeWrapper :global(.markdown-body th) {
+  background: transparent;
+}
+
+.readmeWrapper :global(.markdown-body table tr:nth-child(2n)) {
+  background-color: #111619 !important;
+}
+
 .readmeWrapper :global(pre),
 .readmeWrapper :global(code) {
   max-width: 100%;

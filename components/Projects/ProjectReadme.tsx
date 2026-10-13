@@ -32,6 +32,9 @@ export function ProjectReadme({
     }
     const handleError = () => setImageFailure(true);
     images.forEach((image) => image.addEventListener('error', handleError));
+    if (Array.from(images).some((image) => image.complete && image.naturalWidth === 0)) {
+      setImageFailure(true);
+    }
     return () => images.forEach((image) => image.removeEventListener('error', handleError));
   }, [state]);
 

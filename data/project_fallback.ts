@@ -1,18 +1,26 @@
 import { GITHUB_USERNAME } from '@/config/site';
+import type { Lang } from '@/lib/i18n';
+import type { EnrichedProject } from '@/lib/use-projects';
 import { projects_meta } from './projects_meta';
 import { resume_projects } from './resume_projects';
-import type { EnrichedProject } from '@/lib/use-projects';
-import type { Lang } from '@/lib/i18n';
 
-const FALLBACK_NAMES = ['JobAppliesTracker', 'ShScriptHub', 'AutoPot-DR', 'SmokeShopERP-DataAnalytics'];
+const FALLBACK_NAMES = [
+  'JobAppliesTracker',
+  'ShScriptHub',
+  'AutoPot-DR',
+  'SmokeShopERP-DataAnalytics',
+  'OpenRemoteControl',
+];
 
 function getSummary(projectName: string, lang: Lang): string {
   const project = resume_projects.find((item) => item.name.en === projectName);
   if (project) {
-    return project.description[lang]
-      .split('\n')
-      .map((line) => line.replace(/^-\s*/, '').trim())
-      .filter(Boolean)[0] ?? '';
+    return (
+      project.description[lang]
+        .split('\n')
+        .map((line) => line.replace(/^-\s*/, '').trim())
+        .filter(Boolean)[0] ?? ''
+    );
   }
 
   if (projectName === 'TrackLyrics-ytdlp') {
@@ -21,14 +29,14 @@ function getSummary(projectName: string, lang: Lang): string {
       : 'Aplicativo desktop local para baixar faixas, organizar letras e tocar uma biblioteca curada.';
   }
 
-  return '';
+  return projects_meta[projectName]?.description?.[lang] ?? '';
 }
 
 export function getFallbackProjects(lang: Lang): EnrichedProject[] {
   return FALLBACK_NAMES.map((name) => {
     const meta = projects_meta[name];
     const project = resume_projects.find((item) => item.name.en === name);
-    const technologies = project?.technologies ?? [];
+    const technologies = project?.technologies ?? (name === 'OpenRemoteControl' ? ['Dart'] : []);
     const languageBreakdown = technologies.slice(0, 3).map((technology) => ({ name: technology }));
 
     return {

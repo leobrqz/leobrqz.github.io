@@ -1,26 +1,45 @@
-export type ProjectLabel =
-  | { type: 'new' }
-  | { type: 'update'; changelogUrl?: string };
+export type ProjectLabel = { type: 'new' } | { type: 'update'; changelogUrl?: string };
 
 export interface ProjectMetaItem {
   libraries: string[];
   tools: string[];
   labels?: ProjectLabel[];
+  description?: { en: string; pt: string };
 }
 
 export type ProjectsMeta = Record<string, ProjectMetaItem>;
 
-const SHSCRIPTHUB_RELEASE_V3_5 =
-  'https://github.com/leobrqz/ShScriptHub/releases/tag/v3.5.0';
+const SHSCRIPTHUB_RELEASE_V3_5 = 'https://github.com/leobrqz/ShScriptHub/releases/tag/v3.5.0';
 
 export const projects_meta: ProjectsMeta = {
+  OpenRemoteControl: {
+    libraries: ['Flutter', 'flutter_secure_storage', 'mobile_scanner', 'cryptography'],
+    tools: ['Node.js'],
+    labels: [{ type: 'new' }],
+    description: {
+      en: 'An Android phone app that controls a Windows PC as a mouse, keyboard, and media remote over the local network, with QR code and device discovery pairing.',
+      pt: 'Aplicativo Android que controla um PC Windows como mouse, teclado e controle de mídia pela rede local, com pareamento por QR code e descoberta de dispositivos.',
+    },
+  },
   'TrackLyrics-ytdlp': {
     libraries: ['beautifulsoup4', 'yt-dlp', 'curl_cffi', 'PySide6'],
     tools: [],
     labels: [{ type: 'new' }],
   },
   JobAppliesTracker: {
-    libraries: ['FastAPI', 'Pydantic', 'SQLAlchemy', 'Alembic', 'Next.js', 'React', 'Tailwind', 'shadcn', 'TanStack', 'Recharts', 'schedule-x'],
+    libraries: [
+      'FastAPI',
+      'Pydantic',
+      'SQLAlchemy',
+      'Alembic',
+      'Next.js',
+      'React',
+      'Tailwind',
+      'shadcn',
+      'TanStack',
+      'Recharts',
+      'schedule-x',
+    ],
     tools: ['Docker', 'Turborepo'],
     labels: [{ type: 'update' }],
   },

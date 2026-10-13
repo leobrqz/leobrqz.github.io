@@ -19,6 +19,7 @@ export const TECHSTARS_PDF_FILENAME = 'Techstars Startup Weekend.pdf';
 export const TECHSTARS_PDF_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/assets/cv/${encodeURIComponent(TECHSTARS_PDF_FILENAME)}`;
 
 export const REPOSITORIES: string[] = [
+  'OpenRemoteControl',
   'TrackLyrics-ytdlp',
   'JobAppliesTracker',
   'ShScriptHub',

@@ -1,5 +1,6 @@
 import { GITHUB_USERNAME, REPOSITORIES } from '@/config/site';
 import { getCached, setCached } from './github-cache';
+import { processReadmeHtml } from './readme-html';
 
 const GITHUB_API = 'https://api.github.com';
 const CACHE_TTL = 3600;
@@ -16,7 +17,7 @@ export type GhLanguages = Record<string, number>;
 
 /** GET /users/:username/repos?per_page=100, then filter by REPOSITORIES and preserve order. */
 export async function fetchRepos(): Promise<GhRepo[]> {
-  const cacheKey = `repos:${GITHUB_USERNAME}`;
+  const cacheKey = `repos:${GITHUB_USERNAME}:${REPOSITORIES.join(',')}`;
   const cached = getCached<GhRepo[]>(cacheKey);
   if (cached) {
     return cached;
@@ -66,48 +67,13 @@ function defaultBranchFromReadmeResponse(data: { html_url?: string }): string {
   if (typeof url !== 'string') {
     return 'main';
   }
-  const match = url.match(/\/blob\/([^/]+)\//);
+  const match = url.match(/\/blob\/(?:refs\/(?:heads|tags)\/)?([^/]+)\//);
   return match ? match[1] : 'main';
-}
-
-/** Rewrite README HTML image URLs to raw.githubusercontent.com and remove heading anchor links. */
-function processReadmeHtml(html: string, owner: string, repo: string, branch: string): string {
-  const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
-
-  // Blob URLs -> raw URLs
-  let out = html.replace(
-    /https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/([^"'\s)>]+)/g,
-    (_, o, r, b, path) => `https://raw.githubusercontent.com/${o}/${r}/${b}/${path}`
-  );
-
-  // Relative img src (e.g. ./img.png or docs/img.png) -> raw URL
-  out = out.replace(/(\bsrc=)(["'])(?!https?:|\/\/|data:)([^"']+)\2/gi, (_, attr, quote, path) => {
-    const normalized = path.replace(/^\.\//, '').trim();
-    if (!normalized) {
-      return attr + quote + path + quote;
-    }
-    return attr + quote + rawBase + normalized + quote;
-  });
-
-  // Remove heading anchor elements (chain-link icons): <a class="anchor" ...>...</a>
-  out = out.replace(/<a\s+[^>]*class="[^"]*anchor[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '');
-
-  // Rewrite all remaining <a href="..."> to open in a new tab
-  out = out.replace(/<a\s+([^>]*?)href=(["'])([^"']+)\2([^>]*)>/gi, (_, before, quote, href, after) => {
-    const combined = `${before}${after}`;
-    const hasTarget = /target\s*=/i.test(combined);
-    const hasRel = /rel\s*=/i.test(combined);
-    const targetAttr = hasTarget ? '' : ' target="_blank"';
-    const relAttr = hasRel ? '' : ' rel="noopener noreferrer"';
-    return `<a ${combined}href=${quote}${href}${quote}${targetAttr}${relAttr}>`;
-  });
-
-  return out;
 }
 
 /** README as HTML: GET /repos/:owner/:repo/readme with Accept application/vnd.github.html+json. */
 export async function fetchReadmeHtml(owner: string, repo: string): Promise<string | null> {
-  const cacheKey = `readme:${owner}:${repo}`;
+  const cacheKey = `readme:v2:${owner}:${repo}`;
   const cached = getCached<{ html: string | null }>(cacheKey);
   if (cached !== null) {
     return cached.html;

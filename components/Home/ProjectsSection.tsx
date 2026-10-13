@@ -17,7 +17,7 @@ const PROJECT_PREVIEWS: Record<string, ProjectPreviewKind> = {
 };
 
 export function ProjectsSection({ lang }: { lang: Lang }) {
-  const { state } = useProjects();
+  const { state } = useProjects(lang);
   const fallbackProjects = getFallbackProjects(lang);
   const projects = (
     state.status === 'success' && state.projects.length ? state.projects : fallbackProjects

@@ -25,7 +25,7 @@ function formatDate(iso: string, lang: Lang): string {
 }
 
 export function ProjectsPage({ lang }: ProjectsPageProps) {
-  const { state, refetch, fetchReadme } = useProjects();
+  const { state, refetch, fetchReadme } = useProjects(lang);
   const [readmeOpen, setReadmeOpen] = useState<Record<string, ReadmeState>>({});
   const [activeHash, setActiveHash] = useState('');
   const handledHashes = useRef(new Set<string>());
