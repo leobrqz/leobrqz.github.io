@@ -2,7 +2,6 @@
 
 import { Box } from '@mantine/core';
 import type { Lang } from '@/lib/i18n';
-import { AboutSection } from './AboutSection';
 import { ContactInvitation } from './ContactInvitation';
 import { ExperienceSection } from './ExperienceSection';
 import { LandingHero } from './LandingHero';
@@ -18,7 +17,6 @@ export function HomePage({ lang }: HomePageProps) {
       <LandingHero lang={lang} />
       <SkillsSection lang={lang} />
       <ProjectsSection lang={lang} />
-      <AboutSection lang={lang} />
       <ExperienceSection lang={lang} />
       <ContactInvitation lang={lang} />
     </Box>

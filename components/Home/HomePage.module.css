@@ -207,43 +207,6 @@
   text-transform: uppercase;
 }
 
-.aboutGrid {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) minmax(180px, 0.58fr);
-  align-items: center;
-  gap: 28px;
-}
-
-.portrait {
-  width: 102px;
-  height: 102px;
-  border: 1px solid var(--home-line);
-  border-radius: 50%;
-  filter: grayscale(1);
-  object-fit: cover;
-}
-
-.aboutCopy {
-  max-width: 560px;
-  margin: 0;
-  color: var(--home-muted);
-  font-size: 14px;
-  line-height: 1.75;
-}
-
-.aboutMeta {
-  padding-left: 20px;
-  border-left: 1px solid var(--home-line);
-  color: var(--home-muted);
-  font-family: var(--home-mono);
-  font-size: 10px;
-  line-height: 1.8;
-}
-
-.aboutMeta span {
-  display: block;
-}
-
 .experienceList {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -387,22 +350,6 @@
     margin-bottom: 20px;
   }
 
-  .aboutGrid {
-    grid-template-columns: 86px minmax(0, 1fr);
-    gap: 18px;
-  }
-
-  .portrait {
-    width: 82px;
-    height: 82px;
-  }
-
-  .aboutMeta {
-    grid-column: 2;
-    padding: 0;
-    border: 0;
-  }
-
   .experienceList {
     grid-template-columns: 1fr;
   }
@@ -456,20 +403,6 @@
 
   .sectionTitle {
     font-size: 13px;
-  }
-
-  .aboutGrid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .portrait {
-    width: 76px;
-    height: 76px;
-  }
-
-  .aboutMeta {
-    grid-column: 1;
   }
 
   .contactInvitation {
