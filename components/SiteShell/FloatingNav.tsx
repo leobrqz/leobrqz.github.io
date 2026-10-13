@@ -130,7 +130,7 @@ export function FloatingNav({ lang }: FloatingNavProps) {
             className={styles.contactCta}
             onClick={() => setMenuOpen(false)}
           >
-            <span>{lang === 'en' ? "LET'S BUILD SOMETHING" : 'VAMOS CONSTRUIR ALGO'}</span>
+            <span>{lang === 'en' ? 'CONTACT' : 'CONTATO'}</span>
             <IconArrowRight size={19} stroke={1.5} aria-hidden="true" />
           </Link>
           <button
