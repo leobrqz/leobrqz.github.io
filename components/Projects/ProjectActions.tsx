@@ -11,8 +11,17 @@ const REMOTE_CONTROL_REPOSITORY = 'OpenRemoteControl';
 const LYRICS_INSTALL_URL = 'https://addons.mozilla.org/en-US/firefox/addon/lyrics-please/';
 const REMOTE_CONTROL_RELEASES_URL = 'https://github.com/leobrqz/OpenRemoteControl/releases';
 
-export function ProjectActions({ repoName, lang }: { repoName: string; lang: Lang }) {
+export function ProjectActions({
+  repoName,
+  lang,
+  variant = 'default',
+}: {
+  repoName: string;
+  lang: Lang;
+  variant?: 'default' | 'side';
+}) {
   const [browser, setBrowser] = useState<BrowserFamily | null>(null);
+  const actionsClassName = `${styles.actions} ${variant === 'side' ? styles.sideActions : ''}`;
 
   useEffect(() => {
     setBrowser(detectBrowserFamily(navigator.userAgent, navigator.platform));
@@ -29,7 +38,7 @@ export function ProjectActions({ repoName, lang }: { repoName: string; lang: Lan
           : 'Disponível para Firefox.';
 
     return (
-      <div className={styles.actions} aria-live="polite">
+      <div className={actionsClassName} aria-live="polite">
         {browser === 'firefox' ? (
           <a
             className={styles.actionLink}
@@ -37,9 +46,9 @@ export function ProjectActions({ repoName, lang }: { repoName: string; lang: Lan
             target="_blank"
             rel="noopener noreferrer"
           >
-            <IconDownload size={15} aria-hidden="true" />
+            <IconDownload size={18} aria-hidden="true" />
             {lang === 'en' ? 'Install for Firefox' : 'Instalar no Firefox'}
-            <IconArrowUpRight size={14} aria-hidden="true" />
+            <IconArrowUpRight size={18} aria-hidden="true" />
           </a>
         ) : (
           <p className={styles.actionNote}>{message}</p>
@@ -50,16 +59,16 @@ export function ProjectActions({ repoName, lang }: { repoName: string; lang: Lan
 
   if (repoName === REMOTE_CONTROL_REPOSITORY) {
     return (
-      <div className={styles.actions}>
+      <div className={actionsClassName}>
         <a
           className={styles.actionLink}
           href={REMOTE_CONTROL_RELEASES_URL}
           target="_blank"
           rel="noopener noreferrer"
         >
-          <IconDownload size={15} aria-hidden="true" />
-          {lang === 'en' ? 'Download release' : 'Baixar versão'}
-          <IconArrowUpRight size={14} aria-hidden="true" />
+          <IconDownload size={18} aria-hidden="true" />
+          Download
+          <IconArrowUpRight size={18} aria-hidden="true" />
         </a>
       </div>
     );

@@ -165,23 +165,27 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
                 <article className={styles.projectRow} id={`project-${project.name}`}>
                   <div className={styles.projectIndex}>{String(index + 1).padStart(2, '0')}</div>
                   <div className={styles.projectMain}>
-                    <div className={styles.projectTopline}>
-                      <Anchor
-                        href={project.html_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.projectTitle}
-                        onClick={() => trackEvent('github_repo', { repo: project.name })}
-                      >
-                        {project.displayName ?? project.name}
-                        <IconArrowUpRight size={18} />
-                      </Anchor>
-                      <ProjectLabels labels={project.labels} lang={lang} />
+                    <div className={styles.projectHeader}>
+                      <div className={styles.projectHeading}>
+                        <div className={styles.projectTopline}>
+                          <Anchor
+                            href={project.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.projectTitle}
+                            onClick={() => trackEvent('github_repo', { repo: project.name })}
+                          >
+                            {project.displayName ?? project.name}
+                            <IconArrowUpRight size={18} />
+                          </Anchor>
+                          <ProjectLabels labels={project.labels} lang={lang} />
+                        </div>
+                        {project.description && (
+                          <p className={styles.projectDescription}>{project.description}</p>
+                        )}
+                      </div>
+                      <ProjectActions repoName={project.name} lang={lang} variant="side" />
                     </div>
-                    {project.description && (
-                      <p className={styles.projectDescription}>{project.description}</p>
-                    )}
-                    <ProjectActions repoName={project.name} lang={lang} />
                     {formatDate(project.updated_at, lang) && (
                       <p className={styles.projectMeta}>
                         {lang === 'en' ? 'Last updated' : 'Atualizado'}:{' '}

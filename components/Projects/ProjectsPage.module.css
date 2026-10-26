@@ -121,6 +121,17 @@
   min-width: 0;
 }
 
+.projectHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 18px 28px;
+}
+
+.projectHeading {
+  min-width: 0;
+}
+
 .projectTopline {
   display: flex;
   flex-wrap: wrap;
@@ -150,7 +161,7 @@
 
 .projectDescription {
   max-width: 760px;
-  margin: 8px 0 18px;
+  margin: 8px 0 0;
   color: var(--muted);
   font-size: 15px;
   line-height: 1.65;
@@ -374,6 +385,11 @@
     grid-template-columns: 35px minmax(0, 1fr);
     gap: 10px;
     padding-block: 23px;
+  }
+
+  .projectHeader {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 
   .projectIndex {
