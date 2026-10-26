@@ -3,8 +3,11 @@ export type ProjectLabel = { type: 'new' } | { type: 'update'; changelogUrl?: st
 export interface ProjectMetaItem {
   libraries: string[];
   tools: string[];
+  displayName?: string;
+  language?: string;
   labels?: ProjectLabel[];
   description?: { en: string; pt: string };
+  preferLocalizedDescription?: boolean;
 }
 
 export type ProjectsMeta = Record<string, ProjectMetaItem>;
@@ -12,7 +15,20 @@ export type ProjectsMeta = Record<string, ProjectMetaItem>;
 const SHSCRIPTHUB_RELEASE_V3_5 = 'https://github.com/leobrqz/ShScriptHub/releases/tag/v3.5.0';
 
 export const projects_meta: ProjectsMeta = {
+  LyricsExtension: {
+    displayName: 'Lyrics, Please',
+    language: 'JavaScript',
+    libraries: ['@browsermt/bergamot-translator', 'franc-min'],
+    tools: ['Node.js 22', 'esbuild', 'web-ext'],
+    labels: [{ type: 'new' }],
+    preferLocalizedDescription: true,
+    description: {
+      en: 'A Firefox extension that finds lyrics from selected text or search, shows Portuguese translations, and saves favorites.',
+      pt: 'Extensão para Firefox que busca letras a partir de um texto selecionado ou pesquisa, mostra traduções em português e salva favoritas.',
+    },
+  },
   OpenRemoteControl: {
+    language: 'Dart',
     libraries: ['Flutter', 'flutter_secure_storage', 'mobile_scanner', 'cryptography'],
     tools: ['Node.js'],
     labels: [{ type: 'new' }],

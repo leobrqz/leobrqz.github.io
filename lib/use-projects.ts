@@ -16,6 +16,7 @@ export interface LanguageBreakdownItem {
 
 export interface EnrichedProject {
   name: string;
+  displayName?: string;
   html_url: string;
   description: string | null;
   updated_at: string;
@@ -57,7 +58,10 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages, lang: Lang): EnrichedProj
   return {
     name: repo.name,
     html_url: repo.html_url,
-    description: repo.description ?? meta?.description?.[lang] ?? null,
+    description: meta?.preferLocalizedDescription
+      ? (meta.description?.[lang] ?? repo.description ?? null)
+      : (repo.description ?? meta?.description?.[lang] ?? null),
+    displayName: meta?.displayName,
     updated_at: repo.updated_at,
     language: repo.language,
     languages,

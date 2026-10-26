@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { IconArrowRight } from '@tabler/icons-react';
+import { ProjectActions } from '@/components/Projects/ProjectActions';
 import { ProjectLabels } from '@/components/Projects/ProjectLabels';
 import { getFallbackProjects } from '@/data/project_fallback';
 import { t, type Lang } from '@/lib/i18n';
@@ -47,10 +48,17 @@ export function ProjectsSection({ lang }: { lang: Lang }) {
               <ProjectPreview kind={PROJECT_PREVIEWS[project.name] ?? 'repository'} />
               <div className={styles.projectCopy}>
                 <h3 className={styles.projectTitle}>
-                  <Link href={detailHref}>{project.name}</Link>
+                  {project.name === 'LyricsExtension' ? (
+                    <a href={project.html_url} target="_blank" rel="noopener noreferrer">
+                      {project.displayName ?? project.name}
+                    </a>
+                  ) : (
+                    <Link href={detailHref}>{project.displayName ?? project.name}</Link>
+                  )}
                   <ProjectLabels labels={project.labels} lang={lang} />
                 </h3>
                 <p className={styles.projectDescription}>{project.description}</p>
+                <ProjectActions repoName={project.name} lang={lang} />
               </div>
               <div
                 className={styles.projectTags}

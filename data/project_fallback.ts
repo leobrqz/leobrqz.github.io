@@ -1,16 +1,8 @@
-import { GITHUB_USERNAME } from '@/config/site';
+import { GITHUB_USERNAME, REPOSITORIES } from '@/config/site';
 import type { Lang } from '@/lib/i18n';
 import type { EnrichedProject } from '@/lib/use-projects';
 import { projects_meta } from './projects_meta';
 import { resume_projects } from './resume_projects';
-
-const FALLBACK_NAMES = [
-  'JobAppliesTracker',
-  'ShScriptHub',
-  'AutoPot-DR',
-  'SmokeShopERP-DataAnalytics',
-  'OpenRemoteControl',
-];
 
 function getSummary(projectName: string, lang: Lang): string {
   const project = resume_projects.find((item) => item.name.en === projectName);
@@ -32,15 +24,20 @@ function getSummary(projectName: string, lang: Lang): string {
   return projects_meta[projectName]?.description?.[lang] ?? '';
 }
 
+const FALLBACK_NAMES = REPOSITORIES.filter(
+  (name) => Boolean(getSummary(name, 'en')) || Boolean(getSummary(name, 'pt'))
+);
+
 export function getFallbackProjects(lang: Lang): EnrichedProject[] {
   return FALLBACK_NAMES.map((name) => {
     const meta = projects_meta[name];
     const project = resume_projects.find((item) => item.name.en === name);
-    const technologies = project?.technologies ?? (name === 'OpenRemoteControl' ? ['Dart'] : []);
+    const technologies = project?.technologies ?? (meta?.language ? [meta.language] : []);
     const languageBreakdown = technologies.slice(0, 3).map((technology) => ({ name: technology }));
 
     return {
       name,
+      displayName: meta?.displayName,
       html_url: `https://github.com/${GITHUB_USERNAME}/${name}`,
       description: getSummary(name, lang),
       updated_at: '',

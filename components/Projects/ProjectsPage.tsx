@@ -9,6 +9,7 @@ import { getFallbackProjects } from '@/data/project_fallback';
 import { trackEvent } from '@/lib/analytics';
 import { t, type Lang } from '@/lib/i18n';
 import { useProjects } from '@/lib/use-projects';
+import { ProjectActions } from './ProjectActions';
 import { ProjectLabels } from './ProjectLabels';
 import { ProjectReadme } from './ProjectReadme';
 import styles from './ProjectsPage.module.css';
@@ -172,7 +173,7 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
                         className={styles.projectTitle}
                         onClick={() => trackEvent('github_repo', { repo: project.name })}
                       >
-                        {project.name}
+                        {project.displayName ?? project.name}
                         <IconArrowUpRight size={18} />
                       </Anchor>
                       <ProjectLabels labels={project.labels} lang={lang} />
@@ -180,6 +181,7 @@ export function ProjectsPage({ lang }: ProjectsPageProps) {
                     {project.description && (
                       <p className={styles.projectDescription}>{project.description}</p>
                     )}
+                    <ProjectActions repoName={project.name} lang={lang} />
                     {formatDate(project.updated_at, lang) && (
                       <p className={styles.projectMeta}>
                         {lang === 'en' ? 'Last updated' : 'Atualizado'}:{' '}
