@@ -1,0 +1,13 @@
+# Smooth Void stone backdrop
+
+`void-stone-smooth.webp` is the refined texture used by the portfolio background. The built-in `image_gen` edit lowered the surface relief while preserving the stone composition; its 1672 × 941 dimensions are preserved in the WebP conversion. No crop or visual edits were applied during conversion.
+
+- Original texture PNG: `C:/Users/Conta/AppData/Roaming/orca/codex-accounts/482ee872-6d44-48dd-a786-f0b676316e61/home/generated_images/01a11cd2-ba56-7d93-885f-6a43fac8dee8/exec-78569d86-056b-4980-b38c-8425e111d2b2.png` (1672 × 941, 3,695,095 bytes)
+- Refined texture PNG: `C:/Users/Conta/AppData/Roaming/orca/codex-accounts/482ee872-6d44-48dd-a786-f0b676316e61/home/generated_images/01a11cd2-ba56-7d93-885f-6a43fac8dee8/exec-694081c3-d833-4c90-a9ea-932c199a5b7f.png` (1672 × 941, 3,183,380 bytes)
+- Retired edit input: `void-stone.webp` (1672 × 941, 384,280 bytes; removed after the refined conversion)
+- Output: `void-stone-smooth.webp` (1672 × 941, 261,768 bytes)
+- Conversion: Sharp/libvips WebP, quality 82, effort 6
+- Generation mode: stylized-concept, using the supplied close-up as material and surface reference only.
+- Initial generation prompt: “Wide charcoal-black stone surface evoking Dishonored's Void and the smooth brutalist walls of Remedy's Control. Landscape front-on macro texture with broad layered slate/basalt plates, widely spaced angular fractures, chipped edges, matte mineral grain, dark quiet left, restrained cool-gray light. No horizon, objects, text, logos, glowing fissures, bright veins, or polished marble.”
+- Edit mode: image edit, using `void-stone.webp` as the source image.
+- Edit prompt: “Edit the supplied stone texture. Keep the same wide framing, charcoal-gray palette, large plate shapes and crack layout. Lower the apparent height/displacement by about 65%. Make adjacent stone plates nearly coplanar. Flatten protruding flakes and chipped ridges, soften jagged edges, and turn deep black crevices into narrow shallow fractures. Smooth the plate faces to matte basalt with restrained fine mineral grain; reduce small rough bumps and harsh relief shadows. It should feel like a low-relief dark stone wall from Remedy's Control, while retaining the cracked stone identity of Dishonored's Void. Use soft diffuse lighting with subtle surface shading. Preserve the material detail and image sharpness; do not simulate smoothing by blurring the image. Keep it dark but retain visible gray stone tones because the website adds its own dark overlay. Change only surface relief and roughness. No new objects, veins, colors, text, logos, glossy finish, or composition changes. Opaque full-bleed landscape texture, same aspect ratio.”

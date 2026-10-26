@@ -1,387 +1,225 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
-import { IconAlertCircle } from '@tabler/icons-react';
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Group,
-  Loader,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
-import { t, type Lang } from '@/lib/i18n';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
+import { IconAlertCircle, IconArrowUpRight, IconRefresh } from '@tabler/icons-react';
+import { Anchor, Box, Container } from '@mantine/core';
+import { Reveal } from '@/components/Design/Reveal';
+import { getFallbackProjects } from '@/data/project_fallback';
 import { trackEvent } from '@/lib/analytics';
-import { useProjects, type EnrichedProject } from '@/lib/use-projects';
+import { t, type Lang } from '@/lib/i18n';
+import { useProjects } from '@/lib/use-projects';
 import { ProjectLabels } from './ProjectLabels';
+import { ProjectReadme } from './ProjectReadme';
 import styles from './ProjectsPage.module.css';
 
-export type ProjectsPageProps = {
-  lang: Lang;
-};
-
+export type ProjectsPageProps = { lang: Lang };
 type ReadmeState =
-  | { status: 'idle' }
-  | { status: 'loading' }
-  | { status: 'html'; html: string }
-  | { status: 'none' }
-  | { status: 'error' };
+  { status: 'idle' | 'loading' | 'none' | 'error' } | { status: 'html'; html: string };
 
-function formatDate(iso: string): string {
-  try {
-    const d = new Date(iso);
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  } catch {
-    return iso;
-  }
-}
-
-const PILL_CLASS = 'project-pill';
-
-function SectionPills({ items }: { items: string[] }) {
-  if (items.length === 0) return null;
-  return (
-    <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-      {items.map((label) => (
-        <Box
-          key={label}
-          component="li"
-          className={PILL_CLASS}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '4px 10px',
-            borderRadius: 6,
-            fontSize: 'var(--mantine-font-size-xs)',
-            fontWeight: 500,
-            backgroundColor: 'var(--mantine-color-dark-6)',
-            color: 'var(--mantine-color-gray-3)',
-            border: '1px solid var(--mantine-color-dark-4)',
-          }}
-        >
-          {label}
-        </Box>
-      ))}
-    </Box>
-  );
-}
-
-function LanguagePills({ items }: { items: { name: string }[] }) {
-  if (items.length === 0) return null;
-  return (
-    <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-      {items.map(({ name }) => (
-        <Box
-          key={name}
-          component="li"
-          className={PILL_CLASS}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '4px 10px',
-            borderRadius: 6,
-            fontSize: 'var(--mantine-font-size-xs)',
-            fontWeight: 500,
-            backgroundColor: 'var(--mantine-color-dark-6)',
-            color: 'var(--mantine-color-gray-3)',
-            border: '1px solid var(--mantine-color-dark-4)',
-          }}
-        >
-          {name}
-        </Box>
-      ))}
-    </Box>
-  );
-}
-
-function ProjectCard({
-  project,
-  lang,
-  readmeState,
-  onToggleReadme,
-}: {
-  project: EnrichedProject;
-  lang: Lang;
-  readmeState: ReadmeState;
-  onToggleReadme: (name: string, show: boolean) => void;
-}) {
-  const loading = readmeState.status === 'loading';
-  const showContent =
-    readmeState.status === 'html' ||
-    readmeState.status === 'none' ||
-    readmeState.status === 'error';
-
-  const handleToggle = useCallback(() => {
-    const expanding = !showContent;
-    if (expanding) {
-      trackEvent('readme_expand', { project: project.name });
-    }
-    onToggleReadme(project.name, expanding);
-  }, [project.name, showContent, onToggleReadme]);
-
-  const hasLanguages =
-    project.languageBreakdown.length > 0 || project.languages.length > 0 || project.language;
-  const hasLibsOrTools = project.libraries.length > 0 || project.tools.length > 0;
-  const showRightColumn = hasLanguages || hasLibsOrTools;
-
-  return (
-    <Paper withBorder p="lg" radius="md" shadow="sm">
-      <Stack gap="md">
-        <Grid gutter="lg">
-          <Grid.Col span={{ base: 12, sm: 5 }}>
-            <Stack gap="xs">
-              <Group wrap="wrap" align="center" gap={6}>
-                <Title order={3} size="h4" style={{ minWidth: 0 }}>
-                  <Text
-                    component="a"
-                    href={project.html_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    inherit
-                    c="var(--mantine-color-anchor)"
-                    style={{ textDecoration: 'underline' }}
-                    onClick={() => trackEvent('github_repo', { repo: project.name })}
-                  >
-                    {project.name}
-                  </Text>
-                </Title>
-                <ProjectLabels labels={project.labels} lang={lang} />
-              </Group>
-              {project.description && (
-                <Text size="sm" c="dimmed">
-                  {project.description}
-                </Text>
-              )}
-              <Text size="xs" c="dimmed">
-                {t(lang, 'projects.last_updated')}: {formatDate(project.updated_at)}
-              </Text>
-            </Stack>
-          </Grid.Col>
-          {showRightColumn && (
-            <Grid.Col span={{ base: 12, sm: 7 }}>
-              <Box
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${
-                    (hasLanguages ? 1 : 0) +
-                    (project.libraries.length > 0 ? 1 : 0) +
-                    (project.tools.length > 0 ? 1 : 0)
-                  }, 1fr)`,
-                  gap: 'var(--mantine-spacing-lg)',
-                  minHeight: 0,
-                  paddingLeft: 'var(--mantine-spacing-sm)',
-                  paddingRight: 'var(--mantine-spacing-md)',
-                }}
-              >
-                {hasLanguages && (
-                  <Stack gap="xs" style={{ minWidth: 0 }}>
-                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                      {t(lang, 'projects.languages')}
-                    </Text>
-                    {project.languageBreakdown.length > 0 ? (
-                      <LanguagePills items={project.languageBreakdown} />
-                    ) : (
-                      <SectionPills
-                        items={
-                          project.languages.length > 0
-                            ? project.languages
-                            : project.language
-                              ? [project.language]
-                              : []
-                        }
-                      />
-                    )}
-                  </Stack>
-                )}
-                {project.libraries.length > 0 && (
-                  <Stack gap="xs" style={{ minWidth: 0 }}>
-                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                      {t(lang, 'projects.libraries')}
-                    </Text>
-                    <SectionPills items={project.libraries} />
-                  </Stack>
-                )}
-                {project.tools.length > 0 && (
-                  <Stack gap="xs" style={{ minWidth: 0 }}>
-                    <Text size="xs" fw={700} c="dimmed" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                      {t(lang, 'projects.tools')}
-                    </Text>
-                    <SectionPills items={project.tools} />
-                  </Stack>
-                )}
-              </Box>
-            </Grid.Col>
-          )}
-        </Grid>
-
-        <Button variant="light" size="xs" loading={loading} onClick={handleToggle}>
-          {showContent ? t(lang, 'projects.hide_readme') : t(lang, 'projects.show_readme')}
-        </Button>
-        {showContent && (
-          <Box
-            component="div"
-            style={{
-              borderTop: '1px solid var(--mantine-color-default-border)',
-              paddingTop: 'var(--mantine-spacing-md)',
-              marginTop: 2,
-            }}
-          >
-            {readmeState.status === 'html' && (
-              <Box
-                className={`${styles.readmeWrapper} markdown-body`}
-                dangerouslySetInnerHTML={{ __html: readmeState.html }}
-                style={{
-                  borderRadius: 'var(--mantine-radius-sm)',
-                  padding: 'var(--mantine-spacing-md)',
-                  fontSize: 'var(--mantine-font-size-sm)',
-                  overflow: 'auto',
-                }}
-              />
-            )}
-            {readmeState.status === 'none' && (
-              <Text size="sm" c="dimmed">
-                {t(lang, 'projects.no_readme')}
-              </Text>
-            )}
-            {readmeState.status === 'error' && (
-              <Text size="sm" c="red">
-                {t(lang, 'projects.unable_to_load')}
-              </Text>
-            )}
-          </Box>
-        )}
-      </Stack>
-    </Paper>
-  );
+function formatDate(iso: string, lang: Lang): string {
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime())
+    ? ''
+    : date.toLocaleDateString(lang === 'en' ? 'en-US' : 'pt-BR');
 }
 
 export function ProjectsPage({ lang }: ProjectsPageProps) {
-  const { state, refetch, fetchReadme } = useProjects();
+  const { state, refetch, fetchReadme } = useProjects(lang);
   const [readmeOpen, setReadmeOpen] = useState<Record<string, ReadmeState>>({});
+  const [activeHash, setActiveHash] = useState('');
+  const handledHashes = useRef(new Set<string>());
+  const pendingScrollProject = useRef<string | null>(null);
+  const fallbackProjects = useMemo(() => getFallbackProjects(lang), [lang]);
+  const projects =
+    state.status === 'success' && state.projects.length ? state.projects : fallbackProjects;
 
   const onToggleReadme = useCallback(
     (name: string, show: boolean) => {
       if (!show) {
-        setReadmeOpen((prev) => {
-          const next = { ...prev };
+        setReadmeOpen((previous) => {
+          const next = { ...previous };
           delete next[name];
           return next;
         });
         return;
       }
-      setReadmeOpen((prev) => ({ ...prev, [name]: { status: 'loading' } }));
+      setReadmeOpen((previous) => ({ ...previous, [name]: { status: 'loading' } }));
+      trackEvent('readme_expand', { project: name });
       fetchReadme(name)
-        .then((html) => {
-          setReadmeOpen((prev) => ({
-            ...prev,
+        .then((html) =>
+          setReadmeOpen((previous) => ({
+            ...previous,
             [name]: html ? { status: 'html', html } : { status: 'none' },
-          }));
-        })
-        .catch(() => {
-          setReadmeOpen((prev) => ({ ...prev, [name]: { status: 'error' } }));
-        });
+          }))
+        )
+        .catch(() => setReadmeOpen((previous) => ({ ...previous, [name]: { status: 'error' } })));
     },
     [fetchReadme]
   );
 
-  if (state.status === 'loading') {
-    return (
-      <Box component="main" py="xl">
-        <Container size="md">
-          <Stack align="center" gap="md" py="xl">
-            <Loader size="md" />
-            <Text size="sm" c="dimmed">
-              {t(lang, 'projects.last_updated')}…
-            </Text>
-          </Stack>
-        </Container>
-      </Box>
-    );
-  }
+  useEffect(() => {
+    const syncHash = () => {
+      const hash = window.location.hash.slice(1);
+      try {
+        setActiveHash(decodeURIComponent(hash));
+      } catch {
+        setActiveHash(hash);
+      }
+    };
+    syncHash();
+    window.addEventListener('hashchange', syncHash);
+    return () => window.removeEventListener('hashchange', syncHash);
+  }, []);
 
-  if (state.status === 'empty') {
-    const message =
-      state.kind === 'no_config' ? t(lang, 'projects.no_projects') : t(lang, 'projects.no_repos');
-    return (
-      <Box component="main" py="xl">
-        <Container size="md">
-          <Alert
-            icon={<IconAlertCircle size={16} />}
-            title={t(lang, 'pages.projects')}
-            color="gray"
-          >
-            <Text size="sm">{message}</Text>
-          </Alert>
-        </Container>
-      </Box>
-    );
-  }
+  useEffect(() => {
+    if (!activeHash || handledHashes.current.has(activeHash)) {
+      return;
+    }
+    const project = projects.find(({ name }) => `project-${name}` === activeHash);
+    if (!project) {
+      return;
+    }
 
-  if (state.status === 'error') {
-    const errorMessage =
-      state.kind === 'rate_limit' ? t(lang, 'projects.error_rate_limit') : t(lang, 'projects.error_loading');
-    return (
-      <Box component="main" py="xl">
-        <Container size="md">
-          <Alert icon={<IconAlertCircle size={16} />} title={t(lang, 'pages.projects')} color="red">
-            {errorMessage}
-          </Alert>
-          <Button variant="light" mt="md" onClick={refetch}>
-            Retry
-          </Button>
-        </Container>
-      </Box>
-    );
-  }
+    handledHashes.current.add(activeHash);
+    pendingScrollProject.current = project.name;
+    if (!readmeOpen[project.name] || readmeOpen[project.name].status === 'idle') {
+      onToggleReadme(project.name, true);
+    }
+  }, [activeHash, onToggleReadme, projects, readmeOpen]);
+
+  useEffect(() => {
+    const projectName = pendingScrollProject.current;
+    const readme = projectName ? readmeOpen[projectName] : undefined;
+    if (!projectName || !readme || readme.status === 'loading' || readme.status === 'idle') {
+      return;
+    }
+
+    pendingScrollProject.current = null;
+    window.requestAnimationFrame(() => {
+      const row = document.getElementById(`project-${projectName}`);
+      row?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    });
+  }, [readmeOpen]);
 
   return (
-    <Box component="main" py="xl">
-      <Container size="md">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
-          }}
+    <Box component="main" className={styles.projectsPage}>
+      <Container className={styles.projectsContainer}>
+        <header className={styles.pageIntro}>
+          <span className={styles.eyebrow}>{lang === 'en' ? 'PROJECTS' : 'PROJETOS'}</span>
+          <h1>{t(lang, 'pages.projects')}</h1>
+        </header>
+
+        {state.status === 'loading' && (
+          <div className={styles.syncNotice} role="status">
+            <span className={styles.syncDot} />
+            {lang === 'en'
+              ? 'Showing selected projects while GitHub loads.'
+              : 'Exibindo projetos selecionados enquanto o GitHub carrega.'}
+          </div>
+        )}
+        {state.status === 'error' && (
+          <div className={styles.syncNotice} role="status">
+            <IconAlertCircle size={16} />
+            <span>
+              {state.kind === 'rate_limit'
+                ? t(lang, 'projects.error_rate_limit')
+                : t(lang, 'projects.error_loading')}
+            </span>
+            <button type="button" className={styles.retryButton} onClick={refetch}>
+              <IconRefresh size={15} />
+              {lang === 'en' ? 'Retry' : 'Tentar novamente'}
+            </button>
+          </div>
+        )}
+        {state.status === 'empty' && (
+          <div className={styles.syncNotice} role="status">
+            <IconAlertCircle size={16} />
+            <span>
+              {state.kind === 'no_config'
+                ? t(lang, 'projects.no_projects')
+                : t(lang, 'projects.no_repos')}
+            </span>
+          </div>
+        )}
+
+        <div className={styles.listHeading}>
+          <span>{lang === 'en' ? 'REPOSITORIES' : 'REPOSITÓRIOS'}</span>
+        </div>
+        <div className={styles.projectList}>
+          {projects.map((project, index) => {
+            const readme = readmeOpen[project.name] ?? { status: 'idle' as const };
+            const languages = project.languageBreakdown.length
+              ? project.languageBreakdown.map(({ name }) => name)
+              : project.languages.length
+                ? project.languages
+                : project.language
+                  ? [project.language]
+                  : [];
+            return (
+              <Reveal key={project.name} delay={Math.min(index * 45, 240)}>
+                <article className={styles.projectRow} id={`project-${project.name}`}>
+                  <div className={styles.projectIndex}>{String(index + 1).padStart(2, '0')}</div>
+                  <div className={styles.projectMain}>
+                    <div className={styles.projectTopline}>
+                      <Anchor
+                        href={project.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.projectTitle}
+                        onClick={() => trackEvent('github_repo', { repo: project.name })}
+                      >
+                        {project.name}
+                        <IconArrowUpRight size={18} />
+                      </Anchor>
+                      <ProjectLabels labels={project.labels} lang={lang} />
+                    </div>
+                    {project.description && (
+                      <p className={styles.projectDescription}>{project.description}</p>
+                    )}
+                    {formatDate(project.updated_at, lang) && (
+                      <p className={styles.projectMeta}>
+                        {lang === 'en' ? 'Last updated' : 'Atualizado'}:{' '}
+                        {formatDate(project.updated_at, lang)}
+                      </p>
+                    )}
+                    <div className={styles.projectDetails}>
+                      {[
+                        [lang === 'en' ? 'LANGUAGES' : 'LINGUAGENS', languages],
+                        [lang === 'en' ? 'LIBRARIES' : 'BIBLIOTECAS', project.libraries],
+                        [lang === 'en' ? 'TOOLS' : 'FERRAMENTAS', project.tools],
+                      ]
+                        .filter(([, items]) => (items as string[]).length)
+                        .map(([label, items]) => (
+                          <div className={styles.detailGroup} key={label as string}>
+                            <span>{label}</span>
+                            <p>{(items as string[]).join(' / ')}</p>
+                          </div>
+                        ))}
+                    </div>
+                    <ProjectReadme
+                      projectName={project.name}
+                      state={readme}
+                      lang={lang}
+                      onToggle={onToggleReadme}
+                    />
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+        <Anchor
+          component={Link}
+          href={lang === 'en' ? '/en' : '/'}
+          className={styles.backLink}
+          underline="never"
         >
-          <Stack gap="md">
-            <motion.div
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
-              }}
-            >
-              <Title order={1}>{t(lang, 'pages.projects')}</Title>
-            </motion.div>
-            {state.projects.map((project) => (
-              <motion.div
-                key={project.name}
-                variants={{
-                  hidden: { opacity: 0, x: 36 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-                }}
-              >
-                <ProjectCard
-                  project={project}
-                  lang={lang}
-                  readmeState={readmeOpen[project.name] ?? { status: 'idle' }}
-                  onToggleReadme={onToggleReadme}
-                />
-              </motion.div>
-            ))}
-          </Stack>
-        </motion.div>
+          ← {lang === 'en' ? 'Back home' : 'Voltar ao início'}
+        </Anchor>
       </Container>
     </Box>
   );

@@ -1,0 +1,229 @@
+.contactPage {
+  color: var(--paper);
+}
+
+.contactContainer {
+  max-width: var(--content-width, 1180px);
+  padding: 0;
+}
+
+.eyebrow,
+.contactRule,
+.linkIndex,
+.linkCopy small,
+.contactFooter {
+  font-family: var(--font-mono);
+}
+
+.contactIntro {
+  max-width: 900px;
+  padding: clamp(58px, 9vw, 112px) 0 clamp(48px, 7vw, 80px);
+}
+
+.eyebrow {
+  color: var(--orange);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contactIntro h1 {
+  margin: 20px 0 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(60px, 7vw, 80px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.contactIntro p {
+  max-width: 540px;
+  margin: 24px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.emailFeature {
+  display: inline-flex;
+  max-width: 100%;
+  min-height: 48px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  color: var(--blue) !important;
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 2.3vw, 20px);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.emailFeature:hover,
+.emailFeature:focus-visible {
+  color: var(--orange) !important;
+  outline: 1px solid var(--orange);
+  outline-offset: 5px;
+}
+
+.contactRule {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 13px 0;
+  border-block: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.contactLinks {
+  border-bottom: 1px solid var(--line);
+}
+
+.gameFrame {
+  width: 100%;
+}
+
+.gameSection {
+  padding: 42px 0 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.gameHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin-bottom: 12px;
+}
+
+.gameHeading h2 {
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.gameHeading p {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.contactLink {
+  display: grid;
+  grid-template-columns: 40px 28px minmax(0, 1fr) 24px;
+  gap: 12px;
+  align-items: center;
+  min-height: 84px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--paper) !important;
+  text-decoration: none;
+}
+
+.contactLink:last-child {
+  border-bottom: 0;
+}
+
+.contactLink:hover,
+.contactLink:focus-visible {
+  color: var(--blue) !important;
+  outline: 1px solid var(--blue);
+  outline-offset: -1px;
+}
+
+.linkIndex {
+  color: var(--orange);
+  font-size: 10px;
+}
+
+.linkIcon,
+.linkArrow {
+  color: var(--muted);
+}
+
+.contactLink:hover .linkIcon,
+.contactLink:hover .linkArrow {
+  color: var(--orange);
+}
+
+.linkCopy {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.linkCopy strong {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.linkCopy small {
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.contactFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 0 58px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contactFooter a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--orange) !important;
+  text-decoration: none;
+}
+
+.contactFooter a:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .contactContainer {
+    padding: 0;
+  }
+
+  .contactIntro p {
+    font-size: 15px;
+  }
+
+  .contactRule {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .contactLink {
+    grid-template-columns: 28px 24px minmax(0, 1fr) 20px;
+    gap: 8px;
+  }
+
+  .linkCopy strong {
+    font-size: 20px;
+  }
+
+  .linkCopy small {
+    font-size: 12px;
+  }
+
+  .contactFooter {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

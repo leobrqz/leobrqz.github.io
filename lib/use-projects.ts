@@ -8,6 +8,7 @@ import {
   type GhLanguages,
   type GhRepo,
 } from './github-api';
+import type { Lang } from './i18n';
 
 export interface LanguageBreakdownItem {
   name: string;
@@ -36,7 +37,9 @@ const LANGUAGE_SHARE_MIN_PERCENT = 0.3;
 
 function toLanguageBreakdown(langMap: GhLanguages): LanguageBreakdownItem[] {
   const total = Object.values(langMap).reduce((a, b) => a + b, 0);
-  if (total === 0) return [];
+  if (total === 0) {
+    return [];
+  }
   return Object.entries(langMap)
     .map(([name, bytes]) => ({ name, bytes, sharePercent: (bytes / total) * 100 }))
     .filter((item) => item.sharePercent >= LANGUAGE_SHARE_MIN_PERCENT)
@@ -44,7 +47,7 @@ function toLanguageBreakdown(langMap: GhLanguages): LanguageBreakdownItem[] {
     .map(({ name }) => ({ name }));
 }
 
-function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
+function mergeMeta(repo: GhRepo, langMap: GhLanguages, lang: Lang): EnrichedProject {
   const meta = projects_meta[repo.name];
   const libraries = meta?.libraries ?? [];
   const tools = meta?.tools ?? [];
@@ -54,7 +57,7 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
   return {
     name: repo.name,
     html_url: repo.html_url,
-    description: repo.description,
+    description: repo.description ?? meta?.description?.[lang] ?? null,
     updated_at: repo.updated_at,
     language: repo.language,
     languages,
@@ -65,7 +68,7 @@ function mergeMeta(repo: GhRepo, langMap: GhLanguages): EnrichedProject {
   };
 }
 
-export function useProjects(): {
+export function useProjects(lang: Lang = 'pt'): {
   state: ProjectsState;
   refetch: () => void;
   fetchReadme: (repoName: string) => Promise<string | null>;
@@ -87,7 +90,7 @@ export function useProjects(): {
       const withLangs = await Promise.all(
         repos.map(async (repo) => {
           const langMap = await fetchLanguages(GITHUB_USERNAME, repo.name);
-          return mergeMeta(repo, langMap);
+          return mergeMeta(repo, langMap, lang);
         })
       );
       setState({ status: 'success', projects: withLangs });
@@ -96,7 +99,7 @@ export function useProjects(): {
       const kind = message === 'GITHUB_RATE_LIMIT' ? 'rate_limit' : 'generic';
       setState({ status: 'error', kind, message });
     }
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     load();

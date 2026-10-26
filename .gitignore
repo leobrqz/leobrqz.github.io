@@ -36,3 +36,8 @@ docs
 
 # Old assets
 Leonardo_Briquezi_CV-old.pdf
+
+# Local browser and QA artifacts
+/artifacts/
+/test-results/
+/%SystemDrive%/

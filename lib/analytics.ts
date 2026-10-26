@@ -7,7 +7,8 @@ type GtagEvent =
   | 'project_label_changelog'
   | 'github_repo'
   | 'github'
-  | 'linkedin';
+  | 'linkedin'
+  | 'email';
 
 export function trackEvent(event: GtagEvent, params?: Record<string, unknown>): void {
   if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {

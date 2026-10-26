@@ -1,183 +1,104 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { Anchor, Box, Group, Text, Tooltip, useMantineColorScheme, useMantineTheme } from '@mantine/core';
-import { IconBrandGithub, IconBrandLinkedin } from '@tabler/icons-react';
+import Link from 'next/link';
+import {
+  IconArrowDownRight,
+  IconArrowRight,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconMail,
+} from '@tabler/icons-react';
+import { about } from '@/data/about';
 import { contact } from '@/data/contact';
-import { t, type Lang } from '@/lib/i18n';
 import { trackEvent } from '@/lib/analytics';
+import { t, type Lang } from '@/lib/i18n';
+import styles from './HomePage.module.css';
 
-const TYPE_SPEED_MS = 80;
-const CURSOR_BLINK_MS = 530;
-const DELAY_AFTER_NAME_MS = 400;
-const SUBTITLE_SPEED_MS = 22;
-
-export type LandingHeroProps = {
-  lang: Lang;
-};
-
-function useTypewriter(fullText: string, speedMs: number, startDelayMs: number, run: boolean) {
-  const [display, setDisplay] = useState('');
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    if (!run || fullText === '') {
-      return;
-    }
-    const startTimer = setTimeout(() => setStarted(true), startDelayMs);
-    return () => clearTimeout(startTimer);
-  }, [run, fullText, startDelayMs]);
-
-  useEffect(() => {
-    if (!started || display.length >= fullText.length) {
-      return;
-    }
-    const t = setTimeout(() => {
-      setDisplay(fullText.slice(0, display.length + 1));
-    }, speedMs);
-    return () => clearTimeout(t);
-  }, [started, display, fullText, speedMs]);
-
-  return display;
-}
-
-function useCursorBlink() {
-  const [on, setOn] = useState(true);
-  useEffect(() => {
-    const id = setInterval(() => setOn((v) => !v), CURSOR_BLINK_MS);
-    return () => clearInterval(id);
-  }, []);
-  return on;
-}
-
-export function LandingHero({ lang }: LandingHeroProps) {
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === 'dark';
-
-  const nameDisplay = useTypewriter(contact.name, TYPE_SPEED_MS, 300, true);
-  const nameDone = nameDisplay.length >= contact.name.length;
-  const subtitle = `${t(lang, 'sidebar.role')} · ${t(lang, 'sidebar.education')}`;
-  const subtitleDisplay = useTypewriter(
-    subtitle,
-    SUBTITLE_SPEED_MS,
-    nameDone ? DELAY_AFTER_NAME_MS : 999999,
-    nameDone
-  );
-  const subtitleDone = subtitleDisplay.length >= subtitle.length;
-  const cursorOn = useCursorBlink();
-
-  const gradientStyle = {
-    background: isDark
-      ? `linear-gradient(110deg, ${theme.colors.blue[3]}, ${theme.colors.cyan[4]})`
-      : `linear-gradient(110deg, ${theme.colors.blue[7]}, ${theme.colors.cyan[7]})`,
-    backgroundClip: 'text',
-    WebkitBackgroundClip: 'text',
-    color: 'transparent',
-  } as React.CSSProperties;
+export function LandingHero({ lang }: { lang: Lang }) {
+  const resumeHref = lang === 'en' ? '/en/resume' : '/resume';
+  const resumePdfHref = `${resumeHref}?view=pdf`;
+  const projectsHref = lang === 'en' ? '/en/projects' : '/projects';
+  const contacts = [
+    {
+      label: contact.email,
+      href: `mailto:${contact.email}`,
+      icon: IconMail,
+      onClick: () => trackEvent('email'),
+    },
+    {
+      label: `github.com/${contact.github}`,
+      href: `https://github.com/${contact.github}`,
+      icon: IconBrandGithub,
+      onClick: () => trackEvent('github'),
+    },
+    {
+      label: `linkedin.com/in/${contact.linkedin}`,
+      href: `https://linkedin.com/in/${contact.linkedin}`,
+      icon: IconBrandLinkedin,
+      onClick: () => trackEvent('linkedin'),
+    },
+  ];
 
   return (
-    <Box
-      component="section"
-      style={{
-        minHeight: 'min(70vh, 420px)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 'var(--mantine-spacing-xl) 0',
-      }}
-    >
-      <Box style={{ textAlign: 'center' }}>
-        <Box
-          component="h1"
-          style={{
-            margin: 0,
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
-            fontWeight: 800,
-            letterSpacing: '0.02em',
-            lineHeight: 1.3,
-            fontFamily: theme.fontFamilyMonospace,
-          }}
-        >
-          <span style={gradientStyle}>{nameDisplay}</span>
-          {!nameDone && (
-            <span
-              style={{
-                ...gradientStyle,
-                opacity: cursorOn ? 1 : 0.35,
-                borderRight: `3px solid ${isDark ? theme.colors.cyan[4] : theme.colors.cyan[7]}`,
-                marginLeft: 2,
-              }}
-            >
-              {' '}
-            </span>
-          )}
-        </Box>
-        <Text
-          size="lg"
-          c="dimmed"
-          mt="md"
-          style={{
-            fontFamily: theme.fontFamilyMonospace,
-            minHeight: '1.5em',
-          }}
-        >
-          {subtitleDisplay}
-          {nameDone && (
-            <span
-              style={{
-                opacity: cursorOn ? 1 : 0.35,
-                borderRight: `2px solid var(--mantine-color-dimmed)`,
-                marginLeft: 2,
-              }}
-            >
-              {' '}
-            </span>
-          )}
-        </Text>
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{
-            opacity: subtitleDone ? 1 : 0,
-            y: subtitleDone ? 0 : 8,
-          }}
-          transition={{
-            delay: subtitleDone ? 0.25 : 0,
-            duration: 0.35,
-          }}
-        >
-          <Group justify="center" gap="md" mt="sm">
-            <Tooltip label="GitHub" withArrow>
-              <Anchor
-                href={`https://github.com/${contact.github}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                c="dimmed"
-                style={{ lineHeight: 0 }}
-                aria-label="GitHub"
-                onClick={() => trackEvent('github')}
+    <section className={styles.hero} id="home" aria-labelledby="hero-title">
+      <div className={styles.heroMain}>
+        <p className={styles.eyebrow}>{t(lang, 'home.intro_kicker')}</p>
+        <h1 id="hero-title" className={styles.heroTitle} aria-label="Leonardo Briquezi">
+          <span className={styles.heroNameLine}>Leonardo</span>
+          <span>Briquezi</span>
+        </h1>
+        <p className={styles.heroSummary}>{about.home_content[lang]}</p>
+        <div className={styles.heroActions}>
+          <Link className={`${styles.action} ${styles.primaryAction}`} href={projectsHref}>
+            {t(lang, 'home.view_projects')} <IconArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link className={`${styles.action} ${styles.secondaryAction}`} href={resumeHref}>
+            {lang === 'en' ? 'Resume' : 'Currículo'}
+            <IconArrowDownRight size={16} aria-hidden="true" />
+          </Link>
+          <Link className={styles.pdfLink} href={resumePdfHref}>
+            {lang === 'en' ? 'View PDF' : 'Ver PDF'}
+            <IconArrowDownRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+
+      <aside
+        className={styles.heroAside}
+        aria-label={lang === 'en' ? 'Contact details' : 'Dados de contato'}
+      >
+        <div className={styles.heroAsideTop}>
+          <span className={styles.sectionIndex}>{lang === 'en' ? 'Contact' : 'Contato'}</span>
+          <span className={styles.asideRule} />
+        </div>
+        <div className={styles.contactList}>
+          {contacts.map(({ label, href, icon: Icon, onClick }) => {
+            const content = (
+              <>
+                <Icon className={styles.contactIcon} size={18} stroke={1.6} aria-hidden="true" />
+                <span>{label}</span>
+              </>
+            );
+
+            return href ? (
+              <a
+                className={styles.contactLink}
+                href={href}
+                key={label}
+                onClick={onClick}
+                target={href.startsWith('https:') ? '_blank' : undefined}
+                rel={href.startsWith('https:') ? 'noopener noreferrer' : undefined}
               >
-                <IconBrandGithub size={30} stroke={1.5} />
-              </Anchor>
-            </Tooltip>
-            <Tooltip label="LinkedIn" withArrow>
-              <Anchor
-                href={`https://linkedin.com/in/${contact.linkedin}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                c="dimmed"
-                style={{ lineHeight: 0 }}
-                aria-label="LinkedIn"
-                onClick={() => trackEvent('linkedin')}
-              >
-                <IconBrandLinkedin size={30} stroke={1.5} />
-              </Anchor>
-            </Tooltip>
-          </Group>
-        </motion.div>
-      </Box>
-    </Box>
+                {content}
+              </a>
+            ) : (
+              <span className={styles.contactLink} key={label}>
+                {content}
+              </span>
+            );
+          })}
+        </div>
+      </aside>
+    </section>
   );
 }

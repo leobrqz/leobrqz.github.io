@@ -1,0 +1,38 @@
+.labels {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  vertical-align: middle;
+}
+
+.badge {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 0 0 8px;
+  border-left: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.new {
+  color: var(--orange) !important;
+}
+
+.update {
+  color: var(--blue) !important;
+}
+
+.badge:hover,
+.badge:focus-visible {
+  color: var(--paper) !important;
+}
+
+.badge:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}

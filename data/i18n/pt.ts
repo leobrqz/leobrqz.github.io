@@ -5,6 +5,7 @@ export const pt = {
     projects: 'Projetos',
     resume: 'Currículo',
     contact: 'Contato',
+    open_menu: 'Abrir menu',
   },
   pages: {
     home: 'Início',
@@ -56,10 +57,13 @@ export const pt = {
     hide_readme: 'Ocultar README',
     no_readme: 'Nenhum README disponível',
     unable_to_load: 'Não foi possível carregar o README. Tente novamente mais tarde.',
-    no_projects: 'Nenhum projeto configurado. Adicione os nomes dos repositórios no array REPOSITORIES em config/site.ts.',
+    no_projects:
+      'Nenhum projeto configurado. Adicione os nomes dos repositórios no array REPOSITORIES em config/site.ts.',
     error_loading: 'Erro ao carregar projetos. Verifique o console para detalhes.',
-    error_rate_limit: 'Limite de requisições do GitHub atingido. Tente novamente em alguns minutos.',
-    no_repos: 'Nenhum repositório encontrado. Verifique os nomes dos repositórios no array REPOSITORIES em config/site.ts.',
+    error_rate_limit:
+      'Limite de requisições do GitHub atingido. Tente novamente em alguns minutos.',
+    no_repos:
+      'Nenhum repositório encontrado. Verifique os nomes dos repositórios no array REPOSITORIES em config/site.ts.',
   },
   skills: {
     languages: 'Linguagens',
@@ -85,5 +89,12 @@ export const pt = {
   home: {
     recent_projects: 'Projetos recentes',
     see_all_projects: 'Ver todos os projetos',
+    intro_kicker: 'Desenvolvimento fullstack',
+    view_projects: 'Ver projetos',
+    view_resume: 'Ler currículo',
+    about_kicker: 'Perfil',
+    stack_kicker: 'Stack de trabalho',
+    work_kicker: 'Trabalho selecionado',
+    selected_note: 'Projetos publicados e ferramentas que uso no dia a dia.',
   },
 } as const;

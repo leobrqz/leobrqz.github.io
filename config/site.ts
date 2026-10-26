@@ -12,13 +12,14 @@ export const GOOGLE_ANALYTICS_ID: string = 'G-GZ4JSFHDND';
 
 export const CV_PDF_FILENAME = 'Leonardo_Briquezi_CV.pdf';
 
-export const CV_PDF_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/assets/cv/${CV_PDF_FILENAME}`;
+export const CV_PDF_URL = `/documents/${CV_PDF_FILENAME}`;
 
 export const TECHSTARS_PDF_FILENAME = 'Techstars Startup Weekend.pdf';
 
 export const TECHSTARS_PDF_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/assets/cv/${encodeURIComponent(TECHSTARS_PDF_FILENAME)}`;
 
 export const REPOSITORIES: string[] = [
+  'OpenRemoteControl',
   'TrackLyrics-ytdlp',
   'JobAppliesTracker',
   'ShScriptHub',
